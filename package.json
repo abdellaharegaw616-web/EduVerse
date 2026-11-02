@@ -1,0 +1,20 @@
+{
+  "name": "eduverse-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EduVerse — Learn Beyond Boundaries (Educational SaaS Platform)",
+  "packageManager": "pnpm@12.16.1",
+  "scripts": {
+    "dev": "pnpm --filter \"@eduverse/*\" --parallel run dev",
+    "build": "pnpm --filter \"@eduverse/*\" run build",
+    "typecheck": "pnpm --filter \"@eduverse/*\" run typecheck",
+    "lint": "pnpm --filter \"@eduverse/*\" run lint",
+    "test": "pnpm --filter \"@eduverse/*\" run test",
+    "clean": "pnpm -r --parallel exec -- rm -rf dist .next node_modules"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  }
+}
+

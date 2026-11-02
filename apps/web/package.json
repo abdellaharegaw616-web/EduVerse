@@ -1,0 +1,39 @@
+{
+  "name": "@eduverse/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@eduverse/api-client": "workspace:*",
+    "@eduverse/shared-types": "workspace:*",
+    "@eduverse/shared-validation": "workspace:*",
+    "@hookform/resolvers": "^7.0.1",
+    "@tanstack/react-query": "^5.105.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.66.0",
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.91.0",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eduverse/typescript-config": "workspace:*",
+    "@types/node": "^22.13.9",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.8.2"
+  }
+}
