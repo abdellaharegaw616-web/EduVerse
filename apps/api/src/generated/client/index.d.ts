@@ -181,6 +181,7 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 export const CourseStatus: {
   DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
 };

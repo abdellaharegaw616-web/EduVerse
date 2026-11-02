@@ -25,6 +25,7 @@ enum Role {
 
 enum CourseStatus {
   DRAFT
+  PENDING_REVIEW
   PUBLISHED
   ARCHIVED
 }

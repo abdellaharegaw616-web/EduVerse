@@ -454,6 +454,7 @@ exports.Role = exports.$Enums.Role = {
 
 exports.CourseStatus = exports.$Enums.CourseStatus = {
   DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
 };
