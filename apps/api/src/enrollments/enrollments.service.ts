@@ -1,5 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../database/prisma.service';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
+import { PrismaService, CourseStatus } from '../database/prisma.service';
 
 @Injectable()
 export class EnrollmentsService {
@@ -277,6 +283,219 @@ export class EnrollmentsService {
         limit,
         totalPages: Math.ceil(total / limit),
       },
+    };
+  }
+
+  // 5. Enroll in Course (Free Enrollment)
+  async enrollInCourse(userId: string, courseId: string) {
+    // 1. Verify user exists and is active
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user || user.isActive === false) {
+      throw new ForbiddenException('Active account required to enroll');
+    }
+
+    // 2. Verify course exists and is published
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+      include: {
+        category: { select: { name: true } },
+        author: { select: { fullName: true } },
+      },
+    });
+
+    if (!course) {
+      throw new NotFoundException(`Course with ID ${courseId} not found`);
+    }
+
+    // Business Rule: Course must be published and available
+    if (course.status !== CourseStatus.PUBLISHED) {
+      throw new BadRequestException(
+        'Cannot enroll in an unpublished course. Only published courses accept enrollments.',
+      );
+    }
+
+    // 3. Prevent duplicate enrollment
+    const existing = await this.prisma.enrollment.findUnique({
+      where: {
+        userId_courseId: {
+          userId,
+          courseId,
+        },
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException('You are already enrolled in this course');
+    }
+
+    // 4. Atomic transaction: create enrollment, audit log, and notification
+    return this.prisma.$transaction(async (tx) => {
+      const enrollment = await tx.enrollment.create({
+        data: {
+          userId,
+          courseId,
+          progressPercentage: 0.0,
+        },
+        include: {
+          course: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              thumbnailUrl: true,
+              difficulty: true,
+              language: true,
+              estimatedHours: true,
+            },
+          },
+        },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          userId,
+          action: 'COURSE_ENROLLMENT_CREATED',
+          entityType: 'Enrollment',
+          entityId: enrollment.id,
+          metadata: {
+            courseId,
+            courseTitle: course.title,
+          },
+        },
+      });
+
+      await tx.notification.create({
+        data: {
+          userId,
+          title: 'Enrollment Confirmed',
+          message: `You have successfully enrolled in "${course.title}". Start your learning journey!`,
+          actionUrl: `/app/courses/${course.id}`,
+        },
+      });
+
+      return {
+        message: 'Successfully enrolled in course',
+        enrollment: {
+          id: enrollment.id,
+          courseId: enrollment.courseId,
+          enrolledAt: enrollment.enrolledAt,
+          progressPercentage: enrollment.progressPercentage,
+          status: 'IN_PROGRESS',
+          course: enrollment.course,
+        },
+      };
+    });
+  }
+
+  // 6. Get Enrollment History & Status for Authenticated Student (GET /enrollments/me)
+  async getEnrollmentsMe(userId: string) {
+    const enrollments = await this.prisma.enrollment.findMany({
+      where: { userId },
+      include: {
+        course: {
+          include: {
+            category: { select: { name: true, slug: true } },
+            author: { select: { id: true, fullName: true, profile: { select: { avatarUrl: true } } } },
+            _count: {
+              select: {
+                sections: true,
+                reviews: true,
+              },
+            },
+            sections: {
+              select: {
+                _count: {
+                  select: { lessons: true },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { enrolledAt: 'desc' },
+    });
+
+    return enrollments.map((e) => {
+      const totalLessons = e.course.sections.reduce((acc, s) => acc + s._count.lessons, 0);
+      const status = e.completedAt !== null || e.progressPercentage >= 100 ? 'COMPLETED' : 'IN_PROGRESS';
+
+      return {
+        id: e.id,
+        userId: e.userId,
+        courseId: e.courseId,
+        enrolledAt: e.enrolledAt,
+        completedAt: e.completedAt,
+        progressPercentage: e.progressPercentage,
+        status,
+        course: {
+          id: e.course.id,
+          title: e.course.title,
+          slug: e.course.slug,
+          description: e.course.description,
+          thumbnailUrl: e.course.thumbnailUrl,
+          difficulty: e.course.difficulty,
+          language: e.course.language,
+          estimatedHours: e.course.estimatedHours,
+          category: e.course.category?.name || 'General',
+          author: {
+            id: e.course.author.id,
+            fullName: e.course.author.fullName,
+            avatarUrl: e.course.author.profile?.avatarUrl || null,
+          },
+          sectionsCount: e.course._count.sections,
+          lessonsCount: totalLessons,
+        },
+      };
+    });
+  }
+
+  // 7. Verify Authorized Course Content Access
+  async checkCourseAccess(userId: string, courseId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.isActive === false) {
+      throw new ForbiddenException('Active account required');
+    }
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+      select: { id: true, authorId: true, status: true },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // Super admins or the course author always have authorized access
+    if (user.role === 'SUPER_ADMIN' || course.authorId === userId) {
+      return {
+        hasAccess: true,
+        role: user.role === 'SUPER_ADMIN' ? 'SUPER_ADMIN' : 'AUTHOR',
+      };
+    }
+
+    // For students, check active enrollment
+    const enrollment = await this.prisma.enrollment.findUnique({
+      where: {
+        userId_courseId: {
+          userId,
+          courseId,
+        },
+      },
+    });
+
+    if (!enrollment) {
+      throw new ForbiddenException(
+        'You must be enrolled in this course to access full curriculum content',
+      );
+    }
+
+    return {
+      hasAccess: true,
+      role: 'STUDENT',
+      enrollmentId: enrollment.id,
+      progressPercentage: enrollment.progressPercentage,
     };
   }
 }

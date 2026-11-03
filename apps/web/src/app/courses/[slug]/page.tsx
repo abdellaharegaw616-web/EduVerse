@@ -121,12 +121,54 @@ export default function CourseDetailPage() {
   const [reviewComment, setReviewComment] = useState('');
   const [reviewError, setReviewError] = useState<string | null>(null);
 
+  const [enrollError, setEnrollError] = useState<string | null>(null);
+  const [enrollSuccess, setEnrollSuccess] = useState(false);
+
   const { data: course, isLoading, isError } = useQuery<CourseDetails>({
     queryKey: ['marketplace-course-detail', slug],
     queryFn: async () => {
       return apiClient.request<CourseDetails>(`/marketplace/courses/${slug}`);
     },
     enabled: !!slug,
+  });
+
+  const { data: accessData, refetch: refetchAccess } = useQuery<{
+    hasAccess: boolean;
+    isAuthor?: boolean;
+    isSuperAdmin?: boolean;
+    enrollment?: any;
+  }>({
+    queryKey: ['course-access', course?.id],
+    queryFn: async () => {
+      if (!course?.id) return { hasAccess: false };
+      return apiClient.get(`/courses/${course.id}/access`);
+    },
+    enabled: !!user && !!course?.id,
+  });
+
+  const enrollMutation = useMutation({
+    mutationFn: async () => {
+      if (!course) return;
+      return apiClient.post(`/courses/${course.id}/enroll`, {});
+    },
+    onSuccess: () => {
+      setEnrollSuccess(true);
+      setEnrollError(null);
+      refetchAccess();
+      queryClient.invalidateQueries({ queryKey: ['my-enrollments'] });
+      queryClient.invalidateQueries({ queryKey: ['student-dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['marketplace-course-detail', slug] });
+    },
+    onError: (err: any) => {
+      const msg = err?.message || 'Failed to complete course enrollment.';
+      if (msg.toLowerCase().includes('already enrolled')) {
+        setEnrollSuccess(true);
+        setEnrollError(null);
+        refetchAccess();
+      } else {
+        setEnrollError(msg);
+      }
+    },
   });
 
   const toggleSection = (sectionId: string) => {
@@ -528,16 +570,60 @@ export default function CourseDetailPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-2">
-                  <Link href={`/app/courses/${course.id}`} className="block">
-                    <Button variant="default" className="w-full gap-2 text-sm font-semibold h-11">
-                      <span>Enroll in Course</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <p className="text-[11px] text-center text-brand-slate">
-                    Free instant enrollment for registered learners.
-                  </p>
+                <div className="space-y-3 pt-2">
+                  {!user ? (
+                    <div className="space-y-2">
+                      <Link href={`/login?redirect=/courses/${course.slug}`} className="block">
+                        <Button variant="default" className="w-full gap-2 text-sm font-semibold h-11">
+                          <span>Sign In to Enroll</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <p className="text-[11px] text-center text-brand-slate">
+                        Free instant enrollment for registered learners.
+                      </p>
+                    </div>
+                  ) : accessData?.hasAccess || enrollSuccess ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 p-3 bg-brand-mint text-brand-navy rounded-lg text-xs font-semibold">
+                        <CheckCircle2 className="h-4 w-4 text-brand-emerald shrink-0" />
+                        <span>
+                          {accessData?.isAuthor
+                            ? 'You are the author of this course.'
+                            : 'You are enrolled in this course!'}
+                        </span>
+                      </div>
+                      <Link href="/app/courses" className="block">
+                        <Button variant="emerald" className="w-full gap-2 text-sm font-semibold h-11">
+                          <span>Go to Learning Portfolio</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {enrollError && (
+                        <Alert variant="destructive" className="py-2 px-3 text-xs">
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>{enrollError}</AlertDescription>
+                        </Alert>
+                      )}
+                      <Button
+                        variant="default"
+                        onClick={() => enrollMutation.mutate()}
+                        disabled={enrollMutation.isPending}
+                        className="w-full gap-2 text-sm font-semibold h-11"
+                      >
+                        <span>
+                          {enrollMutation.isPending ? 'Enrolling...' : 'Enroll in Free Course'}
+                        </span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                      <p className="text-[11px] text-center text-brand-slate">
+                        Instant free access to all lessons and verified assessments.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -27,6 +27,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser, AuthenticatedUser } from '../auth/decorators/current-user.decorator';
 import { Role } from '../database/prisma.service';
+import { EnrollmentsService } from '../enrollments/enrollments.service';
 
 @ApiTags('Teacher Course Management & Studio')
 @Controller('courses')
@@ -34,7 +35,10 @@ import { Role } from '../database/prisma.service';
 @Roles(Role.TEACHER, Role.INDEPENDENT_INSTRUCTOR, Role.SUPER_ADMIN)
 @ApiBearerAuth('JWT-auth')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(
+    private readonly coursesService: CoursesService,
+    private readonly enrollmentsService: EnrollmentsService,
+  ) {}
 
   // 1. Teacher Dashboard
   @Get('teacher/dashboard')
@@ -361,6 +365,43 @@ export class CoursesController {
   ) {
     const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
     return this.coursesService.deleteLessonResource(caller.id, resourceId, isSuperAdmin);
+  }
+
+  // 29. Free Course Enrollment (Any Authenticated Student or User)
+  @Post(':id/enroll')
+  @Roles(
+    Role.STUDENT,
+    Role.TEACHER,
+    Role.INDEPENDENT_INSTRUCTOR,
+    Role.INSTITUTION_ADMIN,
+    Role.SUPER_ADMIN,
+  )
+  @ApiOperation({ summary: 'Enroll in a published free course' })
+  @ApiResponse({ status: 201, description: 'Successfully enrolled' })
+  @ApiResponse({ status: 400, description: 'Cannot enroll in unpublished course' })
+  @ApiResponse({ status: 409, description: 'Already enrolled in course' })
+  async enrollInCourse(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) courseId: string,
+  ) {
+    return this.enrollmentsService.enrollInCourse(caller.id, courseId);
+  }
+
+  // 30. Verify Course Content Authorization
+  @Get(':id/access')
+  @Roles(
+    Role.STUDENT,
+    Role.TEACHER,
+    Role.INDEPENDENT_INSTRUCTOR,
+    Role.INSTITUTION_ADMIN,
+    Role.SUPER_ADMIN,
+  )
+  @ApiOperation({ summary: 'Verify student authorization to access course content' })
+  async checkCourseAccess(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) courseId: string,
+  ) {
+    return this.enrollmentsService.checkCourseAccess(caller.id, courseId);
   }
 }
 
