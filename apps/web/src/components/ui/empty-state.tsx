@@ -9,6 +9,7 @@ interface EmptyStateProps {
   description: string;
   actionHref?: string;
   actionLabel?: string;
+  onAction?: () => void;
 }
 
 export function EmptyState({
@@ -17,6 +18,7 @@ export function EmptyState({
   description,
   actionHref,
   actionLabel,
+  onAction,
 }: EmptyStateProps) {
   return (
     <div className="rounded-xl border border-dashed border-brand-border bg-white p-10 text-center space-y-4">
@@ -34,6 +36,13 @@ export function EmptyState({
               {actionLabel}
             </Button>
           </Link>
+        </div>
+      )}
+      {!actionHref && onAction && actionLabel && (
+        <div className="pt-2">
+          <Button variant="emerald" size="sm" onClick={onAction}>
+            {actionLabel}
+          </Button>
         </div>
       )}
     </div>

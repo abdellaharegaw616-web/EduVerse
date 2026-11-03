@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
-  BookOpen,
   ArrowLeft,
   Save,
   Loader2,
@@ -30,7 +29,17 @@ const createCourseSchema = z.object({
   description: z
     .string()
     .min(10, 'Please provide an informative description of at least 10 characters'),
+  thumbnailUrl: z
+    .string()
+    .url('Must be a valid URL')
+    .optional()
+    .or(z.literal('')),
   categoryId: z.string().optional().or(z.literal('')),
+  language: z.string().min(2, 'Language is required'),
+  difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'ALL_LEVELS']),
+  learningObjectivesText: z.string().optional(),
+  prerequisitesText: z.string().optional(),
+  estimatedHours: z.coerce.number().min(1).max(500),
 });
 
 type CreateCourseFormValues = z.infer<typeof createCourseSchema>;
@@ -55,21 +64,48 @@ export default function CreateCoursePage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<CreateCourseFormValues>({
-    resolver: zodResolver(createCourseSchema),
+    resolver: zodResolver(createCourseSchema) as any,
     defaultValues: {
       title: '',
       description: '',
+      thumbnailUrl: '',
       categoryId: '',
+      language: 'English',
+      difficulty: 'BEGINNER',
+      learningObjectivesText: '',
+      prerequisitesText: '',
+      estimatedHours: 10,
     },
   });
 
   const createMutation = useMutation({
-    mutationFn: (values: CreateCourseFormValues) =>
-      apiClient.post<any>('/courses/teacher', {
+    mutationFn: (values: CreateCourseFormValues) => {
+      const learningObjectives = values.learningObjectivesText
+        ? values.learningObjectivesText
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+
+      const prerequisites = values.prerequisitesText
+        ? values.prerequisitesText
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+
+      return apiClient.post<any>('/courses/teacher', {
         title: values.title,
         description: values.description,
+        thumbnailUrl: values.thumbnailUrl || undefined,
         categoryId: values.categoryId || undefined,
-      }),
+        language: values.language,
+        difficulty: values.difficulty,
+        learningObjectives,
+        prerequisites,
+        estimatedHours: values.estimatedHours,
+      });
+    },
     onSuccess: (newCourse) => {
       // Redirect to section builder to immediately add syllabus modules
       router.push(`/teacher/courses/${newCourse.id}/sections`);
@@ -96,7 +132,7 @@ export default function CreateCoursePage() {
             Draft a New Course
           </h1>
           <p className="text-xs text-brand-slate mt-0.5">
-            Initialize your curriculum blueprint. You can add modular sections, video lectures, and quizzes next.
+            Initialize your curriculum blueprint with rich metadata. You can attach sections, video lectures, and quizzes next.
           </p>
         </div>
       </div>
@@ -104,98 +140,211 @@ export default function CreateCoursePage() {
       {createMutation.isError && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Creation Failed</AlertTitle>
-          <AlertDescription>
-            {(createMutation.error as any)?.message || 'Failed to create course blueprint. Please check inputs.'}
+          <AlertTitle>Failed to Create Course</AlertTitle>
+          <AlertDescription className="text-xs">
+            {(createMutation.error as any)?.message ||
+              'A problem occurred while initializing your course. Please verify input fields and try again.'}
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Form Card */}
-      <Card className="border border-brand-border bg-white shadow-xs">
-        <CardHeader>
-          <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-            <BookOpen className="h-4 w-4 text-brand-emerald" />
-            <span>Curriculum Metadata</span>
-          </CardTitle>
-          <CardDescription className="text-xs text-brand-slate">
-            New courses are saved in <strong>DRAFT</strong> status until you explicitly submit or publish them.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {/* Course Blueprint Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Card className="border border-brand-border bg-white shadow-sm">
+          <CardHeader className="border-b border-brand-border/60 pb-4">
+            <CardTitle className="text-base text-brand-navy">Course Identity & Overview</CardTitle>
+            <CardDescription className="text-xs">
+              Basic discovery metadata visible to prospective learners in the marketplace catalog.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            {/* Title */}
             <div className="space-y-1.5">
               <Label htmlFor="title" className="text-xs font-semibold text-brand-navy">
                 Course Title <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="title"
-                placeholder="e.g. Modern Full-Stack Distributed Systems with TypeScript"
-                error={errors.title?.message}
+                placeholder="e.g., Advanced Distributed Systems with TypeScript"
                 {...register('title')}
+                className="text-xs h-10"
               />
-              <span className="text-[10px] text-brand-slate">
-                Give your course a descriptive, academic title. URL slug is generated automatically.
-              </span>
+              {errors.title && (
+                <p className="text-[11px] text-red-500 font-medium">{errors.title.message}</p>
+              )}
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="categoryId" className="text-xs font-semibold text-brand-navy">
-                Discipline / Category
-              </Label>
-              <select
-                id="categoryId"
-                className="flex h-10 w-full rounded-md border border-brand-border bg-white px-3 py-2 text-xs text-brand-navy shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald"
-                {...register('categoryId')}
-              >
-                <option value="">Select a Discipline (Optional)</option>
-                {categories?.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
+            {/* Description */}
             <div className="space-y-1.5">
               <Label htmlFor="description" className="text-xs font-semibold text-brand-navy">
-                Course Overview & Objectives <span className="text-red-500">*</span>
+                Course Description <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 id="description"
-                rows={5}
-                placeholder="Summarize course goals, prerequisites, target learners, and expected outcomes..."
-                error={errors.description?.message}
+                rows={4}
+                placeholder="Describe what students will master, curriculum structure, and real-world applicability..."
                 {...register('description')}
+                className="text-xs"
+              />
+              {errors.description && (
+                <p className="text-[11px] text-red-500 font-medium">{errors.description.message}</p>
+              )}
+            </div>
+
+            {/* Thumbnail URL */}
+            <div className="space-y-1.5">
+              <Label htmlFor="thumbnailUrl" className="text-xs font-semibold text-brand-navy">
+                Cover Thumbnail Image URL (Optional)
+              </Label>
+              <Input
+                id="thumbnailUrl"
+                placeholder="https://cdn.eduverse.et/courses/thumbnails/sample.jpg"
+                {...register('thumbnailUrl')}
+                className="text-xs h-10"
+              />
+              {errors.thumbnailUrl && (
+                <p className="text-[11px] text-red-500 font-medium">{errors.thumbnailUrl.message}</p>
+              )}
+            </div>
+
+            {/* Category & Language Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="categoryId" className="text-xs font-semibold text-brand-navy">
+                  Academic Category
+                </Label>
+                <select
+                  id="categoryId"
+                  {...register('categoryId')}
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                >
+                  <option value="">Select Category...</option>
+                  {categories?.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="language" className="text-xs font-semibold text-brand-navy">
+                  Instruction Language
+                </Label>
+                <select
+                  id="language"
+                  {...register('language')}
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                >
+                  <option value="English">English</option>
+                  <option value="Amharic">Amharic</option>
+                  <option value="Afaan Oromoo">Afaan Oromoo</option>
+                  <option value="Tigrinya">Tigrinya</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Difficulty & Estimated Duration Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="difficulty" className="text-xs font-semibold text-brand-navy">
+                  Difficulty Level
+                </Label>
+                <select
+                  id="difficulty"
+                  {...register('difficulty')}
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                >
+                  <option value="BEGINNER">Beginner</option>
+                  <option value="INTERMEDIATE">Intermediate</option>
+                  <option value="ADVANCED">Advanced</option>
+                  <option value="ALL_LEVELS">All Levels</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="estimatedHours" className="text-xs font-semibold text-brand-navy">
+                  Estimated Duration (Hours)
+                </Label>
+                <Input
+                  id="estimatedHours"
+                  type="number"
+                  min={1}
+                  max={500}
+                  {...register('estimatedHours')}
+                  className="text-xs h-10"
+                />
+                {errors.estimatedHours && (
+                  <p className="text-[11px] text-red-500 font-medium">{errors.estimatedHours.message}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Learning Objectives & Prerequisites */}
+        <Card className="border border-brand-border bg-white shadow-sm">
+          <CardHeader className="border-b border-brand-border/60 pb-4">
+            <CardTitle className="text-base text-brand-navy">Curriculum Goals & Prerequisites</CardTitle>
+            <CardDescription className="text-xs">
+              Outline specific competencies learners will acquire and background expectations. Enter one item per line.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="learningObjectivesText" className="text-xs font-semibold text-brand-navy">
+                What Students Will Learn (One objective per line)
+              </Label>
+              <Textarea
+                id="learningObjectivesText"
+                rows={4}
+                placeholder="Architect modular distributed microservices&#10;Implement resilient caching with Redis&#10;Deploy production containers with Kubernetes"
+                {...register('learningObjectivesText')}
+                className="text-xs font-mono"
               />
             </div>
 
-            <div className="pt-3 border-t border-brand-border flex items-center justify-between">
-              <Link href="/teacher/courses">
-                <Button type="button" variant="outline" size="sm" className="text-xs">
-                  Cancel
-                </Button>
-              </Link>
-
-              <Button
-                type="submit"
-                variant="emerald"
-                size="sm"
-                disabled={isSubmitting || createMutation.isPending}
-                className="gap-2 text-xs font-bold"
-              >
-                {isSubmitting || createMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                <span>Save Blueprint & Continue</span>
-              </Button>
+            <div className="space-y-1.5">
+              <Label htmlFor="prerequisitesText" className="text-xs font-semibold text-brand-navy">
+                Prerequisites & Requirements (One per line)
+              </Label>
+              <Textarea
+                id="prerequisitesText"
+                rows={3}
+                placeholder="Solid grasp of TypeScript & Node.js&#10;Basic knowledge of relational databases (PostgreSQL)"
+                {...register('prerequisitesText')}
+                className="text-xs font-mono"
+              />
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Submit Actions */}
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <Link href="/teacher/courses">
+            <Button variant="outline" type="button" className="text-xs">
+              Cancel
+            </Button>
+          </Link>
+          <Button
+            type="submit"
+            disabled={isSubmitting || createMutation.isPending}
+            className="text-xs gap-2 min-w-[140px]"
+          >
+            {createMutation.isPending ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <span>Initializing...</span>
+              </>
+            ) : (
+              <>
+                <Save className="h-3.5 w-3.5" />
+                <span>Save & Build Syllabus</span>
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

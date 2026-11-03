@@ -23,6 +23,21 @@ export enum CourseStatus {
   ARCHIVED = 'ARCHIVED',
 }
 
+export enum CourseDifficulty {
+  BEGINNER = 'BEGINNER',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+  ALL_LEVELS = 'ALL_LEVELS',
+}
+
+export enum LessonType {
+  VIDEO = 'VIDEO',
+  TEXT = 'TEXT',
+  PDF_RESOURCE = 'PDF_RESOURCE',
+  EXTERNAL_RESOURCE = 'EXTERNAL_RESOURCE',
+  ATTACHMENT = 'ATTACHMENT',
+}
+
 // 2. Base Entity & User Models
 export interface BaseEntity {
   readonly id: string;
@@ -68,12 +83,36 @@ export interface Course extends BaseEntity {
   title: string;
   slug: string;
   description: string;
+  thumbnailUrl?: string | null;
   category: string;
+  categoryId?: string | null;
   status: CourseStatus;
-  readonly authorId: string;
-  readonly institutionId?: string | null;
+  difficulty?: CourseDifficulty;
+  language?: string;
+  learningObjectives?: readonly string[];
+  prerequisites?: readonly string[];
   estimatedHours?: number;
+  readonly authorId: string;
+  readonly author?: {
+    id: string;
+    fullName: string;
+    avatarUrl?: string | null;
+    bio?: string | null;
+  };
+  readonly institutionId?: string | null;
   tags?: readonly string[];
+  enrollmentCount?: number;
+  ratingAverage?: number;
+  reviewCount?: number;
+  sectionsCount?: number;
+  lessonsCount?: number;
+}
+
+export interface CourseSection extends BaseEntity {
+  readonly courseId: string;
+  title: string;
+  sortOrder: number;
+  lessons?: Lesson[];
 }
 
 export interface Module extends BaseEntity {
@@ -82,14 +121,38 @@ export interface Module extends BaseEntity {
   sortOrder: number;
 }
 
+export interface CourseResource extends BaseEntity {
+  readonly lessonId: string;
+  title: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+}
+
+export interface Review extends BaseEntity {
+  readonly courseId: string;
+  readonly userId: string;
+  rating: number;
+  comment?: string | null;
+  user?: {
+    id: string;
+    fullName: string;
+    avatarUrl?: string | null;
+  };
+}
+
 export interface Lesson extends BaseEntity {
-  readonly moduleId: string;
+  readonly sectionId?: string;
+  readonly moduleId?: string;
   title: string;
   slug: string;
   content: string; // Markdown text
   videoUrl?: string | null;
   durationMinutes: number;
   sortOrder: number;
+  type?: LessonType;
+  isFreePreview?: boolean;
+  resources?: CourseResource[];
 }
 
 // 4. Enrollment & Progress Checkpoints

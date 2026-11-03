@@ -1,5 +1,18 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, IsUrl, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { LessonType } from '../../database/prisma.service';
 
 export class CreateLessonDto {
   @ApiProperty({ example: 'Introduction to Event-Driven Microservices' })
@@ -19,6 +32,16 @@ export class CreateLessonDto {
   @IsUrl({}, { message: 'Video URL must be a valid URL' })
   videoUrl?: string;
 
+  @ApiPropertyOptional({ enum: LessonType, default: LessonType.VIDEO })
+  @IsOptional()
+  @IsEnum(LessonType)
+  type?: LessonType;
+
+  @ApiPropertyOptional({ example: false, default: false })
+  @IsOptional()
+  @IsBoolean()
+  isFreePreview?: boolean;
+
   @ApiPropertyOptional({ example: 25 })
   @IsOptional()
   @IsInt()
@@ -31,4 +54,3 @@ export class CreateLessonDto {
   @IsInt()
   sortOrder?: number;
 }
-

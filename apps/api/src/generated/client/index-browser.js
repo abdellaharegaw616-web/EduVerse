@@ -234,6 +234,12 @@ exports.Prisma.CourseScalarFieldEnum = {
   title: 'title',
   slug: 'slug',
   description: 'description',
+  thumbnailUrl: 'thumbnailUrl',
+  language: 'language',
+  difficulty: 'difficulty',
+  learningObjectives: 'learningObjectives',
+  prerequisites: 'prerequisites',
+  estimatedHours: 'estimatedHours',
   status: 'status',
   authorId: 'authorId',
   institutionId: 'institutionId',
@@ -261,6 +267,8 @@ exports.Prisma.LessonScalarFieldEnum = {
   videoUrl: 'videoUrl',
   durationMinutes: 'durationMinutes',
   sortOrder: 'sortOrder',
+  type: 'type',
+  isFreePreview: 'isFreePreview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -452,11 +460,26 @@ exports.Role = exports.$Enums.Role = {
   STUDENT: 'STUDENT'
 };
 
+exports.CourseDifficulty = exports.$Enums.CourseDifficulty = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  ALL_LEVELS: 'ALL_LEVELS'
+};
+
 exports.CourseStatus = exports.$Enums.CourseStatus = {
   DRAFT: 'DRAFT',
   PENDING_REVIEW: 'PENDING_REVIEW',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
+};
+
+exports.LessonType = exports.$Enums.LessonType = {
+  VIDEO: 'VIDEO',
+  TEXT: 'TEXT',
+  PDF_RESOURCE: 'PDF_RESOURCE',
+  EXTERNAL_RESOURCE: 'EXTERNAL_RESOURCE',
+  ATTACHMENT: 'ATTACHMENT'
 };
 
 exports.QuestionType = exports.$Enums.QuestionType = {

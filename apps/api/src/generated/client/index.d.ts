@@ -206,6 +206,27 @@ export const SubmissionStatus: {
 
 export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]
 
+
+export const CourseDifficulty: {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  ALL_LEVELS: 'ALL_LEVELS'
+};
+
+export type CourseDifficulty = (typeof CourseDifficulty)[keyof typeof CourseDifficulty]
+
+
+export const LessonType: {
+  VIDEO: 'VIDEO',
+  TEXT: 'TEXT',
+  PDF_RESOURCE: 'PDF_RESOURCE',
+  EXTERNAL_RESOURCE: 'EXTERNAL_RESOURCE',
+  ATTACHMENT: 'ATTACHMENT'
+};
+
+export type LessonType = (typeof LessonType)[keyof typeof LessonType]
+
 }
 
 export type Role = $Enums.Role
@@ -223,6 +244,14 @@ export const QuestionType: typeof $Enums.QuestionType
 export type SubmissionStatus = $Enums.SubmissionStatus
 
 export const SubmissionStatus: typeof $Enums.SubmissionStatus
+
+export type CourseDifficulty = $Enums.CourseDifficulty
+
+export const CourseDifficulty: typeof $Enums.CourseDifficulty
+
+export type LessonType = $Enums.LessonType
+
+export const LessonType: typeof $Enums.LessonType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -16840,8 +16869,18 @@ export namespace Prisma {
 
   export type AggregateCourse = {
     _count: CourseCountAggregateOutputType | null
+    _avg: CourseAvgAggregateOutputType | null
+    _sum: CourseSumAggregateOutputType | null
     _min: CourseMinAggregateOutputType | null
     _max: CourseMaxAggregateOutputType | null
+  }
+
+  export type CourseAvgAggregateOutputType = {
+    estimatedHours: number | null
+  }
+
+  export type CourseSumAggregateOutputType = {
+    estimatedHours: number | null
   }
 
   export type CourseMinAggregateOutputType = {
@@ -16849,6 +16888,10 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    thumbnailUrl: string | null
+    language: string | null
+    difficulty: $Enums.CourseDifficulty | null
+    estimatedHours: number | null
     status: $Enums.CourseStatus | null
     authorId: string | null
     institutionId: string | null
@@ -16863,6 +16906,10 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    thumbnailUrl: string | null
+    language: string | null
+    difficulty: $Enums.CourseDifficulty | null
+    estimatedHours: number | null
     status: $Enums.CourseStatus | null
     authorId: string | null
     institutionId: string | null
@@ -16877,6 +16924,12 @@ export namespace Prisma {
     title: number
     slug: number
     description: number
+    thumbnailUrl: number
+    language: number
+    difficulty: number
+    learningObjectives: number
+    prerequisites: number
+    estimatedHours: number
     status: number
     authorId: number
     institutionId: number
@@ -16888,11 +16941,23 @@ export namespace Prisma {
   }
 
 
+  export type CourseAvgAggregateInputType = {
+    estimatedHours?: true
+  }
+
+  export type CourseSumAggregateInputType = {
+    estimatedHours?: true
+  }
+
   export type CourseMinAggregateInputType = {
     id?: true
     title?: true
     slug?: true
     description?: true
+    thumbnailUrl?: true
+    language?: true
+    difficulty?: true
+    estimatedHours?: true
     status?: true
     authorId?: true
     institutionId?: true
@@ -16907,6 +16972,10 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    thumbnailUrl?: true
+    language?: true
+    difficulty?: true
+    estimatedHours?: true
     status?: true
     authorId?: true
     institutionId?: true
@@ -16921,6 +16990,12 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    thumbnailUrl?: true
+    language?: true
+    difficulty?: true
+    learningObjectives?: true
+    prerequisites?: true
+    estimatedHours?: true
     status?: true
     authorId?: true
     institutionId?: true
@@ -16969,6 +17044,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: CourseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CourseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: CourseMinAggregateInputType
@@ -16999,6 +17086,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CourseCountAggregateInputType | true
+    _avg?: CourseAvgAggregateInputType
+    _sum?: CourseSumAggregateInputType
     _min?: CourseMinAggregateInputType
     _max?: CourseMaxAggregateInputType
   }
@@ -17008,6 +17097,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl: string | null
+    language: string
+    difficulty: $Enums.CourseDifficulty
+    learningObjectives: string[]
+    prerequisites: string[]
+    estimatedHours: number
     status: $Enums.CourseStatus
     authorId: string
     institutionId: string | null
@@ -17016,6 +17111,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: CourseCountAggregateOutputType | null
+    _avg: CourseAvgAggregateOutputType | null
+    _sum: CourseSumAggregateOutputType | null
     _min: CourseMinAggregateOutputType | null
     _max: CourseMaxAggregateOutputType | null
   }
@@ -17039,6 +17136,12 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    thumbnailUrl?: boolean
+    language?: boolean
+    difficulty?: boolean
+    learningObjectives?: boolean
+    prerequisites?: boolean
+    estimatedHours?: boolean
     status?: boolean
     authorId?: boolean
     institutionId?: boolean
@@ -17063,6 +17166,12 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    thumbnailUrl?: boolean
+    language?: boolean
+    difficulty?: boolean
+    learningObjectives?: boolean
+    prerequisites?: boolean
+    estimatedHours?: boolean
     status?: boolean
     authorId?: boolean
     institutionId?: boolean
@@ -17081,6 +17190,12 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    thumbnailUrl?: boolean
+    language?: boolean
+    difficulty?: boolean
+    learningObjectives?: boolean
+    prerequisites?: boolean
+    estimatedHours?: boolean
     status?: boolean
     authorId?: boolean
     institutionId?: boolean
@@ -17099,6 +17214,12 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    thumbnailUrl?: boolean
+    language?: boolean
+    difficulty?: boolean
+    learningObjectives?: boolean
+    prerequisites?: boolean
+    estimatedHours?: boolean
     status?: boolean
     authorId?: boolean
     institutionId?: boolean
@@ -17108,7 +17229,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "status" | "authorId" | "institutionId" | "departmentId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "thumbnailUrl" | "language" | "difficulty" | "learningObjectives" | "prerequisites" | "estimatedHours" | "status" | "authorId" | "institutionId" | "departmentId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
     institution?: boolean | Course$institutionArgs<ExtArgs>
@@ -17152,6 +17273,12 @@ export namespace Prisma {
       title: string
       slug: string
       description: string
+      thumbnailUrl: string | null
+      language: string
+      difficulty: $Enums.CourseDifficulty
+      learningObjectives: string[]
+      prerequisites: string[]
+      estimatedHours: number
       status: $Enums.CourseStatus
       authorId: string
       institutionId: string | null
@@ -17595,6 +17722,12 @@ export namespace Prisma {
     readonly title: FieldRef<"Course", 'String'>
     readonly slug: FieldRef<"Course", 'String'>
     readonly description: FieldRef<"Course", 'String'>
+    readonly thumbnailUrl: FieldRef<"Course", 'String'>
+    readonly language: FieldRef<"Course", 'String'>
+    readonly difficulty: FieldRef<"Course", 'CourseDifficulty'>
+    readonly learningObjectives: FieldRef<"Course", 'String[]'>
+    readonly prerequisites: FieldRef<"Course", 'String[]'>
+    readonly estimatedHours: FieldRef<"Course", 'Int'>
     readonly status: FieldRef<"Course", 'CourseStatus'>
     readonly authorId: FieldRef<"Course", 'String'>
     readonly institutionId: FieldRef<"Course", 'String'>
@@ -19359,6 +19492,8 @@ export namespace Prisma {
     videoUrl: string | null
     durationMinutes: number | null
     sortOrder: number | null
+    type: $Enums.LessonType | null
+    isFreePreview: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19372,6 +19507,8 @@ export namespace Prisma {
     videoUrl: string | null
     durationMinutes: number | null
     sortOrder: number | null
+    type: $Enums.LessonType | null
+    isFreePreview: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19385,6 +19522,8 @@ export namespace Prisma {
     videoUrl: number
     durationMinutes: number
     sortOrder: number
+    type: number
+    isFreePreview: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -19410,6 +19549,8 @@ export namespace Prisma {
     videoUrl?: true
     durationMinutes?: true
     sortOrder?: true
+    type?: true
+    isFreePreview?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19423,6 +19564,8 @@ export namespace Prisma {
     videoUrl?: true
     durationMinutes?: true
     sortOrder?: true
+    type?: true
+    isFreePreview?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19436,6 +19579,8 @@ export namespace Prisma {
     videoUrl?: true
     durationMinutes?: true
     sortOrder?: true
+    type?: true
+    isFreePreview?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -19536,6 +19681,8 @@ export namespace Prisma {
     videoUrl: string | null
     durationMinutes: number
     sortOrder: number
+    type: $Enums.LessonType
+    isFreePreview: boolean
     createdAt: Date
     updatedAt: Date
     _count: LessonCountAggregateOutputType | null
@@ -19568,6 +19715,8 @@ export namespace Prisma {
     videoUrl?: boolean
     durationMinutes?: boolean
     sortOrder?: boolean
+    type?: boolean
+    isFreePreview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     section?: boolean | CourseSectionDefaultArgs<ExtArgs>
@@ -19587,6 +19736,8 @@ export namespace Prisma {
     videoUrl?: boolean
     durationMinutes?: boolean
     sortOrder?: boolean
+    type?: boolean
+    isFreePreview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     section?: boolean | CourseSectionDefaultArgs<ExtArgs>
@@ -19601,6 +19752,8 @@ export namespace Prisma {
     videoUrl?: boolean
     durationMinutes?: boolean
     sortOrder?: boolean
+    type?: boolean
+    isFreePreview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     section?: boolean | CourseSectionDefaultArgs<ExtArgs>
@@ -19615,11 +19768,13 @@ export namespace Prisma {
     videoUrl?: boolean
     durationMinutes?: boolean
     sortOrder?: boolean
+    type?: boolean
+    isFreePreview?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "title" | "slug" | "content" | "videoUrl" | "durationMinutes" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "title" | "slug" | "content" | "videoUrl" | "durationMinutes" | "sortOrder" | "type" | "isFreePreview" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     section?: boolean | CourseSectionDefaultArgs<ExtArgs>
     resources?: boolean | Lesson$resourcesArgs<ExtArgs>
@@ -19653,6 +19808,8 @@ export namespace Prisma {
       videoUrl: string | null
       durationMinutes: number
       sortOrder: number
+      type: $Enums.LessonType
+      isFreePreview: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lesson"]>
@@ -20091,6 +20248,8 @@ export namespace Prisma {
     readonly videoUrl: FieldRef<"Lesson", 'String'>
     readonly durationMinutes: FieldRef<"Lesson", 'Int'>
     readonly sortOrder: FieldRef<"Lesson", 'Int'>
+    readonly type: FieldRef<"Lesson", 'LessonType'>
+    readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
   }
@@ -38744,6 +38903,12 @@ export namespace Prisma {
     title: 'title',
     slug: 'slug',
     description: 'description',
+    thumbnailUrl: 'thumbnailUrl',
+    language: 'language',
+    difficulty: 'difficulty',
+    learningObjectives: 'learningObjectives',
+    prerequisites: 'prerequisites',
+    estimatedHours: 'estimatedHours',
     status: 'status',
     authorId: 'authorId',
     institutionId: 'institutionId',
@@ -38777,6 +38942,8 @@ export namespace Prisma {
     videoUrl: 'videoUrl',
     durationMinutes: 'durationMinutes',
     sortOrder: 'sortOrder',
+    type: 'type',
+    isFreePreview: 'isFreePreview',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -39082,16 +39249,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'CourseStatus'
+   * Reference to a field of type 'CourseDifficulty'
    */
-  export type EnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus'>
+  export type EnumCourseDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseDifficulty'>
     
 
 
   /**
-   * Reference to a field of type 'CourseStatus[]'
+   * Reference to a field of type 'CourseDifficulty[]'
    */
-  export type ListEnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus[]'>
+  export type ListEnumCourseDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseDifficulty[]'>
     
 
 
@@ -39106,6 +39273,34 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CourseStatus'
+   */
+  export type EnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CourseStatus[]'
+   */
+  export type ListEnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LessonType'
+   */
+  export type EnumLessonTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LessonType'>
+    
+
+
+  /**
+   * Reference to a field of type 'LessonType[]'
+   */
+  export type ListEnumLessonTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LessonType[]'>
     
 
 
@@ -39961,6 +40156,12 @@ export namespace Prisma {
     title?: StringFilter<"Course"> | string
     slug?: StringFilter<"Course"> | string
     description?: StringFilter<"Course"> | string
+    thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    language?: StringFilter<"Course"> | string
+    difficulty?: EnumCourseDifficultyFilter<"Course"> | $Enums.CourseDifficulty
+    learningObjectives?: StringNullableListFilter<"Course">
+    prerequisites?: StringNullableListFilter<"Course">
+    estimatedHours?: IntFilter<"Course"> | number
     status?: EnumCourseStatusFilter<"Course"> | $Enums.CourseStatus
     authorId?: StringFilter<"Course"> | string
     institutionId?: StringNullableFilter<"Course"> | string | null
@@ -39984,6 +40185,12 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    language?: SortOrder
+    difficulty?: SortOrder
+    learningObjectives?: SortOrder
+    prerequisites?: SortOrder
+    estimatedHours?: SortOrder
     status?: SortOrder
     authorId?: SortOrder
     institutionId?: SortOrderInput | SortOrder
@@ -40010,6 +40217,12 @@ export namespace Prisma {
     NOT?: CourseWhereInput | CourseWhereInput[]
     title?: StringFilter<"Course"> | string
     description?: StringFilter<"Course"> | string
+    thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    language?: StringFilter<"Course"> | string
+    difficulty?: EnumCourseDifficultyFilter<"Course"> | $Enums.CourseDifficulty
+    learningObjectives?: StringNullableListFilter<"Course">
+    prerequisites?: StringNullableListFilter<"Course">
+    estimatedHours?: IntFilter<"Course"> | number
     status?: EnumCourseStatusFilter<"Course"> | $Enums.CourseStatus
     authorId?: StringFilter<"Course"> | string
     institutionId?: StringNullableFilter<"Course"> | string | null
@@ -40033,6 +40246,12 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    language?: SortOrder
+    difficulty?: SortOrder
+    learningObjectives?: SortOrder
+    prerequisites?: SortOrder
+    estimatedHours?: SortOrder
     status?: SortOrder
     authorId?: SortOrder
     institutionId?: SortOrderInput | SortOrder
@@ -40041,8 +40260,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CourseCountOrderByAggregateInput
+    _avg?: CourseAvgOrderByAggregateInput
     _max?: CourseMaxOrderByAggregateInput
     _min?: CourseMinOrderByAggregateInput
+    _sum?: CourseSumOrderByAggregateInput
   }
 
   export type CourseScalarWhereWithAggregatesInput = {
@@ -40053,6 +40274,12 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Course"> | string
     slug?: StringWithAggregatesFilter<"Course"> | string
     description?: StringWithAggregatesFilter<"Course"> | string
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    language?: StringWithAggregatesFilter<"Course"> | string
+    difficulty?: EnumCourseDifficultyWithAggregatesFilter<"Course"> | $Enums.CourseDifficulty
+    learningObjectives?: StringNullableListFilter<"Course">
+    prerequisites?: StringNullableListFilter<"Course">
+    estimatedHours?: IntWithAggregatesFilter<"Course"> | number
     status?: EnumCourseStatusWithAggregatesFilter<"Course"> | $Enums.CourseStatus
     authorId?: StringWithAggregatesFilter<"Course"> | string
     institutionId?: StringNullableWithAggregatesFilter<"Course"> | string | null
@@ -40139,6 +40366,8 @@ export namespace Prisma {
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
     durationMinutes?: IntFilter<"Lesson"> | number
     sortOrder?: IntFilter<"Lesson"> | number
+    type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
+    isFreePreview?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     section?: XOR<CourseSectionScalarRelationFilter, CourseSectionWhereInput>
@@ -40157,6 +40386,8 @@ export namespace Prisma {
     videoUrl?: SortOrderInput | SortOrder
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+    type?: SortOrder
+    isFreePreview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     section?: CourseSectionOrderByWithRelationInput
@@ -40179,6 +40410,8 @@ export namespace Prisma {
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
     durationMinutes?: IntFilter<"Lesson"> | number
     sortOrder?: IntFilter<"Lesson"> | number
+    type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
+    isFreePreview?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     section?: XOR<CourseSectionScalarRelationFilter, CourseSectionWhereInput>
@@ -40197,6 +40430,8 @@ export namespace Prisma {
     videoUrl?: SortOrderInput | SortOrder
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+    type?: SortOrder
+    isFreePreview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonCountOrderByAggregateInput
@@ -40218,6 +40453,8 @@ export namespace Prisma {
     videoUrl?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     durationMinutes?: IntWithAggregatesFilter<"Lesson"> | number
     sortOrder?: IntWithAggregatesFilter<"Lesson"> | number
+    type?: EnumLessonTypeWithAggregatesFilter<"Lesson"> | $Enums.LessonType
+    isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   }
@@ -42171,6 +42408,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42190,6 +42433,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -42209,6 +42458,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42228,6 +42483,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42247,6 +42508,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -42261,6 +42528,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42271,6 +42544,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42354,6 +42633,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     section: CourseSectionCreateNestedOneWithoutLessonsInput
@@ -42372,6 +42653,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceUncheckedCreateNestedManyWithoutLessonInput
@@ -42388,6 +42671,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: CourseSectionUpdateOneRequiredWithoutLessonsNestedInput
@@ -42406,6 +42691,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUncheckedUpdateManyWithoutLessonNestedInput
@@ -42423,6 +42710,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -42435,6 +42724,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42448,6 +42739,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42456,8 +42749,8 @@ export namespace Prisma {
     id?: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
     lesson: LessonCreateNestedOneWithoutResourcesInput
   }
@@ -42467,8 +42760,8 @@ export namespace Prisma {
     lessonId: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
   }
 
@@ -42497,8 +42790,8 @@ export namespace Prisma {
     lessonId: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
   }
 
@@ -44218,6 +44511,32 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumCourseDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.CourseDifficulty | EnumCourseDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCourseDifficultyFilter<$PrismaModel> | $Enums.CourseDifficulty
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type EnumCourseStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CourseStatus | EnumCourseStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
@@ -44250,6 +44569,12 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    thumbnailUrl?: SortOrder
+    language?: SortOrder
+    difficulty?: SortOrder
+    learningObjectives?: SortOrder
+    prerequisites?: SortOrder
+    estimatedHours?: SortOrder
     status?: SortOrder
     authorId?: SortOrder
     institutionId?: SortOrder
@@ -44259,11 +44584,19 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type CourseAvgOrderByAggregateInput = {
+    estimatedHours?: SortOrder
+  }
+
   export type CourseMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    thumbnailUrl?: SortOrder
+    language?: SortOrder
+    difficulty?: SortOrder
+    estimatedHours?: SortOrder
     status?: SortOrder
     authorId?: SortOrder
     institutionId?: SortOrder
@@ -44278,6 +44611,10 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    thumbnailUrl?: SortOrder
+    language?: SortOrder
+    difficulty?: SortOrder
+    estimatedHours?: SortOrder
     status?: SortOrder
     authorId?: SortOrder
     institutionId?: SortOrder
@@ -44285,6 +44622,36 @@ export namespace Prisma {
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CourseSumOrderByAggregateInput = {
+    estimatedHours?: SortOrder
+  }
+
+  export type EnumCourseDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CourseDifficulty | EnumCourseDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCourseDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.CourseDifficulty
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCourseDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumCourseDifficultyFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumCourseStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -44295,17 +44662,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCourseStatusFilter<$PrismaModel>
     _max?: NestedEnumCourseStatusFilter<$PrismaModel>
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type CourseScalarRelationFilter = {
@@ -44358,20 +44714,11 @@ export namespace Prisma {
     sortOrder?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type EnumLessonTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LessonType | EnumLessonTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLessonTypeFilter<$PrismaModel> | $Enums.LessonType
   }
 
   export type CourseSectionScalarRelationFilter = {
@@ -44423,6 +44770,8 @@ export namespace Prisma {
     videoUrl?: SortOrder
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+    type?: SortOrder
+    isFreePreview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -44441,6 +44790,8 @@ export namespace Prisma {
     videoUrl?: SortOrder
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+    type?: SortOrder
+    isFreePreview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -44454,6 +44805,8 @@ export namespace Prisma {
     videoUrl?: SortOrder
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+    type?: SortOrder
+    isFreePreview?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -44461,6 +44814,16 @@ export namespace Prisma {
   export type LessonSumOrderByAggregateInput = {
     durationMinutes?: SortOrder
     sortOrder?: SortOrder
+  }
+
+  export type EnumLessonTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LessonType | EnumLessonTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLessonTypeWithAggregatesFilter<$PrismaModel> | $Enums.LessonType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLessonTypeFilter<$PrismaModel>
+    _max?: NestedEnumLessonTypeFilter<$PrismaModel>
   }
 
   export type LessonScalarRelationFilter = {
@@ -46486,6 +46849,14 @@ export namespace Prisma {
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
   }
 
+  export type CourseCreatelearningObjectivesInput = {
+    set: string[]
+  }
+
+  export type CourseCreateprerequisitesInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutAuthoredCoursesInput = {
     create?: XOR<UserCreateWithoutAuthoredCoursesInput, UserUncheckedCreateWithoutAuthoredCoursesInput>
     connectOrCreate?: UserCreateOrConnectWithoutAuthoredCoursesInput
@@ -46578,6 +46949,28 @@ export namespace Prisma {
     connectOrCreate?: AnnouncementCreateOrConnectWithoutCourseInput | AnnouncementCreateOrConnectWithoutCourseInput[]
     createMany?: AnnouncementCreateManyCourseInputEnvelope
     connect?: AnnouncementWhereUniqueInput | AnnouncementWhereUniqueInput[]
+  }
+
+  export type EnumCourseDifficultyFieldUpdateOperationsInput = {
+    set?: $Enums.CourseDifficulty
+  }
+
+  export type CourseUpdatelearningObjectivesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CourseUpdateprerequisitesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type EnumCourseStatusFieldUpdateOperationsInput = {
@@ -46782,14 +47175,6 @@ export namespace Prisma {
     connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type CourseUpdateOneRequiredWithoutSectionsNestedInput = {
     create?: XOR<CourseCreateWithoutSectionsInput, CourseUncheckedCreateWithoutSectionsInput>
     connectOrCreate?: CourseCreateOrConnectWithoutSectionsInput
@@ -46882,6 +47267,10 @@ export namespace Prisma {
     create?: XOR<AssignmentCreateWithoutLessonInput, AssignmentUncheckedCreateWithoutLessonInput>
     connectOrCreate?: AssignmentCreateOrConnectWithoutLessonInput
     connect?: AssignmentWhereUniqueInput
+  }
+
+  export type EnumLessonTypeFieldUpdateOperationsInput = {
+    set?: $Enums.LessonType
   }
 
   export type CourseSectionUpdateOneRequiredWithoutLessonsNestedInput = {
@@ -47944,6 +48333,13 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumCourseDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.CourseDifficulty | EnumCourseDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCourseDifficultyFilter<$PrismaModel> | $Enums.CourseDifficulty
+  }
+
   export type NestedEnumCourseStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CourseStatus | EnumCourseStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
@@ -47951,14 +48347,14 @@ export namespace Prisma {
     not?: NestedEnumCourseStatusFilter<$PrismaModel> | $Enums.CourseStatus
   }
 
-  export type NestedEnumCourseStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.CourseStatus | EnumCourseStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumCourseStatusWithAggregatesFilter<$PrismaModel> | $Enums.CourseStatus
+  export type NestedEnumCourseDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CourseDifficulty | EnumCourseDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CourseDifficulty[] | ListEnumCourseDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCourseDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.CourseDifficulty
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumCourseStatusFilter<$PrismaModel>
-    _max?: NestedEnumCourseStatusFilter<$PrismaModel>
+    _min?: NestedEnumCourseDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumCourseDifficultyFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -47986,6 +48382,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumCourseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CourseStatus | EnumCourseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CourseStatus[] | ListEnumCourseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCourseStatusWithAggregatesFilter<$PrismaModel> | $Enums.CourseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCourseStatusFilter<$PrismaModel>
+    _max?: NestedEnumCourseStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLessonTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LessonType | EnumLessonTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLessonTypeFilter<$PrismaModel> | $Enums.LessonType
+  }
+
+  export type NestedEnumLessonTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LessonType | EnumLessonTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLessonTypeWithAggregatesFilter<$PrismaModel> | $Enums.LessonType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLessonTypeFilter<$PrismaModel>
+    _max?: NestedEnumLessonTypeFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -48142,6 +48565,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48160,6 +48589,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     institutionId?: string | null
     departmentId?: string | null
@@ -48663,6 +49098,12 @@ export namespace Prisma {
     title?: StringFilter<"Course"> | string
     slug?: StringFilter<"Course"> | string
     description?: StringFilter<"Course"> | string
+    thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    language?: StringFilter<"Course"> | string
+    difficulty?: EnumCourseDifficultyFilter<"Course"> | $Enums.CourseDifficulty
+    learningObjectives?: StringNullableListFilter<"Course">
+    prerequisites?: StringNullableListFilter<"Course">
+    estimatedHours?: IntFilter<"Course"> | number
     status?: EnumCourseStatusFilter<"Course"> | $Enums.CourseStatus
     authorId?: StringFilter<"Course"> | string
     institutionId?: StringNullableFilter<"Course"> | string | null
@@ -49647,6 +50088,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49665,6 +50112,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     departmentId?: string | null
@@ -50298,6 +50751,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -50316,6 +50775,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -50685,6 +51150,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -50703,6 +51174,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -51295,6 +51772,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51313,6 +51796,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -51339,6 +51828,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceCreateNestedManyWithoutLessonInput
@@ -51355,6 +51846,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceUncheckedCreateNestedManyWithoutLessonInput
@@ -51389,6 +51882,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51407,6 +51906,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51448,6 +51953,8 @@ export namespace Prisma {
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
     durationMinutes?: IntFilter<"Lesson"> | number
     sortOrder?: IntFilter<"Lesson"> | number
+    type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
+    isFreePreview?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
@@ -51479,8 +51986,8 @@ export namespace Prisma {
     id?: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
   }
 
@@ -51488,8 +51995,8 @@ export namespace Prisma {
     id?: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
   }
 
@@ -51736,6 +52243,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     section: CourseSectionCreateNestedOneWithoutLessonsInput
@@ -51753,6 +52262,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
@@ -51784,6 +52295,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: CourseSectionUpdateOneRequiredWithoutLessonsNestedInput
@@ -51801,6 +52314,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
@@ -51874,6 +52389,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51892,6 +52413,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -52127,6 +52654,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52145,6 +52678,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52303,6 +52842,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     section: CourseSectionCreateNestedOneWithoutLessonsInput
@@ -52320,6 +52861,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceUncheckedCreateNestedManyWithoutLessonInput
@@ -52388,6 +52931,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: CourseSectionUpdateOneRequiredWithoutLessonsNestedInput
@@ -52405,6 +52950,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUncheckedUpdateManyWithoutLessonNestedInput
@@ -52420,6 +52967,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     section: CourseSectionCreateNestedOneWithoutLessonsInput
@@ -52437,6 +52986,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceUncheckedCreateNestedManyWithoutLessonInput
@@ -52526,6 +53077,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: CourseSectionUpdateOneRequiredWithoutLessonsNestedInput
@@ -52543,6 +53096,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUncheckedUpdateManyWithoutLessonNestedInput
@@ -53015,6 +53570,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     section: CourseSectionCreateNestedOneWithoutLessonsInput
@@ -53032,6 +53589,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: LessonResourceUncheckedCreateNestedManyWithoutLessonInput
@@ -53099,6 +53658,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: CourseSectionUpdateOneRequiredWithoutLessonsNestedInput
@@ -53116,6 +53677,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUncheckedUpdateManyWithoutLessonNestedInput
@@ -53492,6 +54055,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53510,6 +54079,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -53648,6 +54223,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53666,6 +54247,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53684,6 +54271,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53702,6 +54295,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -53797,6 +54396,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53815,6 +54420,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53961,6 +54572,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53979,6 +54596,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -54117,6 +54740,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54135,6 +54764,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54677,6 +55312,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     institutionId?: string | null
     departmentId?: string | null
@@ -54835,6 +55476,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54853,6 +55500,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54871,6 +55524,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55281,6 +55940,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     departmentId?: string | null
@@ -55363,6 +56028,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55381,6 +56052,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55399,6 +56076,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55472,6 +56155,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -55494,6 +56183,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55512,6 +56207,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55530,6 +56231,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55616,6 +56323,12 @@ export namespace Prisma {
     title: string
     slug: string
     description: string
+    thumbnailUrl?: string | null
+    language?: string
+    difficulty?: $Enums.CourseDifficulty
+    learningObjectives?: CourseCreatelearningObjectivesInput | string[]
+    prerequisites?: CourseCreateprerequisitesInput | string[]
+    estimatedHours?: number
     status?: $Enums.CourseStatus
     authorId: string
     institutionId?: string | null
@@ -55629,6 +56342,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55647,6 +56366,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55665,6 +56390,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumCourseDifficultyFieldUpdateOperationsInput | $Enums.CourseDifficulty
+    learningObjectives?: CourseUpdatelearningObjectivesInput | string[]
+    prerequisites?: CourseUpdateprerequisitesInput | string[]
+    estimatedHours?: IntFieldUpdateOperationsInput | number
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     authorId?: StringFieldUpdateOperationsInput | string
     institutionId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55859,6 +56590,8 @@ export namespace Prisma {
     videoUrl?: string | null
     durationMinutes?: number
     sortOrder?: number
+    type?: $Enums.LessonType
+    isFreePreview?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55871,6 +56604,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUpdateManyWithoutLessonNestedInput
@@ -55887,6 +56622,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: LessonResourceUncheckedUpdateManyWithoutLessonNestedInput
@@ -55903,6 +56640,8 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     durationMinutes?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55911,8 +56650,8 @@ export namespace Prisma {
     id?: string
     title: string
     fileUrl: string
-    fileType: string
-    fileSize: number
+    fileType?: string
+    fileSize?: number
     createdAt?: Date | string
   }
 

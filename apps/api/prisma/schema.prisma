@@ -42,6 +42,21 @@ enum SubmissionStatus {
   RETURNED
 }
 
+enum CourseDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  PDF_RESOURCE
+  EXTERNAL_RESOURCE
+  ATTACHMENT
+}
+
 // -------------------------------------------------------------
 // 1. IDENTITY & USER PROFILE DOMAIN
 // -------------------------------------------------------------
@@ -240,21 +255,27 @@ model CourseCategory {
 }
 
 model Course {
-  id            String         @id @default(uuid())
-  title         String
-  slug          String         @unique
-  description   String         @db.Text
-  status        CourseStatus   @default(DRAFT)
-  authorId      String
-  author        User           @relation("CourseAuthor", fields: [authorId], references: [id], onDelete: Restrict)
-  institutionId String?
-  institution   Institution?   @relation(fields: [institutionId], references: [id], onDelete: SetNull)
-  departmentId  String?
-  department    Department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  categoryId    String?
-  category      CourseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                 String            @id @default(uuid())
+  title              String
+  slug               String            @unique
+  description        String            @db.Text
+  thumbnailUrl       String?
+  language           String            @default("English")
+  difficulty         CourseDifficulty  @default(BEGINNER)
+  learningObjectives String[]          @default([])
+  prerequisites      String[]          @default([])
+  estimatedHours     Int               @default(10)
+  status             CourseStatus      @default(DRAFT)
+  authorId           String
+  author             User              @relation("CourseAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  institutionId      String?
+  institution        Institution?      @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  departmentId       String?
+  department         Department?       @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  categoryId         String?
+  category           CourseCategory?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 
   sections      CourseSection[]
   enrollments   Enrollment[]
@@ -293,6 +314,8 @@ model Lesson {
   videoUrl        String?
   durationMinutes Int           @default(10)
   sortOrder       Int           @default(0)
+  type            LessonType    @default(VIDEO)
+  isFreePreview   Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -312,8 +335,8 @@ model LessonResource {
   lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title     String
   fileUrl   String
-  fileType  String
-  fileSize  Int
+  fileType  String   @default("PDF")
+  fileSize  Int      @default(0)
   createdAt DateTime @default(now())
 
   @@index([lessonId])

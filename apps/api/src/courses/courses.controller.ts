@@ -20,6 +20,7 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpsertQuizDto, CreateQuestionDto } from './dto/manage-quiz.dto';
 import { UpsertAssignmentDto } from './dto/manage-assignment.dto';
 import { GradeSubmissionDto } from './dto/grade-submission.dto';
+import { CreateResourceDto } from './dto/create-resource.dto';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -298,6 +299,68 @@ export class CoursesController {
   ) {
     const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
     return this.coursesService.getCourseAnalytics(caller.id, courseId, isSuperAdmin);
+  }
+
+  // 24. Submit Course for Moderation Review
+  @Post('teacher/:id/submit-for-review')
+  @ApiOperation({ summary: 'Submit drafted course for quality and content review' })
+  @ApiResponse({ status: 200, description: 'Course status updated to PENDING_REVIEW' })
+  @ApiResponse({ status: 400, description: 'Validation failed: must contain sections and lessons' })
+  async submitForReview(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) courseId: string,
+  ) {
+    const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
+    return this.coursesService.submitCourseForReview(caller.id, courseId, isSuperAdmin);
+  }
+
+  // 25. Publish Course (Instructor / Super Admin)
+  @Post('teacher/:id/publish')
+  @ApiOperation({ summary: 'Publish course to the public marketplace' })
+  @ApiResponse({ status: 200, description: 'Course published successfully' })
+  async publishCourse(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) courseId: string,
+  ) {
+    const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
+    return this.coursesService.publishCourse(caller.id, courseId, isSuperAdmin);
+  }
+
+  // 26. Archive Course
+  @Post('teacher/:id/archive')
+  @ApiOperation({ summary: 'Archive course from active listings' })
+  @ApiResponse({ status: 200, description: 'Course archived successfully' })
+  async archiveCourse(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) courseId: string,
+  ) {
+    const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
+    return this.coursesService.archiveCourse(caller.id, courseId, isSuperAdmin);
+  }
+
+  // 27. Add Resource to Lesson
+  @Post('teacher/lessons/:lessonId/resources')
+  @ApiOperation({ summary: 'Attach a downloadable or external resource to a lesson' })
+  @ApiResponse({ status: 201, description: 'Resource created successfully' })
+  async addLessonResource(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('lessonId', ParseUUIDPipe) lessonId: string,
+    @Body() dto: CreateResourceDto,
+  ) {
+    const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
+    return this.coursesService.addLessonResource(caller.id, lessonId, dto, isSuperAdmin);
+  }
+
+  // 28. Delete Resource from Lesson
+  @Delete('teacher/resources/:resourceId')
+  @ApiOperation({ summary: 'Remove a resource from a lesson' })
+  @ApiResponse({ status: 200, description: 'Resource removed successfully' })
+  async deleteLessonResource(
+    @CurrentUser() caller: AuthenticatedUser,
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+  ) {
+    const isSuperAdmin = caller.role === Role.SUPER_ADMIN;
+    return this.coursesService.deleteLessonResource(caller.id, resourceId, isSuperAdmin);
   }
 }
 

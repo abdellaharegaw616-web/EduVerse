@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CoursesService } from './courses.service';
-import { PrismaService, CourseStatus } from '../database/prisma.service';
+import { PrismaService, CourseStatus, CourseDifficulty } from '../database/prisma.service';
 
 describe('CoursesService - Teacher Course Management & Ownership', () => {
   let service: CoursesService;
@@ -16,6 +16,7 @@ describe('CoursesService - Teacher Course Management & Ownership', () => {
       course: {
         findMany: jest.fn(),
         findUnique: jest.fn(),
+        findFirst: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
         delete: jest.fn(),
@@ -23,6 +24,7 @@ describe('CoursesService - Teacher Course Management & Ownership', () => {
       },
       courseSection: {
         findUnique: jest.fn(),
+        findMany: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
         delete: jest.fn(),
@@ -53,6 +55,7 @@ describe('CoursesService - Teacher Course Management & Ownership', () => {
       },
       enrollment: {
         findMany: jest.fn(),
+        findUnique: jest.fn(),
       },
       quizAttempt: {
         findMany: jest.fn(),
@@ -60,6 +63,20 @@ describe('CoursesService - Teacher Course Management & Ownership', () => {
       courseCategory: {
         findMany: jest.fn(),
         upsert: jest.fn(),
+      },
+      lessonResource: {
+        create: jest.fn(),
+        findUnique: jest.fn(),
+        delete: jest.fn(),
+      },
+      review: {
+        upsert: jest.fn(),
+      },
+      auditLog: {
+        create: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
       },
     };
 
@@ -281,5 +298,270 @@ describe('CoursesService - Teacher Course Management & Ownership', () => {
       ).rejects.toThrow(ForbiddenException);
     });
   });
+
+  describe('Phase 8A: Course Creation with Rich Metadata', () => {
+    it('creates course with thumbnail, difficulty, language, learning objectives, and prerequisites', async () => {
+      prisma.course.findUnique.mockResolvedValue(null);
+      prisma.course.create.mockResolvedValue({
+        id: 'c-rich-1',
+        title: 'Distributed Systems',
+        slug: 'distributed-systems',
+        thumbnailUrl: 'https://cdn.eduverse.et/thumb.jpg',
+        difficulty: CourseDifficulty.ADVANCED,
+        language: 'English',
+        learningObjectives: ['Master Raft consensus'],
+        prerequisites: ['TypeScript Fundamentals'],
+        estimatedHours: 20,
+        status: CourseStatus.DRAFT,
+        authorId: teacherA,
+      });
+
+      const res = await service.createCourse(teacherA, {
+        title: 'Distributed Systems',
+        description: 'Comprehensive guide to building distributed systems in TypeScript.',
+        thumbnailUrl: 'https://cdn.eduverse.et/thumb.jpg',
+        difficulty: CourseDifficulty.ADVANCED,
+        language: 'English',
+        learningObjectives: ['Master Raft consensus'],
+        prerequisites: ['TypeScript Fundamentals'],
+        estimatedHours: 20,
+      });
+
+      expect(prisma.course.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: 'Distributed Systems',
+            thumbnailUrl: 'https://cdn.eduverse.et/thumb.jpg',
+            difficulty: CourseDifficulty.ADVANCED,
+            language: 'English',
+            learningObjectives: ['Master Raft consensus'],
+            prerequisites: ['TypeScript Fundamentals'],
+            estimatedHours: 20,
+            status: CourseStatus.DRAFT,
+            authorId: teacherA,
+          }),
+        }),
+      );
+      expect(res.id).toBe('c-rich-1');
+    });
+  });
+
+  describe('Phase 8A: Moderation & Publishing Lifecycle', () => {
+    const courseFixture = {
+      id: 'c-mod-1',
+      title: 'Full Stack TypeScript',
+      authorId: teacherA,
+      status: CourseStatus.DRAFT,
+    };
+
+    it('rejects submitting course for review if it has no sections or lessons (400 BadRequest)', async () => {
+      prisma.course.findUnique.mockResolvedValue(courseFixture);
+      prisma.courseSection.findMany.mockResolvedValue([]); // No sections
+
+      await expect(
+        service.submitCourseForReview(teacherA, 'c-mod-1'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('submits course for review when valid curriculum exists', async () => {
+      prisma.course.findUnique.mockResolvedValue(courseFixture);
+      prisma.courseSection.findMany.mockResolvedValue([
+        { id: 'sec-1', _count: { lessons: 2 } },
+      ]);
+      prisma.course.update.mockResolvedValue({
+        ...courseFixture,
+        status: CourseStatus.PENDING_REVIEW,
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const updated = await service.submitCourseForReview(teacherA, 'c-mod-1');
+
+      expect(prisma.course.update).toHaveBeenCalledWith({
+        where: { id: 'c-mod-1' },
+        data: { status: CourseStatus.PENDING_REVIEW },
+      });
+      expect(prisma.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'COURSE_SUBMITTED_FOR_REVIEW',
+            entityId: 'c-mod-1',
+          }),
+        }),
+      );
+      expect(updated.status).toBe(CourseStatus.PENDING_REVIEW);
+    });
+
+    it('forbids Teacher B from submitting Teacher A course for review (403 Forbidden)', async () => {
+      prisma.course.findUnique.mockResolvedValue(courseFixture);
+
+      await expect(
+        service.submitCourseForReview(teacherB, 'c-mod-1'),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('allows publishing course when curriculum is populated', async () => {
+      prisma.course.findUnique.mockResolvedValue(courseFixture);
+      prisma.courseSection.findMany.mockResolvedValue([
+        { id: 'sec-1', _count: { lessons: 1 } },
+      ]);
+      prisma.course.update.mockResolvedValue({
+        ...courseFixture,
+        status: CourseStatus.PUBLISHED,
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const published = await service.publishCourse(teacherA, 'c-mod-1');
+      expect(published.status).toBe(CourseStatus.PUBLISHED);
+    });
+
+    it('allows archiving course', async () => {
+      prisma.course.findUnique.mockResolvedValue(courseFixture);
+      prisma.course.update.mockResolvedValue({
+        ...courseFixture,
+        status: CourseStatus.ARCHIVED,
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const archived = await service.archiveCourse(teacherA, 'c-mod-1');
+      expect(archived.status).toBe(CourseStatus.ARCHIVED);
+    });
+  });
+
+  describe('Phase 8A: Lesson Resources Management', () => {
+    it('creates resource for lesson with ownership check', async () => {
+      prisma.lesson.findUnique.mockResolvedValue({
+        id: 'lesson-1',
+        section: { course: { authorId: teacherA } },
+      });
+      prisma.lessonResource.create.mockResolvedValue({
+        id: 'res-1',
+        lessonId: 'lesson-1',
+        title: 'Cheat Sheet PDF',
+        fileUrl: 'https://cdn.eduverse.et/sheet.pdf',
+        fileType: 'PDF',
+        fileSize: 1024,
+      });
+
+      const res = await service.addLessonResource(teacherA, 'lesson-1', {
+        title: 'Cheat Sheet PDF',
+        fileUrl: 'https://cdn.eduverse.et/sheet.pdf',
+        fileType: 'PDF',
+        fileSize: 1024,
+      });
+
+      expect(res.id).toBe('res-1');
+      expect(prisma.lessonResource.create).toHaveBeenCalled();
+    });
+
+    it('forbids unauthorized teacher from adding resource (403 Forbidden)', async () => {
+      prisma.lesson.findUnique.mockResolvedValue({
+        id: 'lesson-1',
+        section: { course: { authorId: teacherA } },
+      });
+
+      await expect(
+        service.addLessonResource(teacherB, 'lesson-1', {
+          title: 'Unauthorized Doc',
+          fileUrl: 'https://cdn.eduverse.et/doc.pdf',
+        }),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('Phase 8A: Public Marketplace & Privacy Isolation', () => {
+    it('queries only PUBLISHED courses for the public marketplace catalog', async () => {
+      prisma.course.count.mockResolvedValue(1);
+      prisma.course.findMany.mockResolvedValue([
+        {
+          id: 'c-pub-1',
+          title: 'Machine Learning',
+          slug: 'machine-learning',
+          description: 'AI course',
+          thumbnailUrl: null,
+          language: 'English',
+          difficulty: CourseDifficulty.INTERMEDIATE,
+          learningObjectives: [],
+          prerequisites: [],
+          estimatedHours: 15,
+          status: CourseStatus.PUBLISHED,
+          category: { id: 'cat-1', name: 'AI', slug: 'ai' },
+          institution: null,
+          author: { id: 'auth-1', fullName: 'Dr. AI', profile: null },
+          reviews: [{ rating: 5 }, { rating: 4 }],
+          _count: { sections: 4, enrollments: 120, reviews: 2 },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+
+      const result = await service.getMarketplaceCourses({
+        search: 'Machine',
+        difficulty: CourseDifficulty.INTERMEDIATE,
+      });
+
+      // Strict requirement: must filter by status: CourseStatus.PUBLISHED
+      expect(prisma.course.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            status: CourseStatus.PUBLISHED,
+          }),
+        }),
+      );
+      expect(result.data.length).toBe(1);
+      expect(result.data[0]?.averageRating).toBe(4.5);
+    });
+
+    it('rejects public access to non-published draft courses for non-authors (404 NotFound)', async () => {
+      prisma.course.findFirst.mockResolvedValue({
+        id: 'c-draft-99',
+        title: 'Secret Draft',
+        status: CourseStatus.DRAFT,
+        authorId: teacherA,
+        sections: [],
+        reviews: [],
+        _count: { enrollments: 0, reviews: 0 },
+      });
+
+      await expect(
+        service.getMarketplaceCourseDetails('c-draft-99', 'student-viewer-id'),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('Phase 8A: Course Reviews', () => {
+    it('forbids review if student is not enrolled (403 Forbidden)', async () => {
+      prisma.course.findUnique.mockResolvedValue({ id: 'c-1' });
+      prisma.enrollment.findUnique.mockResolvedValue(null); // Not enrolled
+
+      await expect(
+        service.createReview('student-1', 'c-1', { rating: 5, comment: 'Great!' }),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('allows enrolled student to submit review and audits action', async () => {
+      prisma.course.findUnique.mockResolvedValue({ id: 'c-1' });
+      prisma.enrollment.findUnique.mockResolvedValue({ id: 'enr-1', userId: 'student-1', courseId: 'c-1' });
+      prisma.review.upsert.mockResolvedValue({
+        id: 'rev-1',
+        rating: 5,
+        comment: 'Great course!',
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const rev = await service.createReview('student-1', 'c-1', { rating: 5, comment: 'Great course!' });
+
+      expect(rev.id).toBe('rev-1');
+      expect(prisma.review.upsert).toHaveBeenCalled();
+      expect(prisma.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'COURSE_REVIEW_SUBMITTED',
+            entityId: 'rev-1',
+          }),
+        }),
+      );
+    });
+  });
 });
+
 
