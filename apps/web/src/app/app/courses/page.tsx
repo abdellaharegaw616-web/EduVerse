@@ -188,7 +188,7 @@ export default function MyCoursesPage() {
                 </CardContent>
 
                 <div className="p-5 pt-0">
-                  <Link href={`/courses/${enrollment.course.slug}`} className="w-full block">
+                  <Link href={`/courses/${enrollment.course.slug}/learn`} className="w-full block">
                     <Button variant="emerald" size="sm" className="w-full gap-1.5 text-xs">
                       <span>Resume Study</span>
                       <ArrowRight className="h-3 w-3" />

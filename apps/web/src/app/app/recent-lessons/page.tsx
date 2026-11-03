@@ -131,7 +131,7 @@ export default function RecentLessonsPage() {
 
                 <div className="flex items-center gap-3 self-end sm:self-center">
                   <Badge variant="emerald" className="text-[10px]">Completed</Badge>
-                  <Link href={`/courses/${item.lesson.section.course.slug}`}>
+                  <Link href={`/courses/${item.lesson.section.course.slug}/learn?lesson=${item.lesson.id}`}>
                     <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
                       <span>Review</span>
                       <ArrowRight className="h-3 w-3" />

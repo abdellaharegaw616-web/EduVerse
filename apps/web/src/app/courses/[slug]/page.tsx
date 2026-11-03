@@ -593,10 +593,15 @@ export default function CourseDetailPage() {
                             : 'You are enrolled in this course!'}
                         </span>
                       </div>
-                      <Link href="/app/courses" className="block">
+                      <Link href={`/courses/${course.slug}/learn`} className="block">
                         <Button variant="emerald" className="w-full gap-2 text-sm font-semibold h-11">
-                          <span>Go to Learning Portfolio</span>
+                          <span>Open Learning Player</span>
                           <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Link href="/app/courses" className="block">
+                        <Button variant="outline" className="w-full text-xs h-9 text-brand-slate">
+                          <span>View in My Enrolled Courses</span>
                         </Button>
                       </Link>
                     </div>

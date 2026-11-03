@@ -255,7 +255,7 @@ export default function StudentDashboardPage() {
                   <div className="flex items-center justify-between pt-1 text-xs">
                     <span className="text-brand-slate">In Progress</span>
                     <Link
-                      href={`/courses/${enr.course.slug}`}
+                      href={`/courses/${enr.course.slug}/learn`}
                       className="font-semibold text-brand-emerald hover:underline inline-flex items-center gap-1"
                     >
                       <span>Resume</span>
