@@ -145,7 +145,7 @@ export default function StudentAssignmentsPage() {
                     <span>Max Score: {assignment.maxScore} pts</span>
                   </div>
 
-                  <Link href={`/courses/${assignment.courseSlug}`}>
+                  <Link href={`/courses/${assignment.courseSlug}/learn`}>
                     <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
                       <span>View Assignment</span>
                       <ArrowRight className="h-3 w-3" />

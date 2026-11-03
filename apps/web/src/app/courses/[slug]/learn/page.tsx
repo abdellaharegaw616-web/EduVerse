@@ -37,6 +37,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { LessonQuizCard } from '@/components/learn/lesson-quiz-card';
+import { LessonAssignmentCard } from '@/components/learn/lesson-assignment-card';
 
 interface PlayerLessonSummary {
   id: string;
@@ -580,7 +581,19 @@ export default function CourseLearningPlayerPage() {
                   />
                 )}
 
-                {/* F. Previous / Next Footer Controls */}
+                {/* F. Lesson Assignment Deliverable */}
+                {lessonData.hasAssignment && lessonData.assignment?.id && (
+                  <LessonAssignmentCard
+                    assignmentId={lessonData.assignment.id}
+                    onSubmitted={() => {
+                      if (!lessonData.isCompleted) {
+                        handleToggleCompletion();
+                      }
+                    }}
+                  />
+                )}
+
+                {/* G. Previous / Next Footer Controls */}
                 <div className="flex items-center justify-between pt-6 border-t border-slate-800">
                   <Button
                     variant="outline"
