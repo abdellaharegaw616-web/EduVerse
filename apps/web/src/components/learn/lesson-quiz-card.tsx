@@ -430,3 +430,4 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
     </Card>
   );
 }
+

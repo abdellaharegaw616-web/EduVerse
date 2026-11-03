@@ -31,3 +31,4 @@ export class SubmitQuizDto {
   @IsString()
   startedAt?: string;
 }
+
