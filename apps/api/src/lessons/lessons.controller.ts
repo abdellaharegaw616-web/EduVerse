@@ -81,3 +81,4 @@ export class LessonsController {
     return this.lessonsService.getResumeLesson(userId, courseIdentifier);
   }
 }
+

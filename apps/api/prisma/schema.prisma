@@ -383,13 +383,15 @@ model LessonProgress {
 }
 
 model Quiz {
-  id           String     @id @default(uuid())
-  lessonId     String     @unique
-  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  title        String
-  passingScore Int        @default(70)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id               String     @id @default(uuid())
+  lessonId         String     @unique
+  lesson           Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title            String
+  passingScore     Int        @default(70)
+  timeLimitMinutes Int?       @default(30)
+  attemptLimit     Int        @default(3)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   questions Question[]
   attempts  QuizAttempt[]
@@ -430,6 +432,8 @@ model QuizAttempt {
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   score        Int
   passed       Boolean
+  answers      Json?
+  startedAt    DateTime   @default(now())
   attemptedAt  DateTime   @default(now())
 
   @@index([quizId])

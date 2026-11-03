@@ -112,7 +112,7 @@ export default function StudentQuizzesPage() {
                   </Badge>
                 )}
 
-                <Link href={`/courses/${q.courseSlug}`}>
+                <Link href={`/courses/${q.courseSlug}/learn`}>
                   <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
                     <span>Retake</span>
                     <ArrowRight className="h-3 w-3" />

@@ -306,6 +306,8 @@ exports.Prisma.QuizScalarFieldEnum = {
   lessonId: 'lessonId',
   title: 'title',
   passingScore: 'passingScore',
+  timeLimitMinutes: 'timeLimitMinutes',
+  attemptLimit: 'attemptLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -334,6 +336,8 @@ exports.Prisma.QuizAttemptScalarFieldEnum = {
   userId: 'userId',
   score: 'score',
   passed: 'passed',
+  answers: 'answers',
+  startedAt: 'startedAt',
   attemptedAt: 'attemptedAt'
 };
 

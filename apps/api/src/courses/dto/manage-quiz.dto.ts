@@ -26,6 +26,18 @@ export class UpsertQuizDto {
   @Min(1)
   @Max(100)
   passingScore?: number;
+
+  @ApiPropertyOptional({ example: 30, default: 30, description: 'Time limit in minutes (null for unlimited)' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  timeLimitMinutes?: number;
+
+  @ApiPropertyOptional({ example: 3, default: 3, description: 'Maximum allowed quiz attempts' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  attemptLimit?: number;
 }
 
 export class QuestionOptionDto {

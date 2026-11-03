@@ -36,6 +36,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { LessonQuizCard } from '@/components/learn/lesson-quiz-card';
 
 interface PlayerLessonSummary {
   id: string;
@@ -567,7 +568,19 @@ export default function CourseLearningPlayerPage() {
                   </Card>
                 )}
 
-                {/* E. Previous / Next Footer Controls */}
+                {/* E. Lesson Quiz Assessment */}
+                {lessonData.hasQuiz && lessonData.quiz?.id && (
+                  <LessonQuizCard
+                    quizId={lessonData.quiz.id}
+                    onPassed={() => {
+                      if (!lessonData.isCompleted) {
+                        handleToggleCompletion();
+                      }
+                    }}
+                  />
+                )}
+
+                {/* F. Previous / Next Footer Controls */}
                 <div className="flex items-center justify-between pt-6 border-t border-slate-800">
                   <Button
                     variant="outline"

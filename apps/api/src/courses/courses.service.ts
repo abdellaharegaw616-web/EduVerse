@@ -527,10 +527,14 @@ export class CoursesService {
         lessonId,
         title: dto.title.trim(),
         passingScore: dto.passingScore || 70,
+        timeLimitMinutes: dto.timeLimitMinutes !== undefined ? dto.timeLimitMinutes : 30,
+        attemptLimit: dto.attemptLimit !== undefined ? dto.attemptLimit : 3,
       },
       update: {
         title: dto.title.trim(),
-        passingScore: dto.passingScore || 70,
+        ...(dto.passingScore !== undefined && { passingScore: dto.passingScore }),
+        ...(dto.timeLimitMinutes !== undefined && { timeLimitMinutes: dto.timeLimitMinutes }),
+        ...(dto.attemptLimit !== undefined && { attemptLimit: dto.attemptLimit }),
       },
       include: { questions: { include: { options: true } } },
     });
@@ -569,8 +573,16 @@ export class CoursesService {
   ) {
     await this.getQuiz(teacherId, quizId, isSuperAdmin);
 
-    if (!dto.options || dto.options.length < 2) {
-      throw new BadRequestException('A question must have at least 2 answer options');
+    const questionType = dto.type || 'MULTIPLE_CHOICE';
+
+    if (questionType === 'SHORT_ANSWER') {
+      if (!dto.options || dto.options.length < 1) {
+        throw new BadRequestException('A short-answer question must provide at least one accepted answer option');
+      }
+    } else {
+      if (!dto.options || dto.options.length < 2) {
+        throw new BadRequestException('A multiple choice or true/false question must have at least 2 answer options');
+      }
     }
 
     const hasCorrect = dto.options.some((opt) => opt.isCorrect);
