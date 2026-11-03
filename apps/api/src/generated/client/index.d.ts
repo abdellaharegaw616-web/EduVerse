@@ -31244,6 +31244,9 @@ export namespace Prisma {
     enrollmentId: string | null
     userId: string | null
     courseId: string | null
+    isRevoked: boolean | null
+    revocationReason: string | null
+    revokedAt: Date | null
     issuedAt: Date | null
   }
 
@@ -31253,6 +31256,9 @@ export namespace Prisma {
     enrollmentId: string | null
     userId: string | null
     courseId: string | null
+    isRevoked: boolean | null
+    revocationReason: string | null
+    revokedAt: Date | null
     issuedAt: Date | null
   }
 
@@ -31262,6 +31268,9 @@ export namespace Prisma {
     enrollmentId: number
     userId: number
     courseId: number
+    isRevoked: number
+    revocationReason: number
+    revokedAt: number
     issuedAt: number
     _all: number
   }
@@ -31273,6 +31282,9 @@ export namespace Prisma {
     enrollmentId?: true
     userId?: true
     courseId?: true
+    isRevoked?: true
+    revocationReason?: true
+    revokedAt?: true
     issuedAt?: true
   }
 
@@ -31282,6 +31294,9 @@ export namespace Prisma {
     enrollmentId?: true
     userId?: true
     courseId?: true
+    isRevoked?: true
+    revocationReason?: true
+    revokedAt?: true
     issuedAt?: true
   }
 
@@ -31291,6 +31306,9 @@ export namespace Prisma {
     enrollmentId?: true
     userId?: true
     courseId?: true
+    isRevoked?: true
+    revocationReason?: true
+    revokedAt?: true
     issuedAt?: true
     _all?: true
   }
@@ -31373,6 +31391,9 @@ export namespace Prisma {
     enrollmentId: string
     userId: string
     courseId: string
+    isRevoked: boolean
+    revocationReason: string | null
+    revokedAt: Date | null
     issuedAt: Date
     _count: CertificateCountAggregateOutputType | null
     _min: CertificateMinAggregateOutputType | null
@@ -31399,6 +31420,9 @@ export namespace Prisma {
     enrollmentId?: boolean
     userId?: boolean
     courseId?: boolean
+    isRevoked?: boolean
+    revocationReason?: boolean
+    revokedAt?: boolean
     issuedAt?: boolean
     enrollment?: boolean | EnrollmentDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31411,6 +31435,9 @@ export namespace Prisma {
     enrollmentId?: boolean
     userId?: boolean
     courseId?: boolean
+    isRevoked?: boolean
+    revocationReason?: boolean
+    revokedAt?: boolean
     issuedAt?: boolean
     enrollment?: boolean | EnrollmentDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31423,6 +31450,9 @@ export namespace Prisma {
     enrollmentId?: boolean
     userId?: boolean
     courseId?: boolean
+    isRevoked?: boolean
+    revocationReason?: boolean
+    revokedAt?: boolean
     issuedAt?: boolean
     enrollment?: boolean | EnrollmentDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31435,10 +31465,13 @@ export namespace Prisma {
     enrollmentId?: boolean
     userId?: boolean
     courseId?: boolean
+    isRevoked?: boolean
+    revocationReason?: boolean
+    revokedAt?: boolean
     issuedAt?: boolean
   }
 
-  export type CertificateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "verificationCode" | "enrollmentId" | "userId" | "courseId" | "issuedAt", ExtArgs["result"]["certificate"]>
+  export type CertificateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "verificationCode" | "enrollmentId" | "userId" | "courseId" | "isRevoked" | "revocationReason" | "revokedAt" | "issuedAt", ExtArgs["result"]["certificate"]>
   export type CertificateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enrollment?: boolean | EnrollmentDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -31468,6 +31501,9 @@ export namespace Prisma {
       enrollmentId: string
       userId: string
       courseId: string
+      isRevoked: boolean
+      revocationReason: string | null
+      revokedAt: Date | null
       issuedAt: Date
     }, ExtArgs["result"]["certificate"]>
     composites: {}
@@ -31900,6 +31936,9 @@ export namespace Prisma {
     readonly enrollmentId: FieldRef<"Certificate", 'String'>
     readonly userId: FieldRef<"Certificate", 'String'>
     readonly courseId: FieldRef<"Certificate", 'String'>
+    readonly isRevoked: FieldRef<"Certificate", 'Boolean'>
+    readonly revocationReason: FieldRef<"Certificate", 'String'>
+    readonly revokedAt: FieldRef<"Certificate", 'DateTime'>
     readonly issuedAt: FieldRef<"Certificate", 'DateTime'>
   }
     
@@ -40450,6 +40489,9 @@ export namespace Prisma {
     enrollmentId: 'enrollmentId',
     userId: 'userId',
     courseId: 'courseId',
+    isRevoked: 'isRevoked',
+    revocationReason: 'revocationReason',
+    revokedAt: 'revokedAt',
     issuedAt: 'issuedAt'
   };
 
@@ -42544,6 +42586,9 @@ export namespace Prisma {
     enrollmentId?: StringFilter<"Certificate"> | string
     userId?: StringFilter<"Certificate"> | string
     courseId?: StringFilter<"Certificate"> | string
+    isRevoked?: BoolFilter<"Certificate"> | boolean
+    revocationReason?: StringNullableFilter<"Certificate"> | string | null
+    revokedAt?: DateTimeNullableFilter<"Certificate"> | Date | string | null
     issuedAt?: DateTimeFilter<"Certificate"> | Date | string
     enrollment?: XOR<EnrollmentScalarRelationFilter, EnrollmentWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -42556,6 +42601,9 @@ export namespace Prisma {
     enrollmentId?: SortOrder
     userId?: SortOrder
     courseId?: SortOrder
+    isRevoked?: SortOrder
+    revocationReason?: SortOrderInput | SortOrder
+    revokedAt?: SortOrderInput | SortOrder
     issuedAt?: SortOrder
     enrollment?: EnrollmentOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -42571,6 +42619,9 @@ export namespace Prisma {
     NOT?: CertificateWhereInput | CertificateWhereInput[]
     userId?: StringFilter<"Certificate"> | string
     courseId?: StringFilter<"Certificate"> | string
+    isRevoked?: BoolFilter<"Certificate"> | boolean
+    revocationReason?: StringNullableFilter<"Certificate"> | string | null
+    revokedAt?: DateTimeNullableFilter<"Certificate"> | Date | string | null
     issuedAt?: DateTimeFilter<"Certificate"> | Date | string
     enrollment?: XOR<EnrollmentScalarRelationFilter, EnrollmentWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -42583,6 +42634,9 @@ export namespace Prisma {
     enrollmentId?: SortOrder
     userId?: SortOrder
     courseId?: SortOrder
+    isRevoked?: SortOrder
+    revocationReason?: SortOrderInput | SortOrder
+    revokedAt?: SortOrderInput | SortOrder
     issuedAt?: SortOrder
     _count?: CertificateCountOrderByAggregateInput
     _max?: CertificateMaxOrderByAggregateInput
@@ -42598,6 +42652,9 @@ export namespace Prisma {
     enrollmentId?: StringWithAggregatesFilter<"Certificate"> | string
     userId?: StringWithAggregatesFilter<"Certificate"> | string
     courseId?: StringWithAggregatesFilter<"Certificate"> | string
+    isRevoked?: BoolWithAggregatesFilter<"Certificate"> | boolean
+    revocationReason?: StringNullableWithAggregatesFilter<"Certificate"> | string | null
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"Certificate"> | Date | string | null
     issuedAt?: DateTimeWithAggregatesFilter<"Certificate"> | Date | string
   }
 
@@ -44959,6 +45016,9 @@ export namespace Prisma {
   export type CertificateCreateInput = {
     id?: string
     verificationCode: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
     enrollment: EnrollmentCreateNestedOneWithoutCertificateInput
     user: UserCreateNestedOneWithoutCertificatesInput
@@ -44971,12 +45031,18 @@ export namespace Prisma {
     enrollmentId: string
     userId: string
     courseId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
   export type CertificateUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     verificationCode?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollment?: EnrollmentUpdateOneRequiredWithoutCertificateNestedInput
     user?: UserUpdateOneRequiredWithoutCertificatesNestedInput
@@ -44989,6 +45055,9 @@ export namespace Prisma {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     courseId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -44998,12 +45067,18 @@ export namespace Prisma {
     enrollmentId: string
     userId: string
     courseId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
   export type CertificateUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     verificationCode?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -45013,6 +45088,9 @@ export namespace Prisma {
     enrollmentId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     courseId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47075,6 +47153,9 @@ export namespace Prisma {
     enrollmentId?: SortOrder
     userId?: SortOrder
     courseId?: SortOrder
+    isRevoked?: SortOrder
+    revocationReason?: SortOrder
+    revokedAt?: SortOrder
     issuedAt?: SortOrder
   }
 
@@ -47084,6 +47165,9 @@ export namespace Prisma {
     enrollmentId?: SortOrder
     userId?: SortOrder
     courseId?: SortOrder
+    isRevoked?: SortOrder
+    revocationReason?: SortOrder
+    revokedAt?: SortOrder
     issuedAt?: SortOrder
   }
 
@@ -47093,6 +47177,9 @@ export namespace Prisma {
     enrollmentId?: SortOrder
     userId?: SortOrder
     courseId?: SortOrder
+    isRevoked?: SortOrder
+    revocationReason?: SortOrder
+    revokedAt?: SortOrder
     issuedAt?: SortOrder
   }
 
@@ -50635,6 +50722,9 @@ export namespace Prisma {
   export type CertificateCreateWithoutUserInput = {
     id?: string
     verificationCode: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
     enrollment: EnrollmentCreateNestedOneWithoutCertificateInput
     course: CourseCreateNestedOneWithoutCertificatesInput
@@ -50645,6 +50735,9 @@ export namespace Prisma {
     verificationCode: string
     enrollmentId: string
     courseId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
@@ -51184,6 +51277,9 @@ export namespace Prisma {
     enrollmentId?: StringFilter<"Certificate"> | string
     userId?: StringFilter<"Certificate"> | string
     courseId?: StringFilter<"Certificate"> | string
+    isRevoked?: BoolFilter<"Certificate"> | boolean
+    revocationReason?: StringNullableFilter<"Certificate"> | string | null
+    revokedAt?: DateTimeNullableFilter<"Certificate"> | Date | string | null
     issuedAt?: DateTimeFilter<"Certificate"> | Date | string
   }
 
@@ -53400,6 +53496,9 @@ export namespace Prisma {
   export type CertificateCreateWithoutCourseInput = {
     id?: string
     verificationCode: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
     enrollment: EnrollmentCreateNestedOneWithoutCertificateInput
     user: UserCreateNestedOneWithoutCertificatesInput
@@ -53410,6 +53509,9 @@ export namespace Prisma {
     verificationCode: string
     enrollmentId: string
     userId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
@@ -54471,6 +54573,9 @@ export namespace Prisma {
   export type CertificateCreateWithoutEnrollmentInput = {
     id?: string
     verificationCode: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
     user: UserCreateNestedOneWithoutCertificatesInput
     course: CourseCreateNestedOneWithoutCertificatesInput
@@ -54481,6 +54586,9 @@ export namespace Prisma {
     verificationCode: string
     userId: string
     courseId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
@@ -54746,6 +54854,9 @@ export namespace Prisma {
   export type CertificateUpdateWithoutEnrollmentInput = {
     id?: StringFieldUpdateOperationsInput | string
     verificationCode?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutCertificatesNestedInput
     course?: CourseUpdateOneRequiredWithoutCertificatesNestedInput
@@ -54756,6 +54867,9 @@ export namespace Prisma {
     verificationCode?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     courseId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57554,6 +57668,9 @@ export namespace Prisma {
     verificationCode: string
     enrollmentId: string
     courseId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
@@ -57880,6 +57997,9 @@ export namespace Prisma {
   export type CertificateUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     verificationCode?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollment?: EnrollmentUpdateOneRequiredWithoutCertificateNestedInput
     course?: CourseUpdateOneRequiredWithoutCertificatesNestedInput
@@ -57890,6 +58010,9 @@ export namespace Prisma {
     verificationCode?: StringFieldUpdateOperationsInput | string
     enrollmentId?: StringFieldUpdateOperationsInput | string
     courseId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57898,6 +58021,9 @@ export namespace Prisma {
     verificationCode?: StringFieldUpdateOperationsInput | string
     enrollmentId?: StringFieldUpdateOperationsInput | string
     courseId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58614,6 +58740,9 @@ export namespace Prisma {
     verificationCode: string
     enrollmentId: string
     userId: string
+    isRevoked?: boolean
+    revocationReason?: string | null
+    revokedAt?: Date | string | null
     issuedAt?: Date | string
   }
 
@@ -58698,6 +58827,9 @@ export namespace Prisma {
   export type CertificateUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
     verificationCode?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollment?: EnrollmentUpdateOneRequiredWithoutCertificateNestedInput
     user?: UserUpdateOneRequiredWithoutCertificatesNestedInput
@@ -58708,6 +58840,9 @@ export namespace Prisma {
     verificationCode?: StringFieldUpdateOperationsInput | string
     enrollmentId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58716,6 +58851,9 @@ export namespace Prisma {
     verificationCode?: StringFieldUpdateOperationsInput | string
     enrollmentId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    isRevoked?: BoolFieldUpdateOperationsInput | boolean
+    revocationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

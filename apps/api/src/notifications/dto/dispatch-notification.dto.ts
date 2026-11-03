@@ -51,3 +51,4 @@ export class DispatchNotificationDto {
   @IsString()
   idempotencyKey?: string;
 }
+

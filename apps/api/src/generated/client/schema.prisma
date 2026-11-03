@@ -500,6 +500,9 @@ model Certificate {
   user             User       @relation(fields: [userId], references: [id], onDelete: Restrict)
   courseId         String
   course           Course     @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  isRevoked        Boolean    @default(false)
+  revocationReason String?
+  revokedAt        DateTime?
   issuedAt         DateTime   @default(now())
 
   @@index([verificationCode])

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   Award,
-  ExternalLink,
   Download,
   Copy,
   Check,
@@ -14,7 +13,7 @@ import {
   AlertCircle,
   ShieldCheck,
 } from 'lucide-react';
-import { apiClient } from '@/lib/api';
+import { apiClient, getBaseUrl } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -51,9 +50,9 @@ export default function StudentCertificatesPage() {
     setTimeout(() => setCopiedCode(null), 2500);
   };
 
-  const handleDownload = () => {
-    // Print/Save as PDF prompt
-    window.print();
+  const handleDownload = (code: string) => {
+    const downloadUrl = `${getBaseUrl()}/certificates/download/${code}`;
+    window.open(downloadUrl, '_blank');
   };
 
   return (
@@ -169,19 +168,20 @@ export default function StudentCertificatesPage() {
                     variant="outline"
                     size="sm"
                     className="flex-1 text-xs gap-1.5"
-                    onClick={() => handleDownload()}
+                    onClick={() => handleDownload(cert.verificationCode)}
                   >
-                    <Download className="h-3.5 w-3.5" />
+                    <Download className="h-3.5 w-3.5 text-brand-emerald" />
                     <span>Download PDF</span>
                   </Button>
 
                   <Link
-                    href={`/courses/${cert.courseSlug}`}
+                    href={`/verify/${cert.verificationCode}`}
+                    target="_blank"
                     className="flex-1"
                   >
-                    <Button variant="default" size="sm" className="w-full text-xs gap-1.5">
-                      <span>Review Course</span>
-                      <ExternalLink className="h-3.5 w-3.5" />
+                    <Button variant="default" size="sm" className="w-full text-xs gap-1.5 bg-brand-navy hover:bg-brand-navy/90 text-white">
+                      <ShieldCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                      <span>Verify Online</span>
                     </Button>
                   </Link>
                 </div>

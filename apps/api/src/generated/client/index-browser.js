@@ -372,6 +372,9 @@ exports.Prisma.CertificateScalarFieldEnum = {
   enrollmentId: 'enrollmentId',
   userId: 'userId',
   courseId: 'courseId',
+  isRevoked: 'isRevoked',
+  revocationReason: 'revocationReason',
+  revokedAt: 'revokedAt',
   issuedAt: 'issuedAt'
 };
 

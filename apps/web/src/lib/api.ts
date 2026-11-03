@@ -56,7 +56,7 @@ export class WebApiClient extends EduVerseApiClient {
   }
 }
 
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return process.env.NEXT_PUBLIC_API_URL || '/api/v1';
   }

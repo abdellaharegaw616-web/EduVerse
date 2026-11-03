@@ -30,3 +30,4 @@ export class GetNotificationsQueryDto {
   @Min(0)
   offset: number = 0;
 }
+
