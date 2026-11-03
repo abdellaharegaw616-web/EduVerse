@@ -415,9 +415,27 @@ exports.Prisma.NotificationScalarFieldEnum = {
   userId: 'userId',
   title: 'title',
   message: 'message',
+  type: 'type',
   actionUrl: 'actionUrl',
   isRead: 'isRead',
+  metadata: 'metadata',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  emailEnrollment: 'emailEnrollment',
+  emailAnnouncement: 'emailAnnouncement',
+  emailDeadline: 'emailDeadline',
+  emailGrading: 'emailGrading',
+  emailQuizResult: 'emailQuizResult',
+  emailCompletion: 'emailCompletion',
+  emailCertificate: 'emailCertificate',
+  emailInvitation: 'emailInvitation',
+  inAppNotifications: 'inAppNotifications',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {
@@ -498,6 +516,18 @@ exports.SubmissionStatus = exports.$Enums.SubmissionStatus = {
   RETURNED: 'RETURNED'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  ENROLLMENT: 'ENROLLMENT',
+  COURSE_ANNOUNCEMENT: 'COURSE_ANNOUNCEMENT',
+  ASSIGNMENT_DEADLINE: 'ASSIGNMENT_DEADLINE',
+  ASSIGNMENT_GRADING: 'ASSIGNMENT_GRADING',
+  QUIZ_RESULT: 'QUIZ_RESULT',
+  COURSE_COMPLETION: 'COURSE_COMPLETION',
+  CERTIFICATE: 'CERTIFICATE',
+  INSTITUTION_INVITATION: 'INSTITUTION_INVITATION',
+  SYSTEM: 'SYSTEM'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserProfile: 'UserProfile',
@@ -528,6 +558,7 @@ exports.Prisma.ModelName = {
   Achievement: 'Achievement',
   UserAchievement: 'UserAchievement',
   Notification: 'Notification',
+  NotificationPreference: 'NotificationPreference',
   AuditLog: 'AuditLog'
 };
 

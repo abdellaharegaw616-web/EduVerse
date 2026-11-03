@@ -57,6 +57,18 @@ enum LessonType {
   ATTACHMENT
 }
 
+enum NotificationType {
+  ENROLLMENT
+  COURSE_ANNOUNCEMENT
+  ASSIGNMENT_DEADLINE
+  ASSIGNMENT_GRADING
+  QUIZ_RESULT
+  COURSE_COMPLETION
+  CERTIFICATE
+  INSTITUTION_INVITATION
+  SYSTEM
+}
+
 // -------------------------------------------------------------
 // 1. IDENTITY & USER PROFILE DOMAIN
 // -------------------------------------------------------------
@@ -91,6 +103,7 @@ model User {
   reviews          Review[]
   achievements     UserAchievement[]
   notifications    Notification[]
+  notificationPreference NotificationPreference?
 
   // Security, Verification & Audit
   refreshTokens           RefreshToken[]
@@ -552,16 +565,36 @@ model UserAchievement {
 // -------------------------------------------------------------
 
 model Notification {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   message   String
+  type      NotificationType @default(SYSTEM)
   actionUrl String?
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
+  isRead    Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
 
   @@index([userId, isRead])
+  @@index([userId, type])
+}
+
+model NotificationPreference {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailEnrollment    Boolean  @default(true)
+  emailAnnouncement  Boolean  @default(true)
+  emailDeadline      Boolean  @default(true)
+  emailGrading       Boolean  @default(true)
+  emailQuizResult    Boolean  @default(true)
+  emailCompletion    Boolean  @default(true)
+  emailCertificate   Boolean  @default(true)
+  emailInvitation    Boolean  @default(true)
+  inAppNotifications Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model AuditLog {
