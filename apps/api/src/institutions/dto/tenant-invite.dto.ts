@@ -9,11 +9,11 @@ export class TenantInviteDto {
   email!: string;
 
   @ApiProperty({
-    enum: [Role.TEACHER, Role.INSTITUTION_ADMIN],
+    enum: [Role.TEACHER, Role.STUDENT, Role.INSTITUTION_ADMIN],
     example: Role.TEACHER,
   })
-  @IsEnum([Role.TEACHER, Role.INSTITUTION_ADMIN], {
-    message: 'Institution invites may only be issued for TEACHER or INSTITUTION_ADMIN roles',
+  @IsEnum([Role.TEACHER, Role.STUDENT, Role.INSTITUTION_ADMIN], {
+    message: 'Institution invites may only be issued for TEACHER, STUDENT, or INSTITUTION_ADMIN roles',
   })
   role!: Role;
 }
