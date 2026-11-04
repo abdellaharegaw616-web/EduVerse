@@ -4,7 +4,7 @@ import * as argon2 from 'argon2';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting full EduVerse database seed...');
+  console.log('🌱 Starting comprehensive EduVerse database seed for ALL roles & users...');
 
   // 1. Seed Academic Categories
   const categoriesData = [
@@ -63,7 +63,7 @@ async function main() {
   const teacherPassword = await hashPassword('EduVerseTeacher123!');
   const studentPassword = await hashPassword('EduVerseStudent123!');
 
-  // 3. Seed Users
+  // 3. Seed Core Users
   const admin = await prisma.user.upsert({
     where: { email: 'admin@eduverse.et' },
     update: {
@@ -163,7 +163,7 @@ async function main() {
   });
   console.log(`✅ Seeded Core Users: admin, teacher, student (Almaz), student 2 (Solomon)`);
 
-  // 4. Seed Teacher Course 1: Full-Stack Web Development
+  // 4. Seed Course 1: Full-Stack Web Development (Published)
   const course1Slug = 'full-stack-web-dev-nextjs-nestjs';
   const course1 = await prisma.course.upsert({
     where: { slug: course1Slug },
@@ -210,12 +210,12 @@ async function main() {
     },
   });
 
-  // Section 1: Foundations
-  let sec1 = await prisma.courseSection.findFirst({
+  // Course 1 - Section 1
+  let c1Sec1 = await prisma.courseSection.findFirst({
     where: { courseId: course1.id, sortOrder: 1 },
   });
-  if (!sec1) {
-    sec1 = await prisma.courseSection.create({
+  if (!c1Sec1) {
+    c1Sec1 = await prisma.courseSection.create({
       data: {
         courseId: course1.id,
         title: 'Architectural Foundations & TypeScript Mastery',
@@ -224,17 +224,17 @@ async function main() {
     });
   }
 
-  // Lesson 1: NestJS Microservices
-  const lesson1Slug = 'nestjs-microservices-architecture';
-  let lesson1 = await prisma.lesson.findUnique({
-    where: { sectionId_slug: { sectionId: sec1.id, slug: lesson1Slug } },
+  // Course 1 - Lesson 1 (Video + Quiz)
+  const c1L1Slug = 'nestjs-microservices-architecture';
+  let c1L1 = await prisma.lesson.findUnique({
+    where: { sectionId_slug: { sectionId: c1Sec1.id, slug: c1L1Slug } },
   });
-  if (!lesson1) {
-    lesson1 = await prisma.lesson.create({
+  if (!c1L1) {
+    c1L1 = await prisma.lesson.create({
       data: {
-        sectionId: sec1.id,
+        sectionId: c1Sec1.id,
         title: 'Building Production Microservices with NestJS',
-        slug: lesson1Slug,
+        slug: c1L1Slug,
         content: `### Welcome to NestJS Architecture
 NestJS is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 In this lesson, you will learn:
@@ -251,12 +251,12 @@ In this lesson, you will learn:
     });
   }
 
-  // Quiz for Lesson 1
-  let quiz1 = await prisma.quiz.findUnique({ where: { lessonId: lesson1.id } });
-  if (!quiz1) {
-    quiz1 = await prisma.quiz.create({
+  // Quiz for Course 1 Lesson 1
+  let c1Quiz1 = await prisma.quiz.findUnique({ where: { lessonId: c1L1.id } });
+  if (!c1Quiz1) {
+    c1Quiz1 = await prisma.quiz.create({
       data: {
-        lessonId: lesson1.id,
+        lessonId: c1L1.id,
         title: 'NestJS Dependency Injection & Architecture Check',
         passingScore: 70,
         timeLimitMinutes: 20,
@@ -295,17 +295,17 @@ In this lesson, you will learn:
     });
   }
 
-  // Lesson 2: Next.js 15 Server Components
-  const lesson2Slug = 'nextjs-server-components-app-router';
-  let lesson2 = await prisma.lesson.findUnique({
-    where: { sectionId_slug: { sectionId: sec1.id, slug: lesson2Slug } },
+  // Course 1 - Lesson 2 (Video + Assignment)
+  const c1L2Slug = 'nextjs-server-components-app-router';
+  let c1L2 = await prisma.lesson.findUnique({
+    where: { sectionId_slug: { sectionId: c1Sec1.id, slug: c1L2Slug } },
   });
-  if (!lesson2) {
-    lesson2 = await prisma.lesson.create({
+  if (!c1L2) {
+    c1L2 = await prisma.lesson.create({
       data: {
-        sectionId: sec1.id,
+        sectionId: c1Sec1.id,
         title: 'Advanced Server Components & Data Fetching in Next.js 15',
-        slug: lesson2Slug,
+        slug: c1L2Slug,
         content: `### React Server Components in Next.js 15
 Server Components allow you to render UI on the server before streaming HTML to the client.
 Key concepts:
@@ -319,12 +319,12 @@ Key concepts:
     });
   }
 
-  // Assignment for Lesson 2
-  let assignment1 = await prisma.assignment.findUnique({ where: { lessonId: lesson2.id } });
-  if (!assignment1) {
-    assignment1 = await prisma.assignment.create({
+  // Assignment for Course 1 Lesson 2
+  let c1Assignment1 = await prisma.assignment.findUnique({ where: { lessonId: c1L2.id } });
+  if (!c1Assignment1) {
+    c1Assignment1 = await prisma.assignment.create({
       data: {
-        lessonId: lesson2.id,
+        lessonId: c1L2.id,
         title: 'Deploy a Scalable Multi-Tenant Architecture',
         instructions: `Develop a repository with:
 1. NestJS backend modular structure with global validation pipe
@@ -332,17 +332,17 @@ Key concepts:
 3. Clean error handling with informative HTTP exception filters
 Submit your GitHub repository link and architecture notes.`,
         maxScore: 100,
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
   }
 
-  // Section 2: Persistence & Testing
-  let sec2 = await prisma.courseSection.findFirst({
+  // Course 1 - Section 2
+  let c1Sec2 = await prisma.courseSection.findFirst({
     where: { courseId: course1.id, sortOrder: 2 },
   });
-  if (!sec2) {
-    sec2 = await prisma.courseSection.create({
+  if (!c1Sec2) {
+    c1Sec2 = await prisma.courseSection.create({
       data: {
         courseId: course1.id,
         title: 'Data Persistence & CI/CD Pipelines',
@@ -351,17 +351,17 @@ Submit your GitHub repository link and architecture notes.`,
     });
   }
 
-  // Lesson 3: PostgreSQL & Prisma
-  const lesson3Slug = 'postgresql-prisma-orm-schema';
-  let lesson3 = await prisma.lesson.findUnique({
-    where: { sectionId_slug: { sectionId: sec2.id, slug: lesson3Slug } },
+  // Course 1 - Lesson 3
+  const c1L3Slug = 'postgresql-prisma-orm-schema';
+  let c1L3 = await prisma.lesson.findUnique({
+    where: { sectionId_slug: { sectionId: c1Sec2.id, slug: c1L3Slug } },
   });
-  if (!lesson3) {
-    lesson3 = await prisma.lesson.create({
+  if (!c1L3) {
+    c1L3 = await prisma.lesson.create({
       data: {
-        sectionId: sec2.id,
+        sectionId: c1Sec2.id,
         title: 'PostgreSQL Database Schema Design & Prisma ORM',
-        slug: lesson3Slug,
+        slug: c1L3Slug,
         content: `### Designing Relational Models with Prisma
 Prisma provides type-safe database queries.
 Best practices:
@@ -375,17 +375,17 @@ Best practices:
     });
   }
 
-  // Lesson 4: End-to-End Testing
-  const lesson4Slug = 'end-to-end-integration-testing';
-  let lesson4 = await prisma.lesson.findUnique({
-    where: { sectionId_slug: { sectionId: sec2.id, slug: lesson4Slug } },
+  // Course 1 - Lesson 4
+  const c1L4Slug = 'end-to-end-integration-testing';
+  let c1L4 = await prisma.lesson.findUnique({
+    where: { sectionId_slug: { sectionId: c1Sec2.id, slug: c1L4Slug } },
   });
-  if (!lesson4) {
-    lesson4 = await prisma.lesson.create({
+  if (!c1L4) {
+    c1L4 = await prisma.lesson.create({
       data: {
-        sectionId: sec2.id,
+        sectionId: c1Sec2.id,
         title: 'End-to-End Integration Testing & CI/CD Pipelines',
-        slug: lesson4Slug,
+        slug: c1L4Slug,
         content: `### Automated Verification
 Learn how to test endpoints using Supertest and Jest, and ensure zero regressions across releases.`,
         durationMinutes: 35,
@@ -395,7 +395,7 @@ Learn how to test endpoints using Supertest and Jest, and ensure zero regression
     });
   }
 
-  // Course 2: Machine Learning in Python (Completed Track for Student 1 with Certificate)
+  // 5. Seed Course 2: Machine Learning in Python (Published)
   const course2Slug = 'intro-machine-learning-python';
   const course2 = await prisma.course.upsert({
     where: { slug: course2Slug },
@@ -432,7 +432,147 @@ Learn how to test endpoints using Supertest and Jest, and ensure zero regression
     },
   });
 
-  // Course 3: Microservices in Docker (Pending Moderation Review)
+  // Course 2 - Section 1
+  let c2Sec1 = await prisma.courseSection.findFirst({
+    where: { courseId: course2.id, sortOrder: 1 },
+  });
+  if (!c2Sec1) {
+    c2Sec1 = await prisma.courseSection.create({
+      data: {
+        courseId: course2.id,
+        title: 'Supervised Learning Fundamentals & Data Preprocessing',
+        sortOrder: 1,
+      },
+    });
+  }
+
+  // Course 2 - Lesson 1
+  let c2L1 = await prisma.lesson.findFirst({
+    where: { sectionId: c2Sec1.id, slug: 'data-cleaning-pandas-numpy' },
+  });
+  if (!c2L1) {
+    c2L1 = await prisma.lesson.create({
+      data: {
+        sectionId: c2Sec1.id,
+        title: 'Exploratory Data Analysis with Pandas & NumPy',
+        slug: 'data-cleaning-pandas-numpy',
+        content: `Learn feature scaling, handling null values, and encoding categorical variables.`,
+        durationMinutes: 20,
+        sortOrder: 1,
+        type: LessonType.VIDEO,
+      },
+    });
+  }
+
+  // Course 2 - Lesson 2 (Quiz attached)
+  let c2L2 = await prisma.lesson.findFirst({
+    where: { sectionId: c2Sec1.id, slug: 'supervised-regression-classification' },
+  });
+  if (!c2L2) {
+    c2L2 = await prisma.lesson.create({
+      data: {
+        sectionId: c2Sec1.id,
+        title: 'Supervised Learning: Linear & Logistic Regression',
+        slug: 'supervised-regression-classification',
+        content: `Master ordinary least squares regression and logistic sigmoid curves.`,
+        durationMinutes: 30,
+        sortOrder: 2,
+        type: LessonType.VIDEO,
+      },
+    });
+  }
+
+  // Course 2 Quiz
+  let c2Quiz = await prisma.quiz.findUnique({ where: { lessonId: c2L2.id } });
+  if (!c2Quiz) {
+    c2Quiz = await prisma.quiz.create({
+      data: {
+        lessonId: c2L2.id,
+        title: 'Machine Learning Classification Diagnostics',
+        passingScore: 70,
+        questions: {
+          create: [
+            {
+              text: 'Which metric is most resilient when evaluating highly imbalanced classification datasets?',
+              type: QuestionType.MULTIPLE_CHOICE,
+              points: 10,
+              options: {
+                create: [
+                  { text: 'F1-Score / Area Under ROC Curve', isCorrect: true },
+                  { text: 'Simple Accuracy', isCorrect: false },
+                  { text: 'Mean Squared Error', isCorrect: false },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  // Course 2 - Section 2
+  let c2Sec2 = await prisma.courseSection.findFirst({
+    where: { courseId: course2.id, sortOrder: 2 },
+  });
+  if (!c2Sec2) {
+    c2Sec2 = await prisma.courseSection.create({
+      data: {
+        courseId: course2.id,
+        title: 'Model Evaluation & Production Deployment',
+        sortOrder: 2,
+      },
+    });
+  }
+
+  // Course 2 - Lesson 3 (Assignment attached)
+  let c2L3 = await prisma.lesson.findFirst({
+    where: { sectionId: c2Sec2.id, slug: 'hyperparameter-tuning-cross-val' },
+  });
+  if (!c2L3) {
+    c2L3 = await prisma.lesson.create({
+      data: {
+        sectionId: c2Sec2.id,
+        title: 'Cross-Validation & Hyperparameter Optimization',
+        slug: 'hyperparameter-tuning-cross-val',
+        content: `Implement K-Fold cross validation and GridSearchCV pipelines.`,
+        durationMinutes: 25,
+        sortOrder: 1,
+        type: LessonType.VIDEO,
+      },
+    });
+  }
+
+  let c2Assignment = await prisma.assignment.findUnique({ where: { lessonId: c2L3.id } });
+  if (!c2Assignment) {
+    c2Assignment = await prisma.assignment.create({
+      data: {
+        lessonId: c2L3.id,
+        title: 'Predicting Academic Attrition with Scikit-Learn',
+        instructions: 'Train an ensemble random forest classifier to predict student retention with >85% precision.',
+        maxScore: 100,
+      },
+    });
+  }
+
+  // Course 2 - Lesson 4
+  let c2L4 = await prisma.lesson.findFirst({
+    where: { sectionId: c2Sec2.id, slug: 'onnx-production-inference' },
+  });
+  if (!c2L4) {
+    c2L4 = await prisma.lesson.create({
+      data: {
+        sectionId: c2Sec2.id,
+        title: 'Exporting Models with ONNX for Production Inference',
+        slug: 'onnx-production-inference',
+        content: `Export trained scikit-learn pipelines into ONNX runtime format.`,
+        durationMinutes: 20,
+        sortOrder: 2,
+        type: LessonType.TEXT,
+      },
+    });
+  }
+
+  // 6. Seed Course 3: Microservices in Docker (Pending Review)
   const course3Slug = 'microservices-docker-kubernetes';
   await prisma.course.upsert({
     where: { slug: course3Slug },
@@ -459,184 +599,194 @@ Learn how to test endpoints using Supertest and Jest, and ensure zero regression
     },
   });
 
-  console.log(`✅ Seeded 3 Courses: Full-Stack (Published), ML Python (Published), Microservices (Pending Review)`);
+  console.log(`✅ Seeded 3 Courses with Complete Sections, Lessons, Quizzes & Assignments.`);
 
-  // 5. Seed Enrollments for Student 1 (Almaz)
-  // Enrollment in Course 1: 75% completed (3 of 4 lessons completed)
-  const enrollment1 = await prisma.enrollment.upsert({
-    where: { userId_courseId: { userId: student1.id, courseId: course1.id } },
-    update: { progressPercentage: 75 },
-    create: {
-      userId: student1.id,
-      courseId: course1.id,
-      progressPercentage: 75,
-    },
+  // 7. Seed Learning Activity for ALL Users in Database
+  // Fetch every registered user so ANY logged-in account has complete, functional pages!
+  const allUsers = await prisma.user.findMany({
+    select: { id: true, email: true, fullName: true, role: true },
   });
 
-  // Mark Lessons 1, 2, 3 as completed for Student 1
-  await prisma.lessonProgress.upsert({
-    where: { enrollmentId_lessonId: { enrollmentId: enrollment1.id, lessonId: lesson1.id } },
-    update: { completed: true },
-    create: { enrollmentId: enrollment1.id, lessonId: lesson1.id, completed: true },
-  });
-  await prisma.lessonProgress.upsert({
-    where: { enrollmentId_lessonId: { enrollmentId: enrollment1.id, lessonId: lesson2.id } },
-    update: { completed: true },
-    create: { enrollmentId: enrollment1.id, lessonId: lesson2.id, completed: true },
-  });
-  await prisma.lessonProgress.upsert({
-    where: { enrollmentId_lessonId: { enrollmentId: enrollment1.id, lessonId: lesson3.id } },
-    update: { completed: true },
-    create: { enrollmentId: enrollment1.id, lessonId: lesson3.id, completed: true },
-  });
-
-  // Quiz attempt for Student 1 on Quiz 1: Passed (90%)
-  const existingAttempt = await prisma.quizAttempt.findFirst({
-    where: { enrollmentId: enrollment1.id, quizId: quiz1.id },
-  });
-  if (!existingAttempt) {
-    await prisma.quizAttempt.create({
-      data: {
-        quizId: quiz1.id,
-        enrollmentId: enrollment1.id,
-        userId: student1.id,
-        score: 90,
-        passed: true,
-        answers: { q1: 'opt1', q2: 'opt2' },
+  for (const u of allUsers) {
+    // A. Course 1 Enrollment: 75% progress (In Progress)
+    const enr1 = await prisma.enrollment.upsert({
+      where: { userId_courseId: { userId: u.id, courseId: course1.id } },
+      update: { progressPercentage: 75 },
+      create: {
+        userId: u.id,
+        courseId: course1.id,
+        progressPercentage: 75,
       },
     });
-  }
 
-  // Graded Assignment Submission for Student 1
-  const existingSub1 = await prisma.assignmentSubmission.findFirst({
-    where: { enrollmentId: enrollment1.id, assignmentId: assignment1.id },
-  });
-  if (!existingSub1) {
-    await prisma.assignmentSubmission.create({
-      data: {
-        assignmentId: assignment1.id,
-        enrollmentId: enrollment1.id,
-        userId: student1.id,
-        content: 'https://github.com/almaz-tadesse/eduverse-multitenant-prototype\n\nImplemented global NestJS pipes, JWT guards, and Next.js 15 Server Actions.',
-        status: SubmissionStatus.GRADED,
-        grade: 95,
-        feedback: 'Outstanding architecture and clean modularization! Verified with full marks. Keep up the great work.',
-        gradedAt: new Date(),
+    // Mark Lessons 1, 2, 3 completed for User
+    await prisma.lessonProgress.upsert({
+      where: { enrollmentId_lessonId: { enrollmentId: enr1.id, lessonId: c1L1.id } },
+      update: { completed: true },
+      create: { enrollmentId: enr1.id, lessonId: c1L1.id, completed: true },
+    });
+    await prisma.lessonProgress.upsert({
+      where: { enrollmentId_lessonId: { enrollmentId: enr1.id, lessonId: c1L2.id } },
+      update: { completed: true },
+      create: { enrollmentId: enr1.id, lessonId: c1L2.id, completed: true },
+    });
+    await prisma.lessonProgress.upsert({
+      where: { enrollmentId_lessonId: { enrollmentId: enr1.id, lessonId: c1L3.id } },
+      update: { completed: true },
+      create: { enrollmentId: enr1.id, lessonId: c1L3.id, completed: true },
+    });
+
+    // Quiz Attempt for Course 1
+    const existingQ1 = await prisma.quizAttempt.findFirst({
+      where: { enrollmentId: enr1.id, quizId: c1Quiz1.id },
+    });
+    if (!existingQ1) {
+      await prisma.quizAttempt.create({
+        data: {
+          quizId: c1Quiz1.id,
+          enrollmentId: enr1.id,
+          userId: u.id,
+          score: 90,
+          passed: true,
+          answers: { q1: 'opt1', q2: 'opt2' },
+        },
+      });
+    }
+
+    // Graded Assignment Submission for Course 1
+    const existingSub1 = await prisma.assignmentSubmission.findFirst({
+      where: { enrollmentId: enr1.id, assignmentId: c1Assignment1.id },
+    });
+    if (!existingSub1) {
+      await prisma.assignmentSubmission.create({
+        data: {
+          assignmentId: c1Assignment1.id,
+          enrollmentId: enr1.id,
+          userId: u.id,
+          content: `https://github.com/eduverse-learners/${u.email.split('@')[0]}-multitenant-prototype\n\nModular NestJS architecture with global validation pipes and Next.js 15 App router.`,
+          status: SubmissionStatus.GRADED,
+          grade: 95,
+          feedback: 'Outstanding architecture and clean modularization! Verified with full marks.',
+          gradedAt: new Date(),
+        },
+      });
+    }
+
+    // B. Course 2 Enrollment: 100% progress (Completed) with Verifiable Certificate
+    const enr2 = await prisma.enrollment.upsert({
+      where: { userId_courseId: { userId: u.id, courseId: course2.id } },
+      update: {
+        progressPercentage: 100,
+        completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      },
+      create: {
+        userId: u.id,
+        courseId: course2.id,
+        progressPercentage: 100,
+        completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       },
     });
-  }
 
-  // Enrollment in Course 2: 100% completed with Certificate!
-  const enrollment2 = await prisma.enrollment.upsert({
-    where: { userId_courseId: { userId: student1.id, courseId: course2.id } },
-    update: {
-      progressPercentage: 100,
-      completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-    create: {
-      userId: student1.id,
-      courseId: course2.id,
-      progressPercentage: 100,
-      completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-  });
+    // Mark all Course 2 lessons completed
+    for (const l of [c2L1, c2L2, c2L3, c2L4]) {
+      await prisma.lessonProgress.upsert({
+        where: { enrollmentId_lessonId: { enrollmentId: enr2.id, lessonId: l.id } },
+        update: { completed: true },
+        create: { enrollmentId: enr2.id, lessonId: l.id, completed: true },
+      });
+    }
 
-  // Certificate for Student 1 on Course 2
-  const certCode = 'EDU-ETH-2026-CS882';
-  await prisma.certificate.upsert({
-    where: { verificationCode: certCode },
-    update: {
-      isRevoked: false,
-    },
-    create: {
-      verificationCode: certCode,
-      enrollmentId: enrollment2.id,
-      userId: student1.id,
-      courseId: course2.id,
-      isRevoked: false,
-      issuedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-  });
-  console.log(`✅ Seeded Verifiable Certificate: ${certCode}`);
-
-  // 6. Seed Student 2 (Solomon Bekele) with a PENDING submission in Course 1 for Teacher's Grading Queue!
-  const enrollmentSolomon = await prisma.enrollment.upsert({
-    where: { userId_courseId: { userId: student2.id, courseId: course1.id } },
-    update: { progressPercentage: 50 },
-    create: {
-      userId: student2.id,
-      courseId: course1.id,
-      progressPercentage: 50,
-    },
-  });
-
-  const existingSubSolomon = await prisma.assignmentSubmission.findFirst({
-    where: { enrollmentId: enrollmentSolomon.id, assignmentId: assignment1.id },
-  });
-  if (!existingSubSolomon) {
-    await prisma.assignmentSubmission.create({
-      data: {
-        assignmentId: assignment1.id,
-        enrollmentId: enrollmentSolomon.id,
-        userId: student2.id,
-        content: 'https://github.com/solomon-bekele/eduverse-project-submission\n\nSubmitted on schedule. I configured Docker Compose for PostgreSQL and implemented role-based authorization guards.',
-        status: SubmissionStatus.PENDING,
+    // Certificate
+    const certCode = `EDU-ETH-2026-${u.role.substring(0, 3)}-${u.id.substring(0, 6).toUpperCase()}`;
+    await prisma.certificate.upsert({
+      where: { enrollmentId: enr2.id },
+      update: {
+        verificationCode: certCode,
+        isRevoked: false,
+      },
+      create: {
+        verificationCode: certCode,
+        enrollmentId: enr2.id,
+        userId: u.id,
+        courseId: course2.id,
+        isRevoked: false,
+        issuedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       },
     });
-    console.log(`✅ Seeded Pending Assignment Submission for Solomon (Awaiting Teacher Evaluation)`);
-  }
 
-  // 7. Seed Notifications for Student 1
-  const studentNotifications = [
-    {
-      userId: student1.id,
-      title: 'Certificate Issued!',
-      message: 'Congratulations! You have completed "Introduction to Machine Learning & Data Science in Python". Your digital certificate (EDU-ETH-2026-CS882) is ready to view and download.',
-      type: NotificationType.CERTIFICATE,
-      isRead: false,
-      actionUrl: '/app/certificates',
-    },
-    {
-      userId: student1.id,
-      title: 'Assignment Graded: Deploy a Scalable Multi-Tenant Architecture',
-      message: 'Dr. Abebe Kebede graded your submission: 95/100 points. "Outstanding architecture and clean modularization!"',
-      type: NotificationType.ASSIGNMENT_GRADING,
-      isRead: false,
-      actionUrl: '/app/assignments',
-    },
-    {
-      userId: student1.id,
-      title: 'Quiz Passed: NestJS Dependency Injection',
-      message: 'You scored 90% on your knowledge check assessment.',
-      type: NotificationType.QUIZ_RESULT,
-      isRead: true,
-      actionUrl: '/app/quizzes',
-    },
-    {
-      userId: student1.id,
-      title: 'Welcome to Full-Stack Web Development',
-      message: 'Your enrollment at Addis Ababa Institute of Technology (AAiT) has been confirmed.',
-      type: NotificationType.ENROLLMENT,
-      isRead: true,
-      actionUrl: '/app/courses',
-    },
-  ];
+    // Notifications
+    const notifs = [
+      {
+        userId: u.id,
+        title: 'Certificate Issued!',
+        message: `Congratulations ${u.fullName}! You have completed "Introduction to Machine Learning in Python". Your certificate (${certCode}) is ready to view and download.`,
+        type: NotificationType.CERTIFICATE,
+        isRead: false,
+        actionUrl: '/app/certificates',
+      },
+      {
+        userId: u.id,
+        title: 'Assignment Graded: Deploy a Scalable Multi-Tenant Architecture',
+        message: 'Your submission was evaluated: 95/100 points. "Outstanding architecture and clean modularization!"',
+        type: NotificationType.ASSIGNMENT_GRADING,
+        isRead: false,
+        actionUrl: '/app/assignments',
+      },
+      {
+        userId: u.id,
+        title: 'Quiz Passed: NestJS Dependency Injection',
+        message: 'You scored 90% on your knowledge check assessment.',
+        type: NotificationType.QUIZ_RESULT,
+        isRead: true,
+        actionUrl: '/app/quizzes',
+      },
+      {
+        userId: u.id,
+        title: 'Welcome to Full-Stack Web Development',
+        message: 'Your enrollment at Addis Ababa Institute of Technology (AAiT) has been confirmed.',
+        type: NotificationType.ENROLLMENT,
+        isRead: true,
+        actionUrl: '/app/courses',
+      },
+    ];
 
-  for (const notif of studentNotifications) {
-    const existing = await prisma.notification.findFirst({
-      where: { userId: notif.userId, title: notif.title },
-    });
-    if (!existing) {
-      await prisma.notification.create({ data: notif });
+    for (const n of notifs) {
+      const exists = await prisma.notification.findFirst({
+        where: { userId: n.userId, title: n.title },
+      });
+      if (!exists) {
+        await prisma.notification.create({ data: n });
+      }
     }
   }
-  console.log(`✅ Seeded Notifications for Student 1`);
+  console.log(`✅ Seeded Full Learning Activity, Progress, Quizzes & Certificates for ALL ${allUsers.length} Users!`);
 
-  // 8. Seed Course Review
-  const existingReview = await prisma.review.findUnique({
+  // 8. Seed Solomon's PENDING submission so the Teacher Grading Queue is active
+  const enrSolomon = await prisma.enrollment.findUnique({
+    where: { userId_courseId: { userId: student2.id, courseId: course1.id } },
+  });
+  if (enrSolomon) {
+    const existingPending = await prisma.assignmentSubmission.findFirst({
+      where: { enrollmentId: enrSolomon.id, assignmentId: c1Assignment1.id, status: SubmissionStatus.PENDING },
+    });
+    if (!existingPending) {
+      await prisma.assignmentSubmission.create({
+        data: {
+          assignmentId: c1Assignment1.id,
+          enrollmentId: enrSolomon.id,
+          userId: student2.id,
+          content: 'https://github.com/solomon-bekele/eduverse-project-submission\n\nSubmitted on schedule. Configured Docker Compose for PostgreSQL and implemented role-based authorization guards.',
+          status: SubmissionStatus.PENDING,
+        },
+      });
+    }
+  }
+
+  // 9. Seed 5-Star Course Review
+  const review = await prisma.review.findUnique({
     where: { courseId_userId: { courseId: course1.id, userId: student1.id } },
   });
-  if (!existingReview) {
+  if (!review) {
     await prisma.review.create({
       data: {
         courseId: course1.id,
@@ -645,10 +795,9 @@ Learn how to test endpoints using Supertest and Jest, and ensure zero regression
         comment: 'This curriculum is world-class. The practical real-world architecture examples are exactly what we need in Ethiopia’s expanding software industry.',
       },
     });
-    console.log(`✅ Seeded 5-Star Course Review`);
   }
 
-  console.log('🎉 Full EduVerse database seed completed successfully!');
+  console.log('🎉 EduVerse database seed fully applied for ALL accounts!');
 }
 
 main()
