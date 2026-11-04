@@ -8,6 +8,7 @@
     "dev": "pnpm --filter \"@eduverse/*\" --parallel run dev",
     "dev:api": "pnpm --filter @eduverse/api run dev",
     "dev:web": "pnpm --filter @eduverse/web run dev",
+    "seed": "pnpm --filter @eduverse/api run prisma:seed",
     "build": "pnpm --filter \"@eduverse/*\" run build",
     "build:api": "pnpm --filter @eduverse/api run build",
     "build:web": "pnpm --filter @eduverse/web run build",

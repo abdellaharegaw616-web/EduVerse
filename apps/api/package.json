@@ -6,6 +6,7 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "prisma:generate": "prisma generate",
+    "prisma:seed": "node --experimental-strip-types prisma/seed.ts",
     "typecheck": "tsc --noEmit",
     "test": "jest --config jest.config.js",
     "test:e2e": "jest --testRegex=\".*\\.e2e-spec\\.ts$\"",
