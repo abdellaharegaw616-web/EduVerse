@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Menu, X, ArrowRight, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { BookOpen, Menu, X, ArrowRight, User, LogOut, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -64,10 +64,28 @@ export function Navbar() {
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center space-x-3">
           {isAuthenticated && user ? (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              {user.role === 'SUPER_ADMIN' && (
+                <Link href="/admin">
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs border-purple-200 text-purple-700 hover:bg-purple-50">
+                    <ShieldCheck className="h-4 w-4 text-purple-600" />
+                    <span>Admin</span>
+                  </Button>
+                </Link>
+              )}
+
+              {(user.role === 'TEACHER' || user.role === 'INDEPENDENT_INSTRUCTOR' || user.role === 'SUPER_ADMIN') && (
+                <Link href="/teacher/dashboard">
+                  <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                    <Sparkles className="h-4 w-4 text-brand-emerald" />
+                    <span>Studio</span>
+                  </Button>
+                </Link>
+              )}
+
               <Link href="/app/dashboard">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <LayoutDashboard className="h-4 w-4 text-brand-emerald" />
+                <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                  <LayoutDashboard className="h-4 w-4 text-brand-navy" />
                   <span>Dashboard</span>
                 </Button>
               </Link>
@@ -147,10 +165,28 @@ export function Navbar() {
           <div className="pt-4 border-t border-brand-border flex flex-col space-y-2">
             {isAuthenticated && user ? (
               <>
+                {user.role === 'SUPER_ADMIN' && (
+                  <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full gap-2 border-purple-200 text-purple-700">
+                      <ShieldCheck className="h-4 w-4 text-purple-600" />
+                      <span>Administrative Portal</span>
+                    </Button>
+                  </Link>
+                )}
+
+                {(user.role === 'TEACHER' || user.role === 'INDEPENDENT_INSTRUCTOR' || user.role === 'SUPER_ADMIN') && (
+                  <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full gap-2">
+                      <Sparkles className="h-4 w-4 text-brand-emerald" />
+                      <span>Instructor Studio</span>
+                    </Button>
+                  </Link>
+                )}
+
                 <Link href="/app/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full gap-2">
-                    <LayoutDashboard className="h-4 w-4 text-brand-emerald" />
-                    <span>My Dashboard ({user.fullName || user.email})</span>
+                    <LayoutDashboard className="h-4 w-4 text-brand-navy" />
+                    <span>Student Dashboard</span>
                   </Button>
                 </Link>
                 <Button

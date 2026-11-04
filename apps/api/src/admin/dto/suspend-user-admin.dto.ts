@@ -18,3 +18,4 @@ export class SuspendUserAdminDto {
   @MaxLength(500)
   reason?: string;
 }
+

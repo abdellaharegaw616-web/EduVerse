@@ -23,7 +23,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get('redirect') || '/app/dashboard';
+  const explicitRedirect = searchParams.get('redirect');
   const isLoggedOut = searchParams.get('logout') === 'success';
   const isExpired = searchParams.get('expired') === 'true';
 
@@ -48,8 +48,15 @@ function LoginForm() {
       const user = await login(data.email, data.password);
       setSuccessUser(user.fullName || user.email);
 
+      const defaultRedirect =
+        user.role === 'SUPER_ADMIN'
+          ? '/admin'
+          : user.role === 'TEACHER' || user.role === 'INDEPENDENT_INSTRUCTOR'
+          ? '/teacher/dashboard'
+          : '/app/dashboard';
+
       setTimeout(() => {
-        router.push(redirectTarget);
+        router.push(explicitRedirect || defaultRedirect);
       }, 1000);
     } catch (err: any) {
       const message =
