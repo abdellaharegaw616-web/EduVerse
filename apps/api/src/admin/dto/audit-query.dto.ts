@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsDateString, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -18,12 +18,12 @@ export class AuditQueryDto {
   @Max(100)
   limit?: number = 20;
 
-  @ApiPropertyOptional({ description: 'Filter by action code, e.g. USER_STATUS_UPDATED' })
+  @ApiPropertyOptional({ description: 'Filter by action code, e.g. USER_ACCOUNT_SUSPENDED' })
   @IsOptional()
   @IsString()
   action?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by entity type, e.g. User, Course, Institution' })
+  @ApiPropertyOptional({ description: 'Filter by entity type, e.g. User, Course, Institution, Review' })
   @IsOptional()
   @IsString()
   entityType?: string;
@@ -33,9 +33,18 @@ export class AuditQueryDto {
   @IsString()
   userId?: string;
 
+  @ApiPropertyOptional({ description: 'Filter records from start date (ISO 8601)' })
+  @IsOptional()
+  @IsDateString()
+  startDate?: string;
+
+  @ApiPropertyOptional({ description: 'Filter records up to end date (ISO 8601)' })
+  @IsOptional()
+  @IsDateString()
+  endDate?: string;
+
   @ApiPropertyOptional({ description: 'Free-text search in action or entityId' })
   @IsOptional()
   @IsString()
   search?: string;
 }
-

@@ -82,3 +82,4 @@ export class AnalyticsController {
     return this.analyticsService.getPlatformAnalytics(query.days);
   }
 }
+

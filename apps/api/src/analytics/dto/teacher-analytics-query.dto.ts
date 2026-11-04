@@ -10,3 +10,4 @@ export class TeacherAnalyticsQueryDto {
   @IsUUID('4')
   courseId?: string;
 }
+

@@ -2,7 +2,7 @@ import { IsBoolean, IsEmail, IsInt, IsOptional, IsString, Max, Min } from 'class
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateSettingsDto {
-  @ApiPropertyOptional({ example: 'EduVerse Platform' })
+  @ApiPropertyOptional({ example: 'EduVerse - Learn Beyond Boundaries' })
   @IsOptional()
   @IsString()
   platformName?: string;
@@ -16,6 +16,11 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsBoolean()
   allowRegistration?: boolean;
+
+  @ApiPropertyOptional({ example: true, description: 'Whether instructor courses require administrative moderation before catalog publication' })
+  @IsOptional()
+  @IsBoolean()
+  requireCourseApproval?: boolean;
 
   @ApiPropertyOptional({ example: 50 })
   @IsOptional()
@@ -34,4 +39,3 @@ export class UpdateSettingsDto {
   @IsString()
   defaultTimezone?: string;
 }
-

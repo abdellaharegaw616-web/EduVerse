@@ -16,5 +16,10 @@ export class ModerateCourseDto {
   @IsString()
   @MaxLength(1000)
   feedback?: string;
-}
 
+  @ApiPropertyOptional({ description: 'Rejection reason (alias for feedback)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
+  reason?: string;
+}
