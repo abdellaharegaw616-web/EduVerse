@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
+    "prisma:generate": "prisma generate",
     "typecheck": "tsc --noEmit",
     "test": "jest --config jest.config.js",
+    "test:e2e": "jest --testRegex=\".*\\.e2e-spec\\.ts$\"",
     "start": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
   },
