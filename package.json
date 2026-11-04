@@ -6,7 +6,11 @@
   "packageManager": "pnpm@12.16.1",
   "scripts": {
     "dev": "pnpm --filter \"@eduverse/*\" --parallel run dev",
+    "dev:api": "pnpm --filter @eduverse/api run dev",
+    "dev:web": "pnpm --filter @eduverse/web run dev",
     "build": "pnpm --filter \"@eduverse/*\" run build",
+    "build:api": "pnpm --filter @eduverse/api run build",
+    "build:web": "pnpm --filter @eduverse/web run build",
     "typecheck": "pnpm --filter \"@eduverse/*\" run typecheck",
     "lint": "pnpm --filter \"@eduverse/*\" run lint",
     "test": "pnpm --filter \"@eduverse/*\" run test",
