@@ -15,7 +15,8 @@
     "typecheck": "pnpm --filter \"@eduverse/*\" run typecheck",
     "lint": "pnpm --filter \"@eduverse/*\" run lint",
     "test": "pnpm --filter \"@eduverse/*\" run test",
-    "clean": "pnpm -r --parallel exec -- rm -rf dist .next node_modules"
+    "clean": "node -e \"const fs = require('fs'); ['apps/web/.next', 'apps/api/dist'].forEach(p => fs.rmSync(p, { recursive: true, force: true })); console.log('Cleaned build artifacts');\"",
+    "clean:next": "node -e \"const fs = require('fs'); fs.rmSync('apps/web/.next', { recursive: true, force: true }); console.log('Cleaned Next.js cache');\""
   },
   "devDependencies": {
     "prettier": "^3.5.3",
