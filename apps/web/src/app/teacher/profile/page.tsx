@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   User,
@@ -16,6 +16,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
+  Camera,
+  Upload,
+  Trash2,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -61,11 +64,16 @@ interface UserProfileResponse {
 
 export default function TeacherProfilePage() {
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const modalFileInputRef = useRef<HTMLInputElement>(null);
+
   const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [timezone, setTimezone] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const {
@@ -82,25 +90,74 @@ export default function TeacherProfilePage() {
       setBio(data.profile?.bio || '');
       setPhoneNumber(data.profile?.phoneNumber || '');
       setTimezone(data.profile?.timezone || 'Africa/Addis_Ababa');
+      setAvatarUrl(data.profile?.avatarUrl || '');
       return data;
     },
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (overrideData?: Record<string, any>) =>
       apiClient.patch('/users/profile', {
         fullName,
         bio,
         phoneNumber,
         timezone,
+        avatarUrl: avatarUrl || undefined,
+        ...overrideData,
       }),
     onSuccess: () => {
       setSuccessMessage('Instructor profile saved successfully.');
       queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       setIsEditing(false);
       setTimeout(() => setSuccessMessage(null), 3000);
     },
   });
+
+  const handleDirectAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Photo must be less than 5MB.');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result as string;
+      try {
+        await apiClient.patch('/users/profile', { avatarUrl: base64String });
+        setAvatarUrl(base64String);
+        setSuccessMessage('Profile photo updated successfully.');
+        queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (err: any) {
+        alert(err?.message || 'Failed to upload profile photo.');
+      } finally {
+        setIsUploadingAvatar(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleModalPhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Photo must be less than 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="space-y-6 pb-16 max-w-4xl">
@@ -169,9 +226,40 @@ export default function TeacherProfilePage() {
             <CardContent className="px-6 pb-6 pt-0 relative">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-10">
                 <div className="flex items-end gap-4">
-                  <div className="w-20 h-20 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0">
-                    {user.fullName?.charAt(0) || 'T'}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="relative w-20 h-20 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
+                    title="Click to upload profile photo"
+                  >
+                    {user.profile?.avatarUrl ? (
+                      <img
+                        src={user.profile.avatarUrl}
+                        alt={user.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      user.fullName?.charAt(0) || 'T'
+                    )}
+
+                    {/* Camera Overlay */}
+                    <div className="absolute inset-0 bg-brand-navy/60 backdrop-blur-xs flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-medium">
+                      <Camera className="h-5 w-5 mb-0.5 text-brand-emerald" />
+                      <span>Upload</span>
+                    </div>
+
+                    {isUploadingAvatar && (
+                      <div className="absolute inset-0 bg-brand-navy/80 flex items-center justify-center">
+                        <Loader2 className="h-5 w-5 text-brand-emerald animate-spin" />
+                      </div>
+                    )}
                   </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleDirectAvatarUpload}
+                  />
                   <div className="mb-1">
                     <h2 className="text-xl font-bold text-brand-navy">{user.fullName}</h2>
                     <p className="text-xs text-brand-slate flex items-center gap-1.5 mt-0.5">
@@ -311,6 +399,54 @@ export default function TeacherProfilePage() {
         </DialogHeader>
 
         <div className="space-y-4 my-2">
+          {/* Avatar Photo Section */}
+          <div className="space-y-2 p-3 rounded-lg border border-brand-border bg-slate-50">
+            <Label className="text-xs font-semibold text-brand-navy block">Profile Photo</Label>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-xl border-2 border-white bg-brand-emerald text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
+                ) : (
+                  fullName?.charAt(0) || 'T'
+                )}
+              </div>
+              <div className="space-y-1.5 flex-1">
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => modalFileInputRef.current?.click()}
+                    className="h-8 text-xs gap-1.5 bg-white"
+                  >
+                    <Upload className="h-3.5 w-3.5 text-brand-emerald" />
+                    <span>Upload New Photo</span>
+                  </Button>
+                  {avatarUrl && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setAvatarUrl('')}
+                      className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 gap-1"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Remove</span>
+                    </Button>
+                  )}
+                </div>
+                <input
+                  ref={modalFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleModalPhotoSelect}
+                />
+                <p className="text-[10px] text-brand-slate">JPG, PNG, or WebP up to 5MB.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold text-brand-navy">Full Name</Label>
             <Input

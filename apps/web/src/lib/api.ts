@@ -80,4 +80,11 @@ export interface UserSummary {
   isActive?: boolean;
   isEmailVerified?: boolean;
   createdAt?: string;
+  profile?: {
+    id?: string;
+    bio?: string | null;
+    avatarUrl?: string | null;
+    phoneNumber?: string | null;
+    timezone?: string | null;
+  } | null;
 }

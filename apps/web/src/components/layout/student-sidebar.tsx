@@ -43,8 +43,14 @@ export function StudentSidebar() {
       <div className="p-4 space-y-6">
         {/* User Identity Chip */}
         <div className="rounded-lg bg-slate-50 border border-brand-border p-3 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold shrink-0">
-            {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'S'}
+          <div className="h-9 w-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
+            {user?.profile?.avatarUrl ? (
+              <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+            ) : user?.fullName ? (
+              user.fullName.charAt(0).toUpperCase()
+            ) : (
+              'S'
+            )}
           </div>
           <div className="overflow-hidden">
             <span className="font-bold text-brand-navy text-xs truncate block">

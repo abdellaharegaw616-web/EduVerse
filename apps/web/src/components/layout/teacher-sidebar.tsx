@@ -58,8 +58,12 @@ export function TeacherSidebar() {
       <div className="p-4 space-y-6 overflow-y-auto">
         {/* User Card */}
         <div className="p-3 rounded-xl bg-slate-50 border border-brand-border/80 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-brand-navy text-brand-mint font-bold flex items-center justify-center shrink-0 text-sm shadow-xs">
-            {user?.fullName?.charAt(0) || 'T'}
+          <div className="w-10 h-10 rounded-lg bg-brand-navy text-brand-mint font-bold flex items-center justify-center shrink-0 text-sm shadow-xs overflow-hidden">
+            {user?.profile?.avatarUrl ? (
+              <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+            ) : (
+              user?.fullName?.charAt(0) || 'T'
+            )}
           </div>
           <div className="overflow-hidden">
             <h4 className="text-xs font-bold text-brand-navy truncate">

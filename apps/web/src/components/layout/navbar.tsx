@@ -91,8 +91,14 @@ export function Navbar() {
               </Link>
 
               <div className="flex items-center gap-2 pl-2 border-l border-brand-border">
-                <div className="h-8 w-8 rounded-full bg-brand-mint text-brand-emerald flex items-center justify-center text-xs font-bold border border-brand-emerald/20">
-                  {user.fullName ? user.fullName.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                <div className="h-8 w-8 rounded-full bg-brand-mint text-brand-emerald flex items-center justify-center text-xs font-bold border border-brand-emerald/20 overflow-hidden">
+                  {user.profile?.avatarUrl ? (
+                    <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+                  ) : user.fullName ? (
+                    user.fullName.charAt(0).toUpperCase()
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
                 </div>
                 <Button
                   variant="ghost"

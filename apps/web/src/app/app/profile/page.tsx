@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   User,
   Mail,
@@ -14,6 +14,9 @@ import {
   Edit3,
   AlertCircle,
   GraduationCap,
+  Camera,
+  Loader2,
+  CheckCircle2,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -49,6 +52,11 @@ interface UserProfileResponse {
 }
 
 export default function StudentProfilePage() {
+  const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const {
     data: user,
     isLoading,
@@ -59,6 +67,33 @@ export default function StudentProfilePage() {
     queryKey: ['user-profile'],
     queryFn: () => apiClient.get<UserProfileResponse>('/users/profile'),
   });
+
+  const handleDirectAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Photo must be less than 5MB.');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result as string;
+      try {
+        await apiClient.patch('/users/profile', { avatarUrl: base64String });
+        setSuccessMessage('Profile photo updated successfully.');
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (err: any) {
+        alert(err?.message || 'Failed to upload profile photo.');
+      } finally {
+        setIsUploadingAvatar(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -93,6 +128,14 @@ export default function StudentProfilePage() {
           </Button>
         </Link>
       </div>
+
+      {successMessage && (
+        <Alert variant="default" className="bg-emerald-50 border-emerald-200 text-emerald-900">
+          <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+          <AlertTitle>Profile Updated</AlertTitle>
+          <AlertDescription className="text-xs">{successMessage}</AlertDescription>
+        </Alert>
+      )}
 
       {isError && (
         <Alert variant="destructive">
@@ -133,7 +176,11 @@ export default function StudentProfilePage() {
             <CardContent className="px-6 pb-6 pt-0 relative">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12">
                 <div className="flex items-end gap-4">
-                  <div className="w-24 h-24 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden">
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="relative w-24 h-24 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
+                    title="Click to upload profile photo"
+                  >
                     {user.profile?.avatarUrl ? (
                       <img
                         src={user.profile.avatarUrl}
@@ -143,7 +190,26 @@ export default function StudentProfilePage() {
                     ) : (
                       getInitials(user.fullName)
                     )}
+
+                    {/* Camera Overlay */}
+                    <div className="absolute inset-0 bg-brand-navy/60 backdrop-blur-xs flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-medium">
+                      <Camera className="h-5 w-5 mb-0.5 text-brand-emerald" />
+                      <span>Upload</span>
+                    </div>
+
+                    {isUploadingAvatar && (
+                      <div className="absolute inset-0 bg-brand-navy/80 flex items-center justify-center">
+                        <Loader2 className="h-6 w-6 text-brand-emerald animate-spin" />
+                      </div>
+                    )}
                   </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleDirectAvatarUpload}
+                  />
                   <div className="mb-1">
                     <h2 className="text-xl font-bold text-brand-navy">{user.fullName}</h2>
                     <p className="text-xs text-brand-slate flex items-center gap-1.5 mt-0.5">

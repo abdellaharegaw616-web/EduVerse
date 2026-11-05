@@ -14,6 +14,8 @@ import {
   KeyRound,
   Shield,
   Loader2,
+  Upload,
+  Trash2,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -28,11 +30,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters').max(100),
   bio: z.string().max(500, 'Bio cannot exceed 500 characters').optional().or(z.literal('')),
-  avatarUrl: z
-    .string()
-    .url('Must be a valid HTTP/HTTPS URL')
-    .optional()
-    .or(z.literal('')),
+  avatarUrl: z.string().optional().or(z.literal('')),
   phoneNumber: z.string().max(20).optional().or(z.literal('')),
   timezone: z.string().optional().or(z.literal('')),
 });
@@ -61,6 +59,7 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function StudentSettingsPage() {
   const queryClient = useQueryClient();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -79,6 +78,8 @@ export default function StudentSettingsPage() {
     register: registerProfile,
     handleSubmit: handleProfileSubmit,
     reset: resetProfile,
+    setValue,
+    watch,
     formState: { errors: profileErrors, isSubmitting: isProfileSubmitting },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -90,6 +91,24 @@ export default function StudentSettingsPage() {
       timezone: 'Africa/Addis_Ababa',
     },
   });
+
+  const currentAvatarUrl = watch('avatarUrl');
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Photo must be less than 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setValue('avatarUrl', reader.result as string, { shouldDirty: true });
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     if (userData) {
@@ -247,17 +266,65 @@ export default function StudentSettingsPage() {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="avatarUrl" className="text-xs font-semibold text-brand-navy">
-                  Avatar Image URL
+              <div className="space-y-2 p-3.5 rounded-xl border border-brand-border bg-slate-50">
+                <Label className="text-xs font-semibold text-brand-navy block">
+                  Profile Photo
                 </Label>
-                <Input
-                  id="avatarUrl"
-                  type="url"
-                  placeholder="https://images.eduverse.et/avatars/abebe.jpg"
-                  error={profileErrors.avatarUrl?.message}
-                  {...registerProfile('avatarUrl')}
-                />
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-xl border-2 border-white bg-brand-emerald text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+                    {currentAvatarUrl ? (
+                      <img src={currentAvatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="h-8 w-8 text-white/80" />
+                    )}
+                  </div>
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="h-8 text-xs gap-1.5 bg-white shadow-2xs"
+                      >
+                        <Upload className="h-3.5 w-3.5 text-brand-emerald" />
+                        <span>Upload Photo</span>
+                      </Button>
+                      {currentAvatarUrl && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setValue('avatarUrl', '', { shouldDirty: true })}
+                          className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 gap-1"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span>Remove</span>
+                        </Button>
+                      )}
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                    />
+                    <p className="text-[10px] text-brand-slate">
+                      Upload JPG, PNG, or WebP (max 5MB), or paste a direct image URL below.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <Input
+                    id="avatarUrl"
+                    placeholder="Or paste an image URL: https://example.com/avatar.jpg"
+                    error={profileErrors.avatarUrl?.message}
+                    className="bg-white text-xs"
+                    {...registerProfile('avatarUrl')}
+                  />
+                </div>
               </div>
 
               <div className="pt-3 flex justify-end">
