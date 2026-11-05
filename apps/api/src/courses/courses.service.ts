@@ -30,9 +30,10 @@ export class CoursesService {
   }
 
   // 1. Teacher Dashboard Statistics
-  async getTeacherDashboard(teacherId: string) {
+  async getTeacherDashboard(teacherId: string, isSuperAdmin = false) {
+    const courseWhere = isSuperAdmin ? {} : { authorId: teacherId };
     const courses = await this.prisma.course.findMany({
-      where: { authorId: teacherId },
+      where: courseWhere,
       include: {
         enrollments: { select: { id: true, progressPercentage: true, completedAt: true } },
         sections: {
@@ -77,7 +78,7 @@ export class CoursesService {
 
     // Recent student enrollments in teacher's courses
     const recentEnrollments = await this.prisma.enrollment.findMany({
-      where: { course: { authorId: teacherId } },
+      where: isSuperAdmin ? {} : { course: { authorId: teacherId } },
       include: {
         user: { select: { id: true, fullName: true, email: true } },
         course: { select: { id: true, title: true, slug: true } },
@@ -89,11 +90,15 @@ export class CoursesService {
     // Recent pending submissions in teacher's courses
     const recentSubmissions = await this.prisma.assignmentSubmission.findMany({
       where: {
-        assignment: {
-          lesson: {
-            section: { course: { authorId: teacherId } },
-          },
-        },
+        ...(isSuperAdmin
+          ? {}
+          : {
+              assignment: {
+                lesson: {
+                  section: { course: { authorId: teacherId } },
+                },
+              },
+            }),
         status: 'PENDING',
       },
       include: {
@@ -159,12 +164,13 @@ export class CoursesService {
   async getTeacherCourses(
     teacherId: string,
     query: { status?: string; search?: string; page?: number; limit?: number },
+    isSuperAdmin = false,
   ) {
     const page = Math.max(1, query.page || 1);
     const limit = Math.max(1, Math.min(50, query.limit || 10));
     const skip = (page - 1) * limit;
 
-    const where: any = { authorId: teacherId };
+    const where: any = isSuperAdmin ? {} : { authorId: teacherId };
 
     if (query.status && query.status !== 'all') {
       const upper = query.status.toUpperCase();
@@ -655,16 +661,18 @@ export class CoursesService {
   }
 
   // 19. Get Submissions Across Teacher Courses
-  async getTeacherSubmissions(teacherId: string, status?: string) {
-    const where: any = {
-      assignment: {
-        lesson: {
-          section: {
-            course: { authorId: teacherId },
+  async getTeacherSubmissions(teacherId: string, status?: string, isSuperAdmin = false) {
+    const where: any = isSuperAdmin
+      ? {}
+      : {
+          assignment: {
+            lesson: {
+              section: {
+                course: { authorId: teacherId },
+              },
+            },
           },
-        },
-      },
-    };
+        };
 
     if (status && status !== 'ALL') {
       where.status = status;

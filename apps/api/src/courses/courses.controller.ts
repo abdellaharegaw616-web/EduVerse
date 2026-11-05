@@ -44,7 +44,7 @@ export class CoursesController {
   @Get('teacher/dashboard')
   @ApiOperation({ summary: 'Aggregated analytics and telemetry for teacher studio dashboard' })
   async getTeacherDashboard(@CurrentUser() caller: AuthenticatedUser) {
-    return this.coursesService.getTeacherDashboard(caller.id);
+    return this.coursesService.getTeacherDashboard(caller.id, caller.role === Role.SUPER_ADMIN);
   }
 
   // 2. My Courses List
@@ -61,12 +61,16 @@ export class CoursesController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ) {
-    return this.coursesService.getTeacherCourses(caller.id, {
-      status,
-      search,
-      page: page ? parseInt(page, 10) : 1,
-      limit: limit ? parseInt(limit, 10) : 10,
-    });
+    return this.coursesService.getTeacherCourses(
+      caller.id,
+      {
+        status,
+        search,
+        page: page ? parseInt(page, 10) : 1,
+        limit: limit ? parseInt(limit, 10) : 10,
+      },
+      caller.role === Role.SUPER_ADMIN,
+    );
   }
 
   // 3. Categories Dropdown List
@@ -268,7 +272,7 @@ export class CoursesController {
     @CurrentUser() caller: AuthenticatedUser,
     @Query('status') status?: string,
   ) {
-    return this.coursesService.getTeacherSubmissions(caller.id, status);
+    return this.coursesService.getTeacherSubmissions(caller.id, status, caller.role === Role.SUPER_ADMIN);
   }
 
   // 21. Grade Submission
