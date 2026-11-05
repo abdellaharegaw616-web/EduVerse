@@ -32,11 +32,13 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-brand-emerald shrink-0" />
-                <span>+251 11 667 8900 / +251 91 123 4567</span>
+                <span>+251 97 956 7153 / 0979567153</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-brand-emerald shrink-0" />
-                <span>support@eduverse.et</span>
+                <a href="mailto:abdellaj636@gmail.com" className="hover:text-brand-emerald transition-colors">
+                  abdellaj636@gmail.com
+                </a>
               </div>
             </div>
           </div>

@@ -80,9 +80,9 @@ export default function ContactPage() {
                 <Phone className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-brand-navy block text-sm">Phone Line</strong>
-                  <span>+251 11 667 8900</span>
+                  <span>+251 97 956 7153</span>
                   <br />
-                  <span>+251 91 123 4567</span>
+                  <span>0979567153</span>
                 </div>
               </div>
 
@@ -90,9 +90,9 @@ export default function ContactPage() {
                 <Mail className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-brand-navy block text-sm">Email Inquiries</strong>
-                  <span>support@eduverse.et</span>
+                  <span>abdellaj636@gmail.com</span>
                   <br />
-                  <span>partnerships@eduverse.et</span>
+                  <span>support@eduverse.et</span>
                 </div>
               </div>
 
