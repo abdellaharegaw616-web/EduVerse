@@ -158,7 +158,7 @@ export default function InstructorsPage() {
       </div>
 
       {/* Become an Instructor CTA */}
-      <div className="rounded-2xl border border-brand-border bg-gradient-to-r from-brand-mint/40 via-white to-brand-mint/40 p-8 sm:p-12 text-center space-y-4">
+      <div className="rounded-2xl border border-brand-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-8 sm:p-12 text-center space-y-4">
         <h2 className="text-2xl font-bold text-brand-navy">Are You an Educator or University Lecturer?</h2>
         <p className="text-sm text-brand-slate max-w-xl mx-auto">
           Reach thousands of ambitious students across Ethiopia. Leverage our low-bandwidth delivery engine, automated grading tools, and transparent local payouts.

@@ -21,13 +21,13 @@ export function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="rounded-xl border border-dashed border-brand-border bg-white p-10 text-center space-y-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-mint text-brand-emerald mx-auto">
+    <div className="rounded-xl border border-dashed border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900/60 p-10 text-center space-y-4">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-mint dark:bg-emerald-950/60 text-brand-emerald dark:text-emerald-400 mx-auto">
         <Icon className="h-6 w-6" />
       </div>
       <div className="space-y-1 max-w-sm mx-auto">
-        <h3 className="text-base font-bold text-brand-navy">{title}</h3>
-        <p className="text-xs text-brand-slate leading-relaxed">{description}</p>
+        <h3 className="text-base font-bold text-brand-navy dark:text-slate-100">{title}</h3>
+        <p className="text-xs text-brand-slate dark:text-slate-400 leading-relaxed">{description}</p>
       </div>
       {actionHref && actionLabel && (
         <div className="pt-2">
@@ -48,4 +48,3 @@ export function EmptyState({
     </div>
   );
 }
-

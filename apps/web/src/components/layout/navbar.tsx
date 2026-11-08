@@ -4,8 +4,18 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Menu, X, ArrowRight, User, LogOut, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ArrowRight,
+  User,
+  LogOut,
+  LayoutDashboard,
+  ShieldCheck,
+  GraduationCap,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
 import { apiClient } from '@/lib/api';
@@ -34,7 +44,7 @@ export function Navbar() {
   const user = profileData || authUser;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-brand-border bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-brand-border bg-white/95 backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-800 transition-colors">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2.5">
@@ -44,10 +54,10 @@ export function Navbar() {
             className="h-9 w-9 object-contain rounded-lg shadow-xs"
           />
           <div className="flex flex-col">
-            <span className="font-bold tracking-tight text-brand-navy text-lg leading-none">
+            <span className="font-bold tracking-tight text-brand-navy dark:text-white text-lg leading-none">
               Edu<span className="text-brand-emerald">Verse</span>
             </span>
-            <span className="text-[10px] text-brand-slate tracking-wide font-medium">
+            <span className="text-[10px] text-brand-slate dark:text-slate-400 tracking-wide font-medium">
               Learn Beyond Boundaries
             </span>
           </div>
@@ -64,8 +74,8 @@ export function Navbar() {
                 className={cn(
                   'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
                   isActive
-                    ? 'text-brand-emerald bg-brand-mint font-semibold'
-                    : 'text-brand-slate hover:text-brand-navy hover:bg-slate-50',
+                    ? 'text-brand-emerald bg-brand-mint dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
+                    : 'text-brand-slate dark:text-slate-300 hover:text-brand-navy dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800',
                 )}
               >
                 {link.label}
@@ -76,21 +86,30 @@ export function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center space-x-3">
+          {/* Theme Mode Toggle */}
+          <ThemeToggle />
+
           {isAuthenticated && user ? (
             <div className="flex items-center space-x-2">
               {user.role === 'SUPER_ADMIN' && (
                 <Link href="/admin">
-                  <Button variant="outline" size="sm" className="gap-1.5 text-xs border-purple-200 text-purple-700 hover:bg-purple-50">
-                    <ShieldCheck className="h-4 w-4 text-purple-600" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-950/50"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                     <span>Admin</span>
                   </Button>
                 </Link>
               )}
 
-              {(user.role === 'TEACHER' || user.role === 'INDEPENDENT_INSTRUCTOR' || user.role === 'SUPER_ADMIN') && (
+              {(user.role === 'TEACHER' ||
+                user.role === 'INDEPENDENT_INSTRUCTOR' ||
+                user.role === 'SUPER_ADMIN') && (
                 <Link href="/teacher/dashboard">
                   <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                    <Sparkles className="h-4 w-4 text-brand-emerald" />
+                    <GraduationCap className="h-4 w-4 text-brand-emerald" />
                     <span>Studio</span>
                   </Button>
                 </Link>
@@ -98,15 +117,19 @@ export function Navbar() {
 
               <Link href="/app/dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                  <LayoutDashboard className="h-4 w-4 text-brand-navy" />
+                  <LayoutDashboard className="h-4 w-4 text-brand-navy dark:text-slate-200" />
                   <span>Dashboard</span>
                 </Button>
               </Link>
 
-              <div className="flex items-center gap-2 pl-2 border-l border-brand-border">
-                <div className="h-8 w-8 rounded-full bg-brand-mint text-brand-emerald flex items-center justify-center text-xs font-bold border border-brand-emerald/20 overflow-hidden">
+              <div className="flex items-center gap-2 pl-2 border-l border-brand-border dark:border-slate-800">
+                <div className="h-8 w-8 rounded-full bg-brand-mint dark:bg-emerald-950 text-brand-emerald dark:text-emerald-400 flex items-center justify-center text-xs font-bold border border-brand-emerald/20 overflow-hidden">
                   {user.profile?.avatarUrl ? (
-                    <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+                    <img
+                      src={user.profile.avatarUrl}
+                      alt={user.fullName}
+                      className="w-full h-full object-cover"
+                    />
                   ) : user.fullName ? (
                     user.fullName.charAt(0).toUpperCase()
                   ) : (
@@ -117,7 +140,7 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={() => logout()}
-                  className="text-xs text-brand-slate hover:text-red-600 gap-1"
+                  className="text-xs text-brand-slate hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 gap-1"
                   title="Sign Out"
                 >
                   <LogOut className="h-3.5 w-3.5" />
@@ -142,25 +165,22 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile Hamburger Button */}
-        <div className="flex md:hidden">
+        {/* Mobile Header Right Items */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md text-brand-navy hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="p-2 rounded-md text-brand-navy dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-emerald"
             aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-brand-border bg-white px-4 pt-2 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-200">
+        <div className="md:hidden border-b border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-200">
           <div className="flex flex-col space-y-1">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
@@ -172,8 +192,8 @@ export function Navbar() {
                   className={cn(
                     'px-3 py-2 rounded-md text-base font-medium transition-colors',
                     isActive
-                      ? 'text-brand-emerald bg-brand-mint font-semibold'
-                      : 'text-brand-slate hover:text-brand-navy hover:bg-slate-50',
+                      ? 'text-brand-emerald bg-brand-mint dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
+                      : 'text-brand-slate dark:text-slate-300 hover:text-brand-navy dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800',
                   )}
                 >
                   {link.label}
@@ -181,22 +201,28 @@ export function Navbar() {
               );
             })}
           </div>
-          <div className="pt-4 border-t border-brand-border flex flex-col space-y-2">
+
+          <div className="pt-4 border-t border-brand-border dark:border-slate-800 flex flex-col space-y-2">
             {isAuthenticated && user ? (
               <>
                 {user.role === 'SUPER_ADMIN' && (
                   <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full gap-2 border-purple-200 text-purple-700">
-                      <ShieldCheck className="h-4 w-4 text-purple-600" />
+                    <Button
+                      variant="outline"
+                      className="w-full gap-2 border-purple-200 text-purple-700 dark:border-purple-800 dark:text-purple-300"
+                    >
+                      <ShieldCheck className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       <span>Administrative Portal</span>
                     </Button>
                   </Link>
                 )}
 
-                {(user.role === 'TEACHER' || user.role === 'INDEPENDENT_INSTRUCTOR' || user.role === 'SUPER_ADMIN') && (
+                {(user.role === 'TEACHER' ||
+                  user.role === 'INDEPENDENT_INSTRUCTOR' ||
+                  user.role === 'SUPER_ADMIN') && (
                   <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full gap-2">
-                      <Sparkles className="h-4 w-4 text-brand-emerald" />
+                      <GraduationCap className="h-4 w-4 text-brand-emerald" />
                       <span>Instructor Studio</span>
                     </Button>
                   </Link>
@@ -204,10 +230,11 @@ export function Navbar() {
 
                 <Link href="/app/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full gap-2">
-                    <LayoutDashboard className="h-4 w-4 text-brand-navy" />
+                    <LayoutDashboard className="h-4 w-4 text-brand-navy dark:text-slate-200" />
                     <span>Student Dashboard</span>
                   </Button>
                 </Link>
+
                 <Button
                   variant="destructive"
                   className="w-full gap-2"

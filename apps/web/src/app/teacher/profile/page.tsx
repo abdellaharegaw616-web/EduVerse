@@ -10,7 +10,7 @@ import {
   Calendar,
   Building,
   GraduationCap,
-  Sparkles,
+  ShieldCheck,
   Edit3,
   Save,
   CheckCircle2,
@@ -225,10 +225,11 @@ export default function TeacherProfilePage() {
       ) : user ? (
         <div className="space-y-6">
           {/* Identity Card */}
-          <Card className="border border-brand-border bg-white shadow-xs overflow-hidden">
-            <div className="h-28 bg-gradient-to-r from-brand-navy via-slate-800 to-brand-emerald p-4 flex items-start justify-end">
-              <Badge variant="outline" className="bg-white/90 text-brand-navy border-white/20 font-bold text-xs gap-1">
-                <Sparkles className="h-3 w-3 text-brand-amber" />
+          <Card className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
+            <div className="h-28 bg-slate-900 dark:bg-slate-950 border-b border-slate-800 p-4 flex items-start justify-end relative">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-brand-emerald" />
+              <Badge variant="outline" className="bg-slate-800/90 text-white border-slate-700 font-semibold text-xs gap-1.5 shadow-xs">
+                <ShieldCheck className="h-3.5 w-3.5 text-brand-emerald" />
                 {user.role}
               </Badge>
             </div>
@@ -238,7 +239,7 @@ export default function TeacherProfilePage() {
                 <div className="flex items-end gap-4">
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="relative w-20 h-20 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
+                    className="relative w-20 h-20 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-navy dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
                     title="Click to upload profile photo"
                   >
                     {user.profile?.avatarUrl ? (

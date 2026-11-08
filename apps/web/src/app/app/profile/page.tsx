@@ -165,14 +165,16 @@ export default function StudentProfilePage() {
       ) : user ? (
         <div className="space-y-6">
           {/* Identity Header Card */}
-          <Card className="border border-brand-border bg-white shadow-xs overflow-hidden">
-            <div className="h-28 bg-gradient-to-r from-brand-navy via-slate-800 to-brand-emerald relative">
+          <Card className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
+            <div className="h-28 bg-slate-900 dark:bg-slate-950 border-b border-slate-800 relative">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-brand-emerald" />
               <div className="absolute top-4 right-4 flex items-center gap-2">
-                <Badge variant="outline" className="bg-white/90 text-brand-navy border-white/20 font-semibold text-[11px]">
+                <Badge variant="outline" className="bg-slate-800/90 text-white border-slate-700 font-semibold text-[11px] gap-1 shadow-xs">
+                  <GraduationCap className="h-3.5 w-3.5 text-brand-emerald" />
                   {user.role}
                 </Badge>
                 {user.isEmailVerified && (
-                  <Badge variant="emerald" className="gap-1 text-[11px]">
+                  <Badge variant="emerald" className="gap-1 text-[11px] bg-emerald-600 text-white border-emerald-500">
                     <ShieldCheck className="h-3 w-3" />
                     Verified Email
                   </Badge>
@@ -185,7 +187,7 @@ export default function StudentProfilePage() {
                 <div className="flex items-end gap-4">
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="relative w-24 h-24 rounded-2xl border-4 border-white bg-brand-emerald text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
+                    className="relative w-24 h-24 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-navy dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
                     title="Click to upload profile photo"
                   >
                     {user.profile?.avatarUrl ? (

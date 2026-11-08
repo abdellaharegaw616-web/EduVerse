@@ -10,7 +10,6 @@ import {
   Calendar,
   AlertCircle,
   Send,
-  Sparkles,
   Paperclip,
   Check,
 } from 'lucide-react';
@@ -133,7 +132,7 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
           <div className="space-y-1">
             <span className="text-[11px] font-bold uppercase tracking-wider text-brand-mint flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" />
+              <FileText className="h-3.5 w-3.5" />
               <span>Module Assignment Deliverable</span>
             </span>
             <h3 className="text-lg font-black text-white">{assignment.title}</h3>

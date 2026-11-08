@@ -128,8 +128,7 @@ export default function PublicVerifyResultPage() {
             )}
           </Card>
         ) : (
-          <Card className="relative overflow-hidden border border-brand-emerald/40 bg-gradient-to-br from-white via-emerald-50/15 to-white shadow-lg">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
+          <Card className="relative overflow-hidden border border-emerald-300 dark:border-emerald-800/40 bg-white dark:bg-slate-900 shadow-md">
 
             <CardHeader className="p-6 sm:p-8 pb-4 border-b border-brand-border/60">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

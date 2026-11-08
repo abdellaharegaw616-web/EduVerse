@@ -16,7 +16,11 @@ import {
   Loader2,
   Upload,
   Trash2,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
+import { useTheme } from '@/components/providers/theme-provider';
 import { apiClient } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
@@ -65,6 +69,7 @@ export default function StudentSettingsPage() {
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const { theme, setTheme } = useTheme();
 
   // 1. Fetch current profile
   const {
@@ -449,6 +454,79 @@ export default function StudentSettingsPage() {
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      {/* 3. Appearance & Theme Preferences */}
+      <Card className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-bold text-brand-navy dark:text-slate-100 flex items-center gap-2">
+            <Sun className="h-4 w-4 text-brand-emerald" />
+            <span>Appearance & Theme Mode</span>
+          </CardTitle>
+          <CardDescription className="text-xs text-brand-slate dark:text-slate-400">
+            Customize the platform color scheme and viewing experience for low-light or daytime environments.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button
+              type="button"
+              onClick={() => setTheme('light')}
+              className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
+                theme === 'light'
+                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
+                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <Sun className={`h-5 w-5 ${theme === 'light' ? 'text-brand-emerald' : 'text-slate-500'}`} />
+                {theme === 'light' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">Light Mode</h4>
+                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">Academic slate with clean, crisp surfaces</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTheme('dark')}
+              className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
+                theme === 'dark'
+                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
+                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <Moon className={`h-5 w-5 ${theme === 'dark' ? 'text-amber-400' : 'text-slate-500'}`} />
+                {theme === 'dark' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">Dark Mode</h4>
+                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">High contrast dark navy for night study</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTheme('system')}
+              className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
+                theme === 'system'
+                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
+                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <Monitor className={`h-5 w-5 ${theme === 'system' ? 'text-brand-emerald' : 'text-slate-500'}`} />
+                {theme === 'system' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">System Preference</h4>
+                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">Sync automatically with your device OS</p>
+              </div>
+            </button>
+          </div>
         </CardContent>
       </Card>
     </div>

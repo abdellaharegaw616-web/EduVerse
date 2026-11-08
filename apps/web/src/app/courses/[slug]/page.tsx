@@ -19,7 +19,6 @@ import {
   Globe2,
   ChevronDown,
   ChevronUp,
-  Sparkles,
   MessageSquare,
   Send,
   AlertCircle,
@@ -329,7 +328,7 @@ export default function CourseDetailPage() {
               <Card className="border border-brand-border bg-white shadow-sm">
                 <CardContent className="p-6 space-y-4">
                   <h2 className="text-lg font-bold text-brand-navy flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-brand-emerald" />
+                    <BookOpen className="h-5 w-5 text-brand-emerald" />
                     <span>What You'll Learn</span>
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -523,7 +522,7 @@ export default function CourseDetailPage() {
           {/* Right Column: Sticky Action Card */}
           <div className="space-y-6">
             <Card className="sticky top-20 border border-brand-border bg-white shadow-lg overflow-hidden">
-              <div className="relative h-44 w-full bg-gradient-to-tr from-brand-navy to-slate-800">
+              <div className="relative h-44 w-full bg-slate-800 dark:bg-slate-900">
                 {course.thumbnailUrl ? (
                   <Image
                     src={course.thumbnailUrl}

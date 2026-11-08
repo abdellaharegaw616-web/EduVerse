@@ -100,9 +100,8 @@ export default function StudentCertificatesPage() {
           {certificates.map((cert) => (
             <Card
               key={cert.id}
-              className="relative overflow-hidden border border-brand-amber/30 bg-gradient-to-br from-white via-amber-50/20 to-white shadow-sm hover:shadow-md transition-all duration-200"
+              className="relative overflow-hidden border border-amber-300 dark:border-amber-900/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all duration-200"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-amber/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
 
               <CardContent className="p-6 flex flex-col justify-between h-full space-y-6">
                 <div className="space-y-4">

@@ -11,7 +11,7 @@ import {
   ArrowRight,
   TrendingUp,
   AlertCircle,
-  Sparkles,
+  GraduationCap,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { apiClient } from '@/lib/api';
@@ -96,7 +96,7 @@ export default function TeacherDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5" />
+            <GraduationCap className="h-4 w-4" />
             Instructor Studio
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">

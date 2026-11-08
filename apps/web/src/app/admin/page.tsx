@@ -17,7 +17,7 @@ import {
   Search,
   Eye,
   RefreshCw,
-  Sparkles,
+  BarChart3,
   Star,
   Trash2,
   PlusCircle,
@@ -298,7 +298,7 @@ export default function AdminPortalPage() {
           {/* Navigation Tabs */}
           <div className="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0">
             {[
-              { id: 'overview', label: 'KPI Overview', icon: Sparkles },
+              { id: 'overview', label: 'KPI Overview', icon: BarChart3 },
               { id: 'courses', label: 'Course Review', icon: BookOpen },
               { id: 'users', label: 'Users & Bans', icon: Users },
               { id: 'reviews', label: 'Content Moderation', icon: Star },

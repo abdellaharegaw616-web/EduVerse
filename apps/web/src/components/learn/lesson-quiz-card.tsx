@@ -11,7 +11,6 @@ import {
   AlertCircle,
   RotateCcw,
   Send,
-  Sparkles,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -204,7 +203,7 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
           <div className="space-y-1">
             <span className="text-[11px] font-bold uppercase tracking-wider text-brand-mint flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" />
+              <HelpCircle className="h-3.5 w-3.5" />
               <span>Lesson Knowledge Check</span>
             </span>
             <h3 className="text-lg font-black text-white">{quiz.title}</h3>

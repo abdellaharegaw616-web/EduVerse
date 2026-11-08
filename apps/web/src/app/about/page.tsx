@@ -57,7 +57,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-brand-border bg-gradient-to-br from-brand-navy via-slate-900 to-brand-navy p-8 text-white space-y-6 shadow-xl">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 dark:bg-slate-900 p-8 text-white space-y-6 shadow-md">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-emerald text-white">
               <Target className="h-6 w-6" />
             </div>

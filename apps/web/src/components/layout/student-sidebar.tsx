@@ -49,12 +49,12 @@ export function StudentSidebar() {
   const user = profileData || authUser;
 
   return (
-    <aside className="w-64 border-r border-brand-border bg-white flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 border-r border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] transition-colors">
       {/* Top: Nav Links */}
       <div className="p-4 space-y-6">
         {/* User Identity Chip */}
-        <div className="rounded-lg bg-slate-50 border border-brand-border p-3 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
+        <div className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
             {user?.profile?.avatarUrl ? (
               <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
             ) : user?.fullName ? (
@@ -64,10 +64,10 @@ export function StudentSidebar() {
             )}
           </div>
           <div className="overflow-hidden">
-            <span className="font-bold text-brand-navy text-xs truncate block">
+            <span className="font-bold text-brand-navy dark:text-slate-100 text-xs truncate block">
               {user?.fullName || 'Student'}
             </span>
-            <span className="text-[10px] text-brand-slate truncate block">
+            <span className="text-[10px] text-brand-slate dark:text-slate-400 truncate block">
               {user?.email}
             </span>
           </div>
@@ -85,11 +85,18 @@ export function StudentSidebar() {
                 className={cn(
                   'flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors',
                   isActive
-                    ? 'bg-brand-mint text-brand-emerald font-semibold'
-                    : 'text-brand-slate hover:text-brand-navy hover:bg-slate-50',
+                    ? 'bg-brand-mint text-brand-emerald dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
+                    : 'text-brand-slate dark:text-slate-400 hover:text-brand-navy dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800',
                 )}
               >
-                <Icon className={cn('h-4 w-4 shrink-0', isActive ? 'text-brand-emerald' : 'text-brand-slate')} />
+                <Icon
+                  className={cn(
+                    'h-4 w-4 shrink-0',
+                    isActive
+                      ? 'text-brand-emerald dark:text-emerald-400'
+                      : 'text-brand-slate dark:text-slate-400',
+                  )}
+                />
                 <span>{item.label}</span>
               </Link>
             );
@@ -98,18 +105,17 @@ export function StudentSidebar() {
       </div>
 
       {/* Bottom: Sign out button */}
-      <div className="p-4 border-t border-brand-border">
+      <div className="p-4 border-t border-brand-border dark:border-slate-800">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => logout()}
-          className="w-full justify-start text-xs text-red-600 hover:bg-red-50 hover:text-red-700 gap-2"
+          className="w-full justify-start text-xs text-brand-slate dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2"
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-4 w-4 shrink-0" />
           <span>Sign Out</span>
         </Button>
       </div>
     </aside>
   );
 }
-

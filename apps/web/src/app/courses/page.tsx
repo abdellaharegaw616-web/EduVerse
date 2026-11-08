@@ -10,7 +10,6 @@ import {
   Clock,
   Users,
   BookOpen,
-  Sparkles,
   ArrowRight,
   RotateCcw,
   Globe2,
@@ -153,11 +152,10 @@ export default function MarketplaceCoursesPage() {
   return (
     <div className="min-h-screen bg-brand-page pb-24">
       {/* Hero Header */}
-      <section className="bg-gradient-to-b from-brand-navy via-brand-navy/95 to-brand-navy text-white py-16 px-4 sm:px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#168B79_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
+      <section className="bg-slate-900 dark:bg-slate-950 border-b border-slate-800 text-white py-14 px-4 sm:px-6 relative overflow-hidden">
         <div className="container mx-auto max-w-6xl relative z-10 space-y-6 text-center">
           <Badge className="bg-brand-emerald text-white hover:bg-brand-emerald/90 px-3 py-1 text-xs gap-1.5 inline-flex items-center">
-            <Sparkles className="h-3.5 w-3.5" />
+            <GraduationCap className="h-3.5 w-3.5" />
             <span>EduVerse Course Marketplace</span>
           </Badge>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white max-w-3xl mx-auto leading-tight">
@@ -355,7 +353,7 @@ export default function MarketplaceCoursesPage() {
                 <Card className="h-full overflow-hidden border border-brand-border bg-white hover:shadow-lg transition-all duration-300 hover:border-brand-emerald/50 flex flex-col justify-between">
                   <div>
                     {/* Thumbnail Image Container */}
-                    <div className="relative h-44 w-full bg-gradient-to-tr from-brand-navy to-slate-800 overflow-hidden">
+                    <div className="relative h-44 w-full bg-slate-800 dark:bg-slate-900 overflow-hidden">
                       {course.thumbnailUrl ? (
                         <Image
                           src={course.thumbnailUrl}

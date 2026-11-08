@@ -17,7 +17,6 @@ import {
   CheckCircle2,
   ExternalLink,
   Send,
-  Sparkles,
   Archive,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
@@ -288,7 +287,7 @@ export default function EditCoursePage() {
                 onClick={() => setActionModal('publish')}
                 className="text-xs gap-1.5 bg-brand-emerald hover:bg-brand-emerald/90 text-white"
               >
-                <Sparkles className="h-3.5 w-3.5" />
+                <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>Publish Course</span>
               </Button>
             )}

@@ -5,12 +5,12 @@
 @layer base {
   :root {
     --background: 210 20% 98.4%;
-    --foreground: 222 51% 16%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222 51% 16%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 51% 16%;
-    --primary: 222 51% 16%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%;
     --primary-foreground: 0 0% 100%;
     --secondary: 171 73% 31%;
     --secondary-foreground: 0 0% 100%;
@@ -25,6 +25,28 @@
     --ring: 171 73% 31%;
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 171 73% 36%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 171 73% 18%;
+    --accent-foreground: 160 50% 90%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 171 73% 40%;
+  }
 }
 
 @layer base {
@@ -35,6 +57,37 @@
     @apply bg-brand-page text-brand-navy antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* Real Enterprise LMS Dark Mode Styling */
+.dark body {
+  background-color: #0B0F19;
+  color: #F8FAFC;
+}
+
+.dark .bg-brand-page {
+  background-color: #0B0F19 !important;
+}
+
+.dark .border-brand-border {
+  border-color: #1E293B !important;
+}
+
+.dark .text-brand-navy {
+  color: #F8FAFC !important;
+}
+
+.dark .text-brand-slate {
+  color: #94A3B8 !important;
+}
+
+.dark .bg-brand-mint {
+  background-color: rgba(20, 184, 166, 0.16) !important;
+  color: #2DD4BF !important;
+}
+
+.dark .hover\:bg-brand-mint:hover {
+  background-color: rgba(20, 184, 166, 0.24) !important;
 }
 
 /* Custom scrollbars & focus outline for accessibility */
