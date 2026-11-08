@@ -230,10 +230,10 @@ export default function MarketplaceCoursesPage() {
           </div>
 
           {/* Secondary Filters Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2 border-t border-brand-border/60">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-brand-border/60 dark:border-slate-800">
             {/* Difficulty Filter */}
             <div>
-              <label className="text-[11px] font-semibold text-brand-slate uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-semibold text-brand-slate dark:text-slate-400 uppercase tracking-wider block mb-1">
                 Difficulty Level
               </label>
               <select
@@ -242,7 +242,7 @@ export default function MarketplaceCoursesPage() {
                   setDifficulty(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
               >
                 {DIFFICULTIES.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -254,7 +254,7 @@ export default function MarketplaceCoursesPage() {
 
             {/* Language Filter */}
             <div>
-              <label className="text-[11px] font-semibold text-brand-slate uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-semibold text-brand-slate dark:text-slate-400 uppercase tracking-wider block mb-1">
                 Instruction Language
               </label>
               <select
@@ -263,7 +263,7 @@ export default function MarketplaceCoursesPage() {
                   setLanguage(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
               >
                 {LANGUAGES.map((l) => (
                   <option key={l.value} value={l.value}>
@@ -275,7 +275,7 @@ export default function MarketplaceCoursesPage() {
 
             {/* Sort Order */}
             <div>
-              <label className="text-[11px] font-semibold text-brand-slate uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-semibold text-brand-slate dark:text-slate-400 uppercase tracking-wider block mb-1">
                 Sort By
               </label>
               <select
@@ -284,7 +284,7 @@ export default function MarketplaceCoursesPage() {
                   setSortBy(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
               >
                 {SORT_OPTIONS.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -299,7 +299,7 @@ export default function MarketplaceCoursesPage() {
               <Button
                 variant="outline"
                 onClick={resetFilters}
-                className="w-full text-xs gap-1.5 h-[34px]"
+                className="w-full text-xs gap-1.5 h-9"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Reset Filters</span>

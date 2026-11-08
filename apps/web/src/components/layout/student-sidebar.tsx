@@ -35,7 +35,11 @@ const STUDENT_NAV_ITEMS = [
   { href: '/app/settings', label: 'Account Settings', icon: Settings },
 ];
 
-export function StudentSidebar() {
+export interface StudentSidebarProps {
+  onNavigate?: () => void;
+}
+
+export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
   const pathname = usePathname();
   const { user: authUser, logout } = useAuth();
 
@@ -48,12 +52,22 @@ export function StudentSidebar() {
 
   const user = profileData || authUser;
 
+  const handleLinkClick = () => {
+    if (onNavigate) {
+      onNavigate();
+    }
+  };
+
   return (
     <aside className="w-64 border-r border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] transition-colors">
       {/* Top: Nav Links */}
       <div className="p-4 space-y-6">
         {/* User Identity Chip */}
-        <div className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3">
+        <Link
+          href="/app/profile"
+          onClick={handleLinkClick}
+          className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3 hover:border-brand-emerald/40 transition-colors block"
+        >
           <div className="h-9 w-9 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
             {user?.profile?.avatarUrl ? (
               <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
@@ -71,7 +85,7 @@ export function StudentSidebar() {
               {user?.email}
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Links */}
         <nav className="space-y-1">
@@ -82,8 +96,9 @@ export function StudentSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={handleLinkClick}
                 className={cn(
-                  'flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors',
+                  'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors',
                   isActive
                     ? 'bg-brand-mint text-brand-emerald dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
                     : 'text-brand-slate dark:text-slate-400 hover:text-brand-navy dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800',
@@ -109,8 +124,11 @@ export function StudentSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => logout()}
-          className="w-full justify-start text-xs text-brand-slate dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2"
+          onClick={() => {
+            handleLinkClick();
+            logout();
+          }}
+          className="w-full justify-start text-xs text-brand-slate dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2 h-9"
         >
           <LogOut className="h-4 w-4 shrink-0" />
           <span>Sign Out</span>

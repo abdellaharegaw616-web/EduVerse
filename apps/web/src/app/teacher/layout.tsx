@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { TeacherRoute } from '@/components/auth/teacher-route';
 import { TeacherSidebar } from '@/components/layout/teacher-sidebar';
@@ -12,6 +12,24 @@ export default function TeacherAppLayout({
 }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileSidebarOpen(false);
+    };
+
+    if (mobileSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileSidebarOpen]);
+
   return (
     <TeacherRoute>
       <div className="flex min-h-[calc(100vh-4rem)] bg-brand-page dark:bg-slate-950 transition-colors">
@@ -20,36 +38,36 @@ export default function TeacherAppLayout({
           <TeacherSidebar />
         </div>
 
-        {/* Mobile Sidebar Toggle Header */}
-        <div className="md:hidden fixed bottom-4 right-4 z-50">
+        {/* Mobile Sidebar Toggle Button */}
+        <div className="md:hidden fixed bottom-6 right-6 z-50">
           <button
             onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-navy dark:bg-slate-800 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-navy dark:bg-slate-800 text-white shadow-xl hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-brand-emerald"
             aria-label="Toggle Teacher Studio Navigation"
           >
             {mobileSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
-        {/* Mobile Sidebar Drawer */}
+        {/* Mobile Sidebar Drawer Modal */}
         {mobileSidebarOpen && (
-          <div className="fixed inset-0 z-40 md:hidden flex">
+          <div className="fixed inset-0 z-40 md:hidden flex animate-in fade-in duration-200">
             <div
               className="fixed inset-0 bg-brand-navy/60 dark:bg-black/70 backdrop-blur-xs"
               onClick={() => setMobileSidebarOpen(false)}
+              aria-hidden="true"
             />
-            <div className="relative z-50 w-72 bg-white dark:bg-slate-900 h-full shadow-2xl animate-in slide-in-from-left duration-200">
-              <TeacherSidebar />
+            <div className="relative z-50 w-72 max-w-[85vw] bg-white dark:bg-slate-900 h-full shadow-2xl animate-in slide-in-from-left duration-200 overflow-y-auto">
+              <TeacherSidebar onNavigate={() => setMobileSidebarOpen(false)} />
             </div>
           </div>
         )}
 
         {/* Main Teacher Studio Workspace Area */}
-        <div className="flex-1 overflow-x-hidden p-4 sm:p-8">
+        <div className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </div>
     </TeacherRoute>
   );
 }
-

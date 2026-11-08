@@ -319,10 +319,10 @@ export default function CourseDetailPage() {
       </section>
 
       {/* Main Content Layout */}
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 pt-10">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 pt-6 sm:pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Learning Objectives, Syllabus, Bio, Reviews */}
-          <div className="lg:col-span-2 space-y-10">
+          <div className="lg:col-span-2 space-y-10 order-last lg:order-first">
             {/* What You'll Learn */}
             {course.learningObjectives && course.learningObjectives.length > 0 && (
               <Card className="border border-brand-border bg-white shadow-sm">
@@ -519,8 +519,8 @@ export default function CourseDetailPage() {
             </div>
           </div>
 
-          {/* Right Column: Sticky Action Card */}
-          <div className="space-y-6">
+          {/* Right Column: Sticky Action Card (Prioritized on mobile, sticky on desktop) */}
+          <div className="lg:col-span-1 lg:order-last order-first space-y-6">
             <Card className="sticky top-20 border border-brand-border bg-white shadow-lg overflow-hidden">
               <div className="relative h-44 w-full bg-slate-800 dark:bg-slate-900">
                 {course.thumbnailUrl ? (

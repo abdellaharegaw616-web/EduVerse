@@ -143,14 +143,14 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-brand-border dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-brand-slate dark:text-slate-400 gap-4">
+        <div className="mt-12 pt-8 border-t border-brand-border dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-brand-slate dark:text-slate-400 gap-4 text-center sm:text-left">
           <p>© {new Date().getFullYear()} EduVerse Inc. All rights reserved. Built for Ethiopian Education.</p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-4">
             <span className="inline-flex items-center gap-1">
               <Globe className="h-3.5 w-3.5 text-brand-emerald" />
               <span>English (US) / Amharic</span>
             </span>
-            <span className="inline-block h-3 w-px bg-slate-300 dark:bg-slate-700" />
+            <span className="inline-block h-3 w-px bg-slate-300 dark:bg-slate-700 hidden sm:inline" />
             <span className="text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/40">
               Low-Bandwidth 3G Optimized
             </span>

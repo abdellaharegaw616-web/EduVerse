@@ -129,9 +129,16 @@ export default function CourseLearningPlayerPage() {
   const initialLessonId = searchParams.get('lesson');
 
   const [activeLessonId, setActiveLessonId] = useState<string | null>(initialLessonId);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+
+  // Open sidebar by default on large desktop screens
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      setSidebarOpen(true);
+    }
+  }, []);
 
   // 1. Fetch Course Player Syllabus & Progress
   const {
@@ -216,6 +223,9 @@ export default function CourseLearningPlayerPage() {
   const handleSelectLesson = (lessonId: string) => {
     setActiveLessonId(lessonId);
     router.replace(`/courses/${slug}/learn?lesson=${lessonId}`, { scroll: false });
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
   };
 
   const handleNextLesson = () => {
@@ -620,10 +630,19 @@ export default function CourseLearningPlayerPage() {
           </div>
         </main>
 
+        {/* Mobile Backdrop */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-xs lg:hidden animate-in fade-in duration-200"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
         {/* 3. Collapsible Course Syllabus Sidebar */}
         <aside
-          className={`w-80 md:w-96 border-l border-slate-800 bg-slate-900 flex flex-col shrink-0 transition-all duration-300 z-20 ${
-            sidebarOpen ? 'translate-x-0' : 'translate-x-full absolute right-0 inset-y-0'
+          className={`fixed inset-y-0 right-0 z-50 w-full sm:w-80 md:w-96 lg:static lg:w-96 border-l border-slate-800 bg-slate-900 flex flex-col shrink-0 transition-all duration-300 ${
+            sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:hidden'
           }`}
         >
           {/* Syllabus Header */}
@@ -640,7 +659,8 @@ export default function CourseLearningPlayerPage() {
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(false)}
-              className="text-slate-400 hover:text-white md:hidden h-7 w-7 p-0"
+              className="text-slate-400 hover:text-white lg:hidden h-8 w-8 p-0"
+              aria-label="Close Syllabus"
             >
               <X className="h-4 w-4" />
             </Button>

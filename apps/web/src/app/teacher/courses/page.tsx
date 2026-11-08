@@ -228,8 +228,8 @@ export default function TeacherCoursesPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 gap-2 border-t border-brand-border/60">
-                  <div className="flex items-center gap-1.5">
+                <div className="flex flex-wrap items-center justify-between pt-2 gap-2 border-t border-brand-border/60">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     <Link href={`/teacher/courses/${course.id}/edit`}>
                       <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
                         <Edit className="h-3 w-3" />

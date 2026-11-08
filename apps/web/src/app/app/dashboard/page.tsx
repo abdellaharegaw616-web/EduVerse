@@ -138,9 +138,9 @@ export default function StudentDashboardPage() {
       )}
 
       {/* 2. Key Metrics Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-brand-border">
-          <CardContent className="p-5 space-y-1">
+          <CardContent className="p-4 sm:p-5 space-y-1">
             <div className="flex items-center justify-between text-brand-slate text-xs">
               <span>Enrolled Courses</span>
               <BookOpen className="h-4 w-4 text-brand-emerald" />

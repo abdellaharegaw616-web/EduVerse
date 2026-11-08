@@ -182,9 +182,9 @@ export default function StudentProfilePage() {
               </div>
             </div>
 
-            <CardContent className="px-6 pb-6 pt-0 relative">
+            <CardContent className="px-4 sm:px-6 pb-6 pt-0 relative">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12">
-                <div className="flex items-end gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 items-center sm:items-end text-center sm:text-left">
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     className="relative w-24 h-24 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-navy dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
@@ -220,16 +220,16 @@ export default function StudentProfilePage() {
                     onChange={handleDirectAvatarUpload}
                   />
                   <div className="mb-1">
-                    <h2 className="text-xl font-bold text-brand-navy">{user.fullName}</h2>
-                    <p className="text-xs text-brand-slate flex items-center gap-1.5 mt-0.5">
-                      <Mail className="h-3.5 w-3.5" />
-                      {user.email}
+                    <h2 className="text-lg sm:text-xl font-bold text-brand-navy">{user.fullName}</h2>
+                    <p className="text-xs text-brand-slate flex items-center justify-center sm:justify-start gap-1.5 mt-0.5">
+                      <Mail className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate">{user.email}</span>
                     </p>
                   </div>
                 </div>
 
-                <Link href="/app/settings">
-                  <Button variant="default" size="sm" className="gap-1 text-xs">
+                <Link href="/app/settings" className="w-full sm:w-auto">
+                  <Button variant="default" size="sm" className="gap-1 text-xs w-full sm:w-auto h-9">
                     <Edit3 className="h-3 w-3" />
                     <span>Manage Account</span>
                   </Button>

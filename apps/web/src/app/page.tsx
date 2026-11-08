@@ -81,15 +81,15 @@ export default function HomePage() {
               EduVerse connects ambitious students with leading university professors, structured curricula, and verifiable certificates — engineered to run reliably even on low-bandwidth 3G connections.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link href="/courses">
-                <Button variant="emerald" size="lg" className="gap-2 shadow-xs">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
+              <Link href="/courses" className="w-full sm:w-auto">
+                <Button variant="emerald" size="lg" className="w-full sm:w-auto gap-2 shadow-xs">
                   <span>Explore Catalog</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/register">
-                <Button variant="outline" size="lg" className="border-brand-navy text-brand-navy dark:border-slate-700 dark:text-slate-200">
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-brand-navy text-brand-navy dark:border-slate-700 dark:text-slate-200">
                   Create Student Account
                 </Button>
               </Link>
@@ -297,15 +297,15 @@ export default function HomePage() {
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
               Join thousands of Ethiopian students advancing their careers in Software Engineering, Data Science, Electrical Engineering, and Business Management.
             </p>
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link href="/register">
-                <Button variant="emerald" size="lg" className="gap-2 font-semibold">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button variant="emerald" size="lg" className="w-full sm:w-auto gap-2 font-semibold">
                   <span>Create Free Account</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/pricing">
-                <Button variant="outline" size="lg" className="border-white/80 text-white hover:bg-white hover:text-brand-navy dark:border-slate-700">
+              <Link href="/pricing" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/80 text-white hover:bg-white hover:text-brand-navy dark:border-slate-700">
                   View Pricing Plans
                 </Button>
               </Link>
