@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard,
   BookOpen,
@@ -17,6 +18,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
+import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -35,7 +37,16 @@ const STUDENT_NAV_ITEMS = [
 
 export function StudentSidebar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user: authUser, logout } = useAuth();
+
+  const { data: profileData } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: () => apiClient.get<any>('/users/profile'),
+    enabled: !!authUser?.id,
+    staleTime: 1000 * 30,
+  });
+
+  const user = profileData || authUser;
 
   return (
     <aside className="w-64 border-r border-brand-border bg-white flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)]">

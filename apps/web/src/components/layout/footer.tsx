@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, ShieldCheck, Globe, Mail, Phone, MapPin } from 'lucide-react';
+import { ShieldCheck, Globe, Mail, Phone, MapPin } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -10,9 +10,11 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center space-x-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-navy text-white shadow-sm">
-                <BookOpen className="h-5 w-5 text-brand-emerald" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="EduVerse Logo"
+                className="h-9 w-9 object-contain rounded-lg shadow-xs"
+              />
               <div className="flex flex-col">
                 <span className="font-bold tracking-tight text-brand-navy text-lg leading-none">
                   Edu<span className="text-brand-emerald">Verse</span>

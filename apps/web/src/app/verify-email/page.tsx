@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { BookOpen, CheckCircle2, AlertCircle, MailCheck, ArrowRight } from 'lucide-react';
+import { CheckCircle2, AlertCircle, MailCheck, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -118,10 +118,12 @@ export default function VerifyEmailPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy text-white shadow-sm">
-              <BookOpen className="h-5 w-5 text-brand-emerald" />
-            </div>
+          <Link href="/" className="inline-flex items-center space-x-2.5">
+            <img
+              src="/logo.png"
+              alt="EduVerse Logo"
+              className="h-10 w-10 object-contain rounded-xl shadow-xs"
+            />
             <span className="font-extrabold tracking-tight text-brand-navy text-2xl">
               Edu<span className="text-brand-emerald">Verse</span>
             </span>

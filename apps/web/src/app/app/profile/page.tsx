@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/context/auth-context';
 import {
   User,
   Mail,
@@ -53,6 +54,7 @@ interface UserProfileResponse {
 
 export default function StudentProfilePage() {
   const queryClient = useQueryClient();
+  const { refetchUser } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -85,6 +87,11 @@ export default function StudentProfilePage() {
         await apiClient.patch('/users/profile', { avatarUrl: base64String });
         setSuccessMessage('Profile photo updated successfully.');
         queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
+        await refetchUser();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('eduverse:profile-updated'));
+        }
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (err: any) {
         alert(err?.message || 'Failed to upload profile photo.');

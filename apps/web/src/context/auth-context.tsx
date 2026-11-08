@@ -48,9 +48,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
     };
 
+    // Event listener for profile/avatar updates
+    const handleProfileUpdated = () => {
+      refetchUser();
+    };
+
     window.addEventListener('eduverse:unauthorized', handleUnauthorized);
+    window.addEventListener('eduverse:profile-updated', handleProfileUpdated);
     return () => {
       window.removeEventListener('eduverse:unauthorized', handleUnauthorized);
+      window.removeEventListener('eduverse:profile-updated', handleProfileUpdated);
     };
   }, [refetchUser]);
 

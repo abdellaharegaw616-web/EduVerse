@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     siteName: 'EduVerse',
     locale: 'en_US',
     type: 'website',
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'EduVerse Logo' }],
+  },
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

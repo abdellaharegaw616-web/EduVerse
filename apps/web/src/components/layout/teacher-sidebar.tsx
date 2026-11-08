@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard,
   BookOpen,
@@ -15,10 +16,20 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
+import { apiClient } from '@/lib/api';
 
 export function TeacherSidebar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user: authUser, logout } = useAuth();
+
+  const { data: profileData } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: () => apiClient.get<any>('/users/profile'),
+    enabled: !!authUser?.id,
+    staleTime: 1000 * 30,
+  });
+
+  const user = profileData || authUser;
 
   const navItems = [
     {

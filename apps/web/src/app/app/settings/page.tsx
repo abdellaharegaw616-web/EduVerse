@@ -18,6 +18,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -59,6 +60,7 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function StudentSettingsPage() {
   const queryClient = useQueryClient();
+  const { refetchUser } = useAuth();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
@@ -132,9 +134,14 @@ export default function StudentSettingsPage() {
         phoneNumber: values.phoneNumber || undefined,
         timezone: values.timezone || undefined,
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       setProfileSuccess('Your profile details have been saved successfully.');
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
+      await refetchUser();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('eduverse:profile-updated'));
+      }
       setTimeout(() => setProfileSuccess(null), 4000);
     },
   });

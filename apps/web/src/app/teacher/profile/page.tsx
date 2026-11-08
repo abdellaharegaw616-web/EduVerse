@@ -21,6 +21,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -64,6 +65,7 @@ interface UserProfileResponse {
 
 export default function TeacherProfilePage() {
   const queryClient = useQueryClient();
+  const { refetchUser } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,10 +107,14 @@ export default function TeacherProfilePage() {
         avatarUrl: avatarUrl || undefined,
         ...overrideData,
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       setSuccessMessage('Instructor profile saved successfully.');
       queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      await refetchUser();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('eduverse:profile-updated'));
+      }
       setIsEditing(false);
       setTimeout(() => setSuccessMessage(null), 3000);
     },
@@ -133,6 +139,10 @@ export default function TeacherProfilePage() {
         setSuccessMessage('Profile photo updated successfully.');
         queryClient.invalidateQueries({ queryKey: ['teacher-profile'] });
         queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        await refetchUser();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('eduverse:profile-updated'));
+        }
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (err: any) {
         alert(err?.message || 'Failed to upload profile photo.');

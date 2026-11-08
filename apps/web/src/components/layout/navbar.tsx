@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Menu, X, ArrowRight, User, LogOut, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Menu, X, ArrowRight, User, LogOut, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
+import { apiClient } from '@/lib/api';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
@@ -20,16 +22,27 @@ const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user: authUser, isAuthenticated, logout } = useAuth();
+
+  const { data: profileData } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: () => apiClient.get<any>('/users/profile'),
+    enabled: !!authUser?.id,
+    staleTime: 1000 * 30,
+  });
+
+  const user = profileData || authUser;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-brand-border bg-white/95 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-navy text-white shadow-sm">
-            <BookOpen className="h-5 w-5 text-brand-emerald" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="EduVerse Logo"
+            className="h-9 w-9 object-contain rounded-lg shadow-xs"
+          />
           <div className="flex flex-col">
             <span className="font-bold tracking-tight text-brand-navy text-lg leading-none">
               Edu<span className="text-brand-emerald">Verse</span>
