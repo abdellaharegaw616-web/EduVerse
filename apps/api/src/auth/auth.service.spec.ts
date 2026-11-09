@@ -1,4 +1,8 @@
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { PrismaService, Role } from '../database/prisma.service';
@@ -132,6 +136,113 @@ describe('AuthService (Unit)', () => {
           password: 'WrongPassword123!',
         }),
       ).rejects.toThrow(new UnauthorizedException('Invalid email or password'));
+    });
+
+    it('should reject login for deactivated account with UnauthorizedException', async () => {
+      const passwordHash = await argon2.hash('Password123!', { type: argon2.argon2id });
+
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'u-suspended',
+        email: 'suspended@eduverse.et',
+        passwordHash,
+        isActive: false,
+      });
+
+      await expect(
+        authService.login({
+          email: 'suspended@eduverse.et',
+          password: 'Password123!',
+        }),
+      ).rejects.toThrow(new UnauthorizedException('This account has been deactivated. Please contact support.'));
+    });
+  });
+
+  describe('Logout & Session Revocation', () => {
+    it('should revoke active refresh token on logout', async () => {
+      prisma.refreshToken.updateMany.mockResolvedValue({ count: 1 });
+
+      const result = await authService.logout('raw-token-uuid-1234');
+
+      expect(result.message).toBe('Successfully logged out');
+      expect(prisma.refreshToken.updateMany).toHaveBeenCalledWith({
+        where: { tokenHash: expect.any(String) },
+        data: { isRevoked: true },
+      });
+    });
+
+    it('should gracefully handle logout when no refresh token cookie is present', async () => {
+      const result = await authService.logout(undefined);
+
+      expect(result.message).toBe('Successfully logged out');
+      expect(prisma.refreshToken.updateMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Current User Profile Lookup', () => {
+    it('should return user profile including profile relation', async () => {
+      const mockProfile = {
+        id: 'u-1',
+        email: 'student@eduverse.et',
+        fullName: 'Abebe Tadesse',
+        role: Role.STUDENT,
+        isActive: true,
+        isEmailVerified: true,
+        createdAt: new Date(),
+        profile: {
+          id: 'prof-1',
+          avatarUrl: 'https://cdn.eduverse.et/avatar.jpg',
+          bio: 'CS student',
+        },
+      };
+
+      prisma.user.findUnique.mockResolvedValue(mockProfile);
+
+      const result = await authService.getProfile('u-1');
+
+      expect(result.id).toBe('u-1');
+      expect(result.profile?.avatarUrl).toBe('https://cdn.eduverse.et/avatar.jpg');
+    });
+
+    it('should throw UnauthorizedException when user does not exist', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+
+      await expect(authService.getProfile('non-existent-id')).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('Change Password Workflow', () => {
+    it('should change password successfully', async () => {
+      const oldHash = await argon2.hash('OldPassword123!', { type: argon2.argon2id });
+
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'u-1',
+        passwordHash: oldHash,
+      });
+      prisma.user.update.mockResolvedValue({});
+
+      const result = await authService.changePassword('u-1', {
+        currentPassword: 'OldPassword123!',
+        newPassword: 'NewSecurePassword456!',
+      });
+
+      expect(result.message).toBe('Password updated successfully');
+      expect(prisma.user.update).toHaveBeenCalled();
+    });
+
+    it('should reject change password if current password is incorrect', async () => {
+      const oldHash = await argon2.hash('OldPassword123!', { type: argon2.argon2id });
+
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'u-1',
+        passwordHash: oldHash,
+      });
+
+      await expect(
+        authService.changePassword('u-1', {
+          currentPassword: 'WrongPassword!',
+          newPassword: 'NewSecurePassword456!',
+        }),
+      ).rejects.toThrow(new BadRequestException('Current password does not match our records'));
     });
   });
 

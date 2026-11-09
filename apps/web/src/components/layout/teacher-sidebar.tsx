@@ -84,10 +84,14 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
           className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 flex items-center gap-3 hover:border-brand-emerald/40 transition-colors block"
         >
           <div className="w-10 h-10 rounded-lg bg-brand-navy dark:bg-slate-700 text-brand-mint dark:text-emerald-300 font-bold flex items-center justify-center shrink-0 text-sm shadow-xs overflow-hidden">
-            {user?.profile?.avatarUrl ? (
-              <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+            {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
+              <img
+                src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
+                alt={user?.fullName || authUser?.fullName || 'Educator'}
+                className="w-full h-full object-cover"
+              />
             ) : (
-              user?.fullName?.charAt(0) || 'T'
+              (user?.fullName || authUser?.fullName)?.charAt(0) || 'T'
             )}
           </div>
           <div className="overflow-hidden">
@@ -119,11 +123,10 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
                   key={item.href}
                   href={item.href}
                   onClick={handleLinkClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all ${
-                    isActive
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all ${isActive
                       ? 'bg-slate-900 dark:bg-slate-800 text-white shadow-xs font-semibold'
                       : 'text-brand-slate dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-navy dark:hover:text-slate-100'
-                  }`}
+                    }`}
                 >
                   <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-amber-400' : ''}`} />
                   <span className="truncate">{item.label}</span>

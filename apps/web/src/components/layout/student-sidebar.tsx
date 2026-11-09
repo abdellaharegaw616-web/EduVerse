@@ -69,10 +69,14 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
           className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3 hover:border-brand-emerald/40 transition-colors block"
         >
           <div className="h-9 w-9 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
-            {user?.profile?.avatarUrl ? (
-              <img src={user.profile.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
-            ) : user?.fullName ? (
-              user.fullName.charAt(0).toUpperCase()
+            {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
+              <img
+                src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
+                alt={user?.fullName || authUser?.fullName || 'Student'}
+                className="w-full h-full object-cover"
+              />
+            ) : (user?.fullName || authUser?.fullName) ? (
+              (user?.fullName || authUser?.fullName)!.charAt(0).toUpperCase()
             ) : (
               'S'
             )}

@@ -93,6 +93,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email.toLowerCase().trim() },
+      include: { profile: true },
     });
 
     // Generic error message to prevent account enumeration
@@ -113,7 +114,7 @@ export class AuthService {
   }
 
   // Session & Dual-Token Generator
-  private async createSession(user: { id: string; email: string; role: Role; fullName: string }) {
+  private async createSession(user: { id: string; email: string; role: Role; fullName: string; profile?: any }) {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
@@ -145,6 +146,7 @@ export class AuthService {
         email: user.email,
         fullName: user.fullName,
         role: user.role,
+        profile: user.profile || null,
       },
     };
   }
@@ -158,7 +160,11 @@ export class AuthService {
     const tokenHash = this.hashToken(rawRefreshToken);
     const tokenRecord = await this.prisma.refreshToken.findUnique({
       where: { tokenHash },
-      include: { user: true },
+      include: {
+        user: {
+          include: { profile: true },
+        },
+      },
     });
 
     if (!tokenRecord) {
@@ -222,6 +228,7 @@ export class AuthService {
         email: tokenRecord.user.email,
         fullName: tokenRecord.user.fullName,
         role: tokenRecord.user.role,
+        profile: (tokenRecord.user as any).profile || null,
       },
     };
   }

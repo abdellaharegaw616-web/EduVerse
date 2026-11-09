@@ -79,20 +79,18 @@ export default function ContactPage() {
               <div className="flex items-start gap-3">
                 <Phone className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy block text-sm">Phone Line</strong>
-                  <span>+251 97 956 7153</span>
-                  <br />
-                  <span>0979567153</span>
+                  <strong className="text-brand-navy dark:text-slate-200 block text-sm">Phone Line</strong>
+                  <span>+251 97 956 7153 / 0979567153</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy block text-sm">Email Inquiries</strong>
-                  <span>abdellaj636@gmail.com</span>
-                  <br />
-                  <span>support@eduverse.et</span>
+                  <strong className="text-brand-navy dark:text-slate-200 block text-sm">Email Inquiries</strong>
+                  <a href="mailto:abdellaj636@gmail.com" className="text-brand-emerald hover:underline">
+                    abdellaj636@gmail.com
+                  </a>
                 </div>
               </div>
 

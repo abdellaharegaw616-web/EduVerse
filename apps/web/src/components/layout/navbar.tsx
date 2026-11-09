@@ -152,13 +152,13 @@ export function Navbar() {
                   className="h-8 w-8 rounded-full bg-brand-mint dark:bg-emerald-950 text-brand-emerald dark:text-emerald-400 flex items-center justify-center text-xs font-bold border border-brand-emerald/20 overflow-hidden hover:ring-2 hover:ring-brand-emerald transition-all"
                   title="View Profile"
                 >
-                  {user.profile?.avatarUrl ? (
+                  {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
                     <img
-                      src={user.profile.avatarUrl}
-                      alt={user.fullName}
+                      src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
+                      alt={user?.fullName || authUser?.fullName || 'User'}
                       className="w-full h-full object-cover"
                     />
-                  ) : user.fullName ? (
+                  ) : user?.fullName ? (
                     user.fullName.charAt(0).toUpperCase()
                   ) : (
                     <User className="h-4 w-4" />
@@ -218,13 +218,13 @@ export function Navbar() {
                 className="flex items-center gap-3 overflow-hidden"
               >
                 <div className="h-10 w-10 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-sm font-bold shrink-0 overflow-hidden">
-                  {user.profile?.avatarUrl ? (
+                  {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
                     <img
-                      src={user.profile.avatarUrl}
-                      alt={user.fullName}
+                      src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
+                      alt={user?.fullName || authUser?.fullName || 'User'}
                       className="w-full h-full object-cover"
                     />
-                  ) : user.fullName ? (
+                  ) : user?.fullName ? (
                     user.fullName.charAt(0).toUpperCase()
                   ) : (
                     'U'

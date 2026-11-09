@@ -242,9 +242,9 @@ export default function TeacherProfilePage() {
                     className="relative w-20 h-20 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-navy dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
                     title="Click to upload profile photo"
                   >
-                    {user.profile?.avatarUrl ? (
+                    {avatarUrl || user.profile?.avatarUrl ? (
                       <img
-                        src={user.profile.avatarUrl}
+                        src={avatarUrl || user.profile?.avatarUrl!}
                         alt={user.fullName}
                         className="w-full h-full object-cover"
                       />
