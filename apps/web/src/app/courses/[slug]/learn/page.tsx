@@ -22,6 +22,9 @@ import {
   AlertCircle,
   Clock,
   Check,
+  BookOpenCheck,
+  StickyNote,
+  Megaphone,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -38,6 +41,8 @@ import {
 } from '@/components/ui/dialog';
 import { LessonQuizCard } from '@/components/learn/lesson-quiz-card';
 import { LessonAssignmentCard } from '@/components/learn/lesson-assignment-card';
+import { LessonAiTutor } from '@/components/learn/lesson-ai-tutor';
+import { LessonNotesPanel } from '@/components/learn/lesson-notes-panel';
 
 interface PlayerLessonSummary {
   id: string;
@@ -132,6 +137,7 @@ export default function CourseLearningPlayerPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [studyTab, setStudyTab] = useState<'ai' | 'notes' | 'announcements'>('ai');
 
   // Open sidebar by default on large desktop screens
   useEffect(() => {
@@ -152,6 +158,22 @@ export default function CourseLearningPlayerPage() {
       return apiClient.get<CoursePlayerResponse>(`/courses/${slug}/player`);
     },
     enabled: !!slug,
+  });
+
+  // Fetch Course Announcements
+  const { data: courseAnnouncements = [] } = useQuery<
+    Array<{
+      id: string;
+      title: string;
+      content: string;
+      createdAt: string;
+      author: { fullName: string };
+    }>
+  >({
+    queryKey: ['course-announcements', playerData?.course?.id],
+    queryFn: () =>
+      apiClient.get(`/announcements/course/${playerData!.course.id}`),
+    enabled: Boolean(playerData?.course?.id),
   });
 
   // Set default active lesson on syllabus load
@@ -602,6 +624,99 @@ export default function CourseLearningPlayerPage() {
                     }}
                   />
                 )}
+
+                {/* F2. Academic Study Companion (AI Tutor, Study Notes & Course Announcements) */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-3">
+                    <button
+                      type="button"
+                      onClick={() => setStudyTab('ai')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                        studyTab === 'ai'
+                          ? 'bg-brand-emerald text-white'
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                      }`}
+                    >
+                      <BookOpenCheck className="h-3.5 w-3.5" />
+                      <span>AI Study Tutor</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setStudyTab('notes')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                        studyTab === 'notes'
+                          ? 'bg-brand-emerald text-white'
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                      }`}
+                    >
+                      <StickyNote className="h-3.5 w-3.5" />
+                      <span>My Study Notes</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setStudyTab('announcements')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                        studyTab === 'announcements'
+                          ? 'bg-brand-emerald text-white'
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                      }`}
+                    >
+                      <Megaphone className="h-3.5 w-3.5" />
+                      <span>Announcements ({courseAnnouncements.length})</span>
+                    </button>
+                  </div>
+
+                  {studyTab === 'ai' && (
+                    <LessonAiTutor
+                      courseId={lessonData.courseId}
+                      lessonId={lessonData.id}
+                      lessonTitle={lessonData.title}
+                      theme="dark"
+                    />
+                  )}
+
+                  {studyTab === 'notes' && (
+                    <LessonNotesPanel
+                      lessonId={lessonData.id}
+                      lessonTitle={lessonData.title}
+                    />
+                  )}
+
+                  {studyTab === 'announcements' && (
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-3">
+                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Megaphone className="h-4 w-4 text-brand-emerald" />
+                        <span>Instructor Announcements</span>
+                      </h3>
+                      {courseAnnouncements.length === 0 ? (
+                        <p className="text-xs text-slate-400 py-4 text-center">
+                          No announcements have been posted for this course yet.
+                        </p>
+                      ) : (
+                        <div className="divide-y divide-slate-800">
+                          {courseAnnouncements.map((ann) => (
+                            <div key={ann.id} className="py-3 first:pt-0 last:pb-0 space-y-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <h4 className="text-xs font-bold text-white">{ann.title}</h4>
+                                <span className="text-[10px] text-slate-400">
+                                  {new Date(ann.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-300 whitespace-pre-line leading-relaxed">
+                                {ann.content}
+                              </p>
+                              <span className="text-[10px] text-brand-mint block">
+                                Posted by {ann.author?.fullName || 'Course Instructor'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 {/* G. Previous / Next Footer Controls */}
                 <div className="flex items-center justify-between pt-6 border-t border-slate-800">

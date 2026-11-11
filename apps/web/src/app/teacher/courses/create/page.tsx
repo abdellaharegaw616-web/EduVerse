@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ import {
   Save,
   Loader2,
   AlertCircle,
+  BookOpenCheck,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -59,9 +60,16 @@ export default function CreateCoursePage() {
     queryFn: () => apiClient.get<Category[]>('/courses/categories'),
   });
 
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiOutlineSections, setAiOutlineSections] = useState<
+    Array<{ title: string; lessons: string[] }>
+  >([]);
+
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<CreateCourseFormValues>({
     resolver: zodResolver(createCourseSchema) as any,
@@ -75,6 +83,31 @@ export default function CreateCoursePage() {
       learningObjectivesText: '',
       prerequisitesText: '',
       estimatedHours: 10,
+    },
+  });
+
+  const outlineMutation = useMutation({
+    mutationFn: () =>
+      apiClient.post<{
+        title: string;
+        description: string;
+        difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'ALL_LEVELS';
+        estimatedHours: number;
+        learningObjectives: string[];
+        prerequisites: string[];
+        sections: Array<{ title: string; lessons: string[] }>;
+      }>('/ai/teacher/generate-outline', {
+        topic: aiTopic.trim(),
+        difficulty: watch('difficulty'),
+        sectionCount: 4,
+      }),
+    onSuccess: (res) => {
+      setValue('title', res.title, { shouldValidate: true });
+      setValue('description', res.description, { shouldValidate: true });
+      setValue('estimatedHours', res.estimatedHours, { shouldValidate: true });
+      setValue('learningObjectivesText', res.learningObjectives.join('\n'));
+      setValue('prerequisitesText', res.prerequisites.join('\n'));
+      setAiOutlineSections(res.sections || []);
     },
   });
 
@@ -147,6 +180,62 @@ export default function CreateCoursePage() {
           </AlertDescription>
         </Alert>
       )}
+
+      {/* Optional AI Course Outline Assistant */}
+      <Card className="border border-brand-border dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900 shadow-xs">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
+            <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+            <span>AI Curriculum Outline Assistant (Optional)</span>
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Enter a subject topic to pre-populate course title, summary description, learning objectives, and a suggested module structure.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-3">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Input
+              value={aiTopic}
+              onChange={(e) => setAiTopic(e.target.value)}
+              placeholder="e.g., Full-Stack Cloud Architecture with NestJS & PostgreSQL"
+              className="text-xs h-9 bg-white dark:bg-slate-950 flex-1"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={aiTopic.trim().length < 3 || outlineMutation.isPending}
+              onClick={() => outlineMutation.mutate()}
+              className="h-9 text-xs gap-1.5 shrink-0"
+            >
+              {outlineMutation.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <BookOpenCheck className="h-3.5 w-3.5 text-brand-emerald" />
+              )}
+              <span>Draft Blueprint</span>
+            </Button>
+          </div>
+
+          {aiOutlineSections.length > 0 && (
+            <div className="p-3 rounded-lg bg-white dark:bg-slate-950 border border-brand-border dark:border-slate-800 space-y-1.5">
+              <p className="text-[11px] font-bold text-brand-navy dark:text-slate-200">
+                Suggested Module Structure (add these sections on the next step):
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-brand-slate dark:text-slate-400">
+                {aiOutlineSections.map((sec, idx) => (
+                  <li key={idx}>
+                    <strong className="text-brand-navy dark:text-slate-200">
+                      {idx + 1}. {sec.title}
+                    </strong>{' '}
+                    ({sec.lessons.length} lessons)
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Course Blueprint Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

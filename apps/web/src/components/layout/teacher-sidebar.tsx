@@ -14,6 +14,7 @@ import {
   LogOut,
   GraduationCap,
   ShieldCheck,
+  Megaphone,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { apiClient } from '@/lib/api';
@@ -61,6 +62,11 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
       label: 'Grading Queue',
       href: '/teacher/grading',
       icon: FileCheck2,
+    },
+    {
+      label: 'Announcements',
+      href: '/teacher/announcements',
+      icon: Megaphone,
     },
     {
       label: 'Course Analytics',

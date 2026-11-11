@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Save,
   Loader2,
+  BookOpenCheck,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -81,6 +82,17 @@ export default function TeacherGradingQueuePage() {
       queryClient.invalidateQueries({ queryKey: ['teacher-dashboard'] });
       setActiveSubmission(null);
       setGradeError(null);
+    },
+  });
+
+  const draftFeedbackMutation = useMutation({
+    mutationFn: ({ submissionId, proposedGrade }: { submissionId: string; proposedGrade?: number }) =>
+      apiClient.post<{ draftFeedback: string }>('/ai/teacher/draft-feedback', {
+        submissionId,
+        proposedGrade,
+      }),
+    onSuccess: (res) => {
+      setFeedbackInput(res.draftFeedback);
     },
   });
 
@@ -306,9 +318,31 @@ export default function TeacherGradingQueuePage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">
-                Qualitative Feedback for Learner
-              </Label>
+              <div className="flex items-center justify-between gap-2">
+                <Label className="text-xs font-semibold text-brand-navy dark:text-slate-200">
+                  Qualitative Feedback for Learner
+                </Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={draftFeedbackMutation.isPending}
+                  onClick={() =>
+                    draftFeedbackMutation.mutate({
+                      submissionId: activeSubmission.id,
+                      proposedGrade: Number(gradeInput),
+                    })
+                  }
+                  className="h-7 text-[11px] gap-1.5"
+                >
+                  {draftFeedbackMutation.isPending ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <BookOpenCheck className="h-3 w-3 text-brand-emerald" />
+                  )}
+                  <span>Draft with AI</span>
+                </Button>
+              </div>
               <Textarea
                 rows={4}
                 value={feedbackInput}

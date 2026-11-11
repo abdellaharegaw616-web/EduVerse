@@ -10,6 +10,9 @@ import {
   PlusCircle,
   Trash2,
   Save,
+  BookOpenCheck,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -46,6 +49,13 @@ export default function TeacherQuizzesPage() {
     { text: '', isCorrect: false },
     { text: '', isCorrect: false },
   ]);
+
+  // AI Draft Questions state
+  const [aiQuestionCount, setAiQuestionCount] = useState(3);
+  const [aiDrafts, setAiDrafts] = useState<
+    Array<{ text: string; points: number; options: QuestionOption[]; saved?: boolean }>
+  >([]);
+  const [aiEngineLabel, setAiEngineLabel] = useState<string | null>(null);
 
   // Load Course curriculum
   const { data: course } = useQuery({
@@ -120,6 +130,48 @@ export default function TeacherQuizzesPage() {
     mutationFn: (questionId: string) =>
       apiClient.delete(`/courses/teacher/questions/${questionId}`),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-lesson-quiz', activeLessonId] });
+    },
+  });
+
+  // AI Generate Draft Questions Mutation
+  const generateAiQuestionsMutation = useMutation({
+    mutationFn: () =>
+      apiClient.post<{
+        engine: string;
+        model: string;
+        questions: Array<{ text: string; points: number; options: QuestionOption[] }>;
+      }>('/ai/teacher/generate-quiz', {
+        lessonId: activeLessonId,
+        questionCount: Number(aiQuestionCount),
+      }),
+    onSuccess: (res) => {
+      setAiDrafts(res.questions.map((q) => ({ ...q, saved: false })));
+      setAiEngineLabel(`${res.engine} (${res.model})`);
+    },
+  });
+
+  const saveDraftQuestionMutation = useMutation({
+    mutationFn: async ({
+      quizId,
+      draftIndex,
+      draft,
+    }: {
+      quizId: string;
+      draftIndex: number;
+      draft: { text: string; points: number; options: QuestionOption[] };
+    }) => {
+      await apiClient.post(`/courses/teacher/quizzes/${quizId}/questions`, {
+        text: draft.text,
+        points: draft.points || 1,
+        options: draft.options,
+      });
+      return draftIndex;
+    },
+    onSuccess: (savedIndex) => {
+      setAiDrafts((prev) =>
+        prev.map((item, idx) => (idx === savedIndex ? { ...item, saved: true } : item)),
+      );
       queryClient.invalidateQueries({ queryKey: ['teacher-lesson-quiz', activeLessonId] });
     },
   });
@@ -233,9 +285,128 @@ export default function TeacherQuizzesPage() {
         </Card>
       )}
 
-      {/* Questions Section */}
+          {/* Questions Section */}
       {quiz && (
         <div className="space-y-4">
+          {/* AI Quiz Question Drafter */}
+          <Card className="border border-brand-border dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900 shadow-xs">
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
+                    <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+                    <span>AI Assessment Question Drafter</span>
+                  </CardTitle>
+                  <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">
+                    Analyze &ldquo;{activeLesson?.title}&rdquo; content and generate reviewable multiple-choice questions.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={aiQuestionCount}
+                    onChange={(e) => setAiQuestionCount(Number(e.target.value))}
+                    aria-label="Draft question count"
+                    className="h-8 rounded-md border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 text-xs text-brand-navy dark:text-slate-100"
+                  >
+                    <option value={2}>2 Questions</option>
+                    <option value={3}>3 Questions</option>
+                    <option value={4}>4 Questions</option>
+                    <option value={5}>5 Questions</option>
+                  </select>
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => generateAiQuestionsMutation.mutate()}
+                    disabled={!activeLessonId || generateAiQuestionsMutation.isPending}
+                    className="h-8 text-xs gap-1.5"
+                  >
+                    {generateAiQuestionsMutation.isPending ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <BookOpenCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                    )}
+                    <span>Generate Drafts</span>
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+
+            {aiDrafts.length > 0 && (
+              <CardContent className="pt-0 space-y-3">
+                <div className="flex items-center justify-between text-[11px] text-brand-slate dark:text-slate-400 border-t border-brand-border/60 dark:border-slate-800 pt-3">
+                  <span>Generated via {aiEngineLabel} — review before saving to quiz:</span>
+                  <button
+                    type="button"
+                    onClick={() => setAiDrafts([])}
+                    className="text-xs font-semibold text-red-600 hover:underline"
+                  >
+                    Dismiss Drafts
+                  </button>
+                </div>
+
+                <div className="space-y-2.5">
+                  {aiDrafts.map((draft, dIdx) => (
+                    <div
+                      key={dIdx}
+                      className="p-3.5 rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-950/60 space-y-2"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-xs font-bold text-brand-navy dark:text-white">
+                          Draft {dIdx + 1}: {draft.text}
+                        </p>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={draft.saved ? 'outline' : 'emerald'}
+                          disabled={draft.saved || saveDraftQuestionMutation.isPending}
+                          onClick={() =>
+                            saveDraftQuestionMutation.mutate({
+                              quizId: quiz.id,
+                              draftIndex: dIdx,
+                              draft,
+                            })
+                          }
+                          className="h-7 text-[11px] gap-1 shrink-0"
+                        >
+                          {draft.saved ? (
+                            <>
+                              <Check className="h-3 w-3 text-brand-emerald" />
+                              <span>Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <PlusCircle className="h-3 w-3" />
+                              <span>Add to Quiz</span>
+                            </>
+                          )}
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        {draft.options.map((opt, oIdx) => (
+                          <div
+                            key={oIdx}
+                            className={`px-2.5 py-1.5 rounded text-[11px] border ${
+                              opt.isCorrect
+                                ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-semibold'
+                                : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-brand-slate dark:text-slate-400'
+                            }`}
+                          >
+                            {opt.isCorrect ? '✓ ' : ''}
+                            {opt.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-brand-navy flex items-center gap-2">
               <span>Questions & Options</span>

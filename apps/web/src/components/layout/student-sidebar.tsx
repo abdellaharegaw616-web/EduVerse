@@ -16,6 +16,8 @@ import {
   User,
   Settings,
   LogOut,
+  BookOpenCheck,
+  StickyNote,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { apiClient } from '@/lib/api';
@@ -25,6 +27,8 @@ import { Button } from '@/components/ui/button';
 const STUDENT_NAV_ITEMS = [
   { href: '/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/app/courses', label: 'My Courses', icon: BookOpen },
+  { href: '/app/ai-tutor', label: 'AI Study Tutor', icon: BookOpenCheck },
+  { href: '/app/notes', label: 'Study Notebook', icon: StickyNote },
   { href: '/app/progress', label: 'Learning Progress', icon: TrendingUp },
   { href: '/app/recent-lessons', label: 'Recent Lessons', icon: History },
   { href: '/app/assignments', label: 'Assignments', icon: FileCheck2 },

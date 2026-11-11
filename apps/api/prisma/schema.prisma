@@ -68,6 +68,11 @@ enum NotificationType {
   SYSTEM
 }
 
+enum AiMessageRole {
+  USER
+  ASSISTANT
+}
+
 // -------------------------------------------------------------
 // 1. IDENTITY & USER PROFILE DOMAIN
 // -------------------------------------------------------------
@@ -103,6 +108,8 @@ model User {
   achievements     UserAchievement[]
   notifications    Notification[]
   notificationPreference NotificationPreference?
+  aiMessages       AiTutorMessage[]
+  lessonNotes      LessonNote[]
 
   // Security, Verification & Audit
   refreshTokens           RefreshToken[]
@@ -294,6 +301,8 @@ model Course {
   certificates  Certificate[]
   reviews       Review[]
   announcements Announcement[]
+  aiMessages    AiTutorMessage[]
+  lessonNotes   LessonNote[]
 
   @@index([status])
   @@index([authorId])
@@ -331,10 +340,12 @@ model Lesson {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  resources  LessonResource[]
-  progress   LessonProgress[]
-  quiz       Quiz?
-  assignment Assignment?
+  resources   LessonResource[]
+  progress    LessonProgress[]
+  quiz        Quiz?
+  assignment  Assignment?
+  aiMessages  AiTutorMessage[]
+  lessonNotes LessonNote[]
 
   @@unique([sectionId, slug])
   @@index([sectionId])
@@ -613,5 +624,47 @@ model AuditLog {
   @@index([userId])
   @@index([entityType, entityId])
   @@index([createdAt])
+}
+
+// -------------------------------------------------------------
+// 7. AI STUDY ASSISTANT & PERSONAL STUDY NOTEBOOK
+// -------------------------------------------------------------
+
+model AiTutorMessage {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String?
+  course    Course?       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonId  String?
+  lesson    Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  role      AiMessageRole
+  mode      String        @default("TUTOR")
+  content   String        @db.Text
+  engine    String?
+  createdAt DateTime      @default(now())
+
+  @@index([userId, lessonId])
+  @@index([userId, courseId])
+  @@index([userId, createdAt])
+}
+
+model LessonNote {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId     String
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonId     String
+  lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title        String?
+  content      String   @db.Text
+  isBookmarked Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([userId, isBookmarked])
+  @@index([userId, courseId])
 }
 

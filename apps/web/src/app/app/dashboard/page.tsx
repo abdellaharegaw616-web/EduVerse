@@ -11,6 +11,9 @@ import {
   TrendingUp,
   AlertCircle,
   PlayCircle,
+  Megaphone,
+  BookOpenCheck,
+  StickyNote,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { apiClient } from '@/lib/api';
@@ -99,28 +102,57 @@ export default function StudentDashboardPage() {
     enabled: !!user?.id,
   });
 
+  const { data: announcements = [] } = useQuery<
+    Array<{
+      id: string;
+      title: string;
+      content: string;
+      createdAt: string;
+      author: { fullName: string };
+      course?: { id: string; title: string; slug: string } | null;
+    }>
+  >({
+    queryKey: ['my-announcements', user?.id],
+    queryFn: () => apiClient.get('/announcements/my'),
+    enabled: !!user?.id,
+  });
+
   return (
     <div className="space-y-8 pb-16">
       {/* 1. Personalized Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-slate-800 pb-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
             Overview & Telemetry
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-white">
             Welcome, {user?.fullName || 'Student'}
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-slate-400 mt-0.5">
             Your real-time academic standing, coursework telemetry, and assessment logs.
           </p>
         </div>
 
-        <Link href="/courses">
-          <Button variant="emerald" size="sm" className="gap-2">
-            <BookOpen className="h-4 w-4" />
-            <span>Explore Courses</span>
-          </Button>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/app/ai-tutor">
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+              <span>AI Study Tutor</span>
+            </Button>
+          </Link>
+          <Link href="/app/notes">
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <StickyNote className="h-4 w-4 text-brand-emerald" />
+              <span>Study Notebook</span>
+            </Button>
+          </Link>
+          <Link href="/courses">
+            <Button variant="emerald" size="sm" className="gap-2 text-xs">
+              <BookOpen className="h-4 w-4" />
+              <span>Explore Courses</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Error Boundary Notice */}
@@ -452,6 +484,65 @@ export default function StudentDashboardPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* 6. Course & Campus Announcements */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-brand-navy dark:text-white flex items-center gap-2">
+            <Megaphone className="h-5 w-5 text-brand-emerald" />
+            <span>Course Announcements</span>
+          </h2>
+          <Link href="/app/notifications" className="text-xs font-semibold text-brand-emerald hover:underline">
+            Notification Feed
+          </Link>
+        </div>
+
+        <Card className="border-brand-border dark:border-slate-800">
+          <CardContent className="p-4 divide-y divide-brand-border dark:divide-slate-800">
+            {announcements.length > 0 ? (
+              announcements.slice(0, 5).map((ann) => (
+                <div key={ann.id} className="py-3 first:pt-0 last:pb-0 space-y-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <strong className="text-xs font-bold text-brand-navy dark:text-white">
+                        {ann.title}
+                      </strong>
+                      {ann.course && (
+                        <Badge variant="secondary" className="text-[10px]">
+                          {ann.course.title}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-brand-slate dark:text-slate-400">
+                      {new Date(ann.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-brand-slate dark:text-slate-300 leading-relaxed whitespace-pre-line">
+                    {ann.content}
+                  </p>
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[10px] text-brand-slate dark:text-slate-400">
+                      Instructor: {ann.author?.fullName || 'Faculty'}
+                    </span>
+                    {ann.course && (
+                      <Link
+                        href={`/courses/${ann.course.slug}/learn`}
+                        className="text-[11px] font-semibold text-brand-emerald hover:underline"
+                      >
+                        Open Course →
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-6 text-center text-xs text-brand-slate dark:text-slate-400">
+                No instructor announcements posted for your enrolled courses yet.
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

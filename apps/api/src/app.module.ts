@@ -23,6 +23,9 @@ import { CertificatesModule } from './certificates/certificates.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AdminModule } from './admin/admin.module';
+import { AiModule } from './ai/ai.module';
+import { NotesModule } from './notes/notes.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
 
 @Module({
   imports: [
@@ -57,6 +60,9 @@ import { AdminModule } from './admin/admin.module';
     NotificationsModule,
     AnalyticsModule,
     AdminModule,
+    AiModule,
+    NotesModule,
+    AnnouncementsModule,
   ],
   providers: [
     {

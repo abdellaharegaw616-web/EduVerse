@@ -44,6 +44,30 @@ export class EnvironmentVariables {
   @IsNumber()
   @IsOptional()
   THROTTLE_LIMIT: number = 100;
+
+  @IsString()
+  @IsOptional()
+  AI_PROVIDER: string = 'auto';
+
+  @IsString()
+  @IsOptional()
+  GEMINI_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  GEMINI_MODEL: string = 'gemini-2.5-flash';
+
+  @IsString()
+  @IsOptional()
+  OPENAI_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  OPENAI_BASE_URL: string = 'https://api.openai.com/v1';
+
+  @IsString()
+  @IsOptional()
+  OPENAI_MODEL: string = 'gpt-4o-mini';
 }
 
 export function validateEnvironment(config: Record<string, unknown>): EnvironmentVariables {

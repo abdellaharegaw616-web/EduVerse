@@ -63,13 +63,17 @@ eduverse/
 - **Assignments (`/app/assignments`):** Deliverable tracker, submission portal (GitHub repos/text), instructor grades, and feedback.
 - **Quiz History (`/app/quizzes`):** Knowledge check logs with scores, pass status, and diagnostic breakdowns.
 - **Certificates (`/app/certificates`):** Downloadable and cryptographically verifiable digital credentials.
-- **Notifications (`/app/notifications`):** Real-time academic alerts for graded coursework, new certificates, and enrollments.
+- **Notifications (`/app/notifications`):** Real-time academic alerts for graded coursework, new certificates, course announcements, and enrollments.
+- **AI Study Tutor (`/app/ai-tutor`):** Course- and lesson-grounded academic tutor with lesson summaries, plain-language explanations, flashcards, optional English/Amharic hints, and built-in low-bandwidth contextual fallback alongside optional Gemini or OpenAI integration.
+- **Study Notebook & Bookmarks (`/app/notes`):** Personal markdown notes and bookmarked lessons synced directly with the Course Learning Player.
 - **Student Profile & Settings (`/app/profile`, `/app/settings`):** Profile details, timezone, avatar, and password changes.
 
 ### 2. 👨‍🏫 Instructor Studio (`/teacher/*`)
 - **Studio Dashboard (`/teacher/dashboard`):** Cohort telemetry, total active students, pending submissions, and course completion funnel.
-- **Course Authoring (`/teacher/courses` & `/teacher/courses/create`):** Rich curriculum builder with sections, video lessons, and resources.
-- **Grading Queue (`/teacher/grading`):** Live review queue with grading inputs (0–100) and qualitative instructor feedback.
+- **Course Authoring (`/teacher/courses` & `/teacher/courses/create`):** Rich curriculum builder with optional AI course outline drafting, sections, video lessons, and resources.
+- **Assessment Builder (`/teacher/courses/[id]/quizzes`):** Multiple-choice quiz builder with AI draft question generation from lesson content.
+- **Grading Queue (`/teacher/grading`):** Live review queue with grading inputs (0–100), qualitative instructor feedback, and optional AI feedback drafting.
+- **Course Announcements (`/teacher/announcements`):** Publish cohort notices and notify enrolled students automatically.
 - **Cohort Analytics (`/teacher/analytics`):** Real-time pass rates, average scores, and enrollment funnels per course.
 - **Moderation Workflow:** Submit drafted courses to institutional administrators for quality assurance.
 
@@ -86,7 +90,7 @@ eduverse/
 - **Homepage (`/`):** Dynamic marketing showcase linking directly to featured tracks.
 - **Catalog (`/courses`):** Filter by academic category, difficulty (Beginner, Intermediate, Advanced), and search keywords.
 - **Course Detail (`/courses/[slug]`):** Syllabus breakdown, prerequisites, learning outcomes, instructor bio, and 1-click enrollment.
-- **Video & Text Lesson Player (`/courses/[slug]/learn`):** Interactive video player, markdown content viewer, interactive quiz runner, and assignment submitter.
+- **Video & Text Lesson Player (`/courses/[slug]/learn`):** Interactive video player, markdown content viewer, interactive quiz runner, assignment submitter, AI Study Tutor, Study Notes & Bookmarking, and Instructor Announcements.
 - **Certificate Verification (`/verify/[code]`):** Public verification engine for employers to validate certificate authenticity.
 
 ---
