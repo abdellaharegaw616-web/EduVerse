@@ -14,6 +14,8 @@ export enum AiTutorMode {
   SUMMARY = 'SUMMARY',
   FLASHCARDS = 'FLASHCARDS',
   EXPLAIN_SIMPLE = 'EXPLAIN_SIMPLE',
+  PRACTICE_QUESTIONS = 'PRACTICE_QUESTIONS',
+  HINTS = 'HINTS',
 }
 
 export enum AiTutorLanguage {

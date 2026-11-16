@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AiService } from './ai.service';
 import { PrismaService, Role, CourseDifficulty, CourseStatus, AiMessageRole } from '../database/prisma.service';
 import { AiTutorMode, AiTutorLanguage } from './dto/ask-tutor.dto';
@@ -56,6 +56,7 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
       assignmentSubmission: { findUnique: jest.fn() },
       aiTutorMessage: {
         findMany: jest.fn().mockResolvedValue([]),
+        count: jest.fn().mockResolvedValue(0),
         create: jest.fn().mockImplementation((args: any) => ({
           id: `msg-${Math.random()}`,
           createdAt: new Date(),
@@ -250,6 +251,7 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
 
     it('should safely handle courses with undefined or empty learning objectives without throwing slice error', async () => {
       prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.enrollment.findUnique.mockResolvedValue({ id: 'enr-1' });
       prisma.course.findUnique.mockResolvedValue({
         id: courseId,
         title: 'Python for Beginners',
@@ -288,6 +290,72 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
       expect(result).toBeDefined();
       expect(result.assistantMessage.content).toContain('Academic Guidance');
       expect(result.engine).toBe('contextual-offline');
+    });
+
+    it('should generate grounded practice questions with answer keys in PRACTICE_QUESTIONS mode', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.lesson.findUnique.mockResolvedValue(mockLesson);
+      prisma.enrollment.findUnique.mockResolvedValue({ id: 'enr-1' });
+
+      const result = await service.askTutor(studentId, {
+        question: 'Generate test questions on indexing',
+        lessonId,
+        mode: AiTutorMode.PRACTICE_QUESTIONS,
+      });
+
+      expect(result).toBeDefined();
+      expect(result.assistantMessage.content).toContain('Grounded Practice Questions');
+      expect(result.assistantMessage.content).toContain('Answer Key & Explanations');
+      expect(result.assistantMessage.content).toContain('Rationale:');
+      expect(result.quota).toBeDefined();
+      expect(result.quota.remaining).toBe(49);
+    });
+
+    it('should provide Socratic hints and refuse to give direct answers in HINTS mode', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.lesson.findUnique.mockResolvedValue(mockLesson);
+      prisma.enrollment.findUnique.mockResolvedValue({ id: 'enr-1' });
+
+      const result = await service.askTutor(studentId, {
+        question: 'What is the answer to question 3 on the homework?',
+        lessonId,
+        mode: AiTutorMode.HINTS,
+      });
+
+      expect(result).toBeDefined();
+      expect(result.assistantMessage.content).toContain('Socratic Assignment Guidance');
+      expect(result.assistantMessage.content).toContain('Academic Integrity Notice');
+      expect(result.assistantMessage.content).toContain('does not provide direct homework answers');
+      expect(result.assistantMessage.content).toContain('Progressive Hints');
+    });
+
+    it('should enforce daily quota limits and reject requests when daily limit is exceeded', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.aiTutorMessage.count.mockResolvedValueOnce(50); // Student limit is 50
+
+      await expect(
+        service.askTutor(studentId, {
+          question: 'Can you help me?',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should calculate accurate quota limits for students (50) and teachers (200)', async () => {
+      prisma.user.findUnique.mockResolvedValueOnce({ id: studentId, role: Role.STUDENT });
+      prisma.aiTutorMessage.count.mockResolvedValueOnce(15);
+
+      const studentQuota = await service.getTutorQuota(studentId);
+      expect(studentQuota.dailyLimit).toBe(50);
+      expect(studentQuota.usedToday).toBe(15);
+      expect(studentQuota.remaining).toBe(35);
+
+      prisma.user.findUnique.mockResolvedValueOnce({ id: teacherId, role: Role.TEACHER });
+      prisma.aiTutorMessage.count.mockResolvedValueOnce(20);
+
+      const teacherQuota = await service.getTutorQuota(teacherId);
+      expect(teacherQuota.dailyLimit).toBe(200);
+      expect(teacherQuota.usedToday).toBe(20);
+      expect(teacherQuota.remaining).toBe(180);
     });
   });
 

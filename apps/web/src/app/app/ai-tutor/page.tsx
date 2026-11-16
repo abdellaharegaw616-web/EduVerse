@@ -13,6 +13,9 @@ import {
   Layers,
   AlertCircle,
   Sparkles,
+  Lightbulb,
+  CheckSquare,
+  Zap,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -21,7 +24,13 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 
-type TutorMode = 'TUTOR' | 'SUMMARY' | 'FLASHCARDS' | 'EXPLAIN_SIMPLE';
+type TutorMode =
+  | 'TUTOR'
+  | 'SUMMARY'
+  | 'FLASHCARDS'
+  | 'EXPLAIN_SIMPLE'
+  | 'PRACTICE_QUESTIONS'
+  | 'HINTS';
 type TutorLanguage = 'en' | 'bilingual' | 'am';
 
 interface EnrolledCourse {
@@ -59,6 +68,17 @@ export default function StudentAiTutorPage() {
     queryFn: () => apiClient.get('/ai/status'),
   });
 
+  const { data: quota, refetch: refetchQuota } = useQuery<{
+    dailyLimit: number;
+    usedToday: number;
+    remaining: number;
+    resetsAt: string;
+  }>({
+    queryKey: ['ai-tutor-quota'],
+    queryFn: () => apiClient.get('/ai/tutor/quota'),
+    staleTime: 1000 * 30,
+  });
+
   const { data: enrollmentsData } = useQuery<{ enrollments?: EnrolledCourse[] } | EnrolledCourse[]>({
     queryKey: ['my-enrollments-list'],
     queryFn: () => apiClient.get('/enrollments/me'),
@@ -89,6 +109,7 @@ export default function StudentAiTutorPage() {
     onSuccess: (response: any) => {
       setErrorMsg(null);
       setQuestion('');
+      refetchQuota();
       queryClient.invalidateQueries({
         queryKey: ['ai-tutor-workspace-history', selectedCourseId],
       });
@@ -107,11 +128,16 @@ export default function StudentAiTutorPage() {
       }
     },
     onError: (err: any) => {
-      if (err?.message && err.message !== 'An unexpected internal server error occurred.') {
-        setErrorMsg(err.message);
+      const msg = err?.message || '';
+      if (msg.includes('limit of') || msg.includes('quota')) {
+        setErrorMsg(msg);
+      } else if (msg.includes('Enroll in this course')) {
+        setErrorMsg(msg);
+      } else if (msg && !msg.toLowerCase().includes('internal server error')) {
+        setErrorMsg(msg);
       } else {
         setErrorMsg(
-          'The study assistant is momentarily reconnecting. Please click retry or re-send your question.',
+          'The study assistant encountered a temporary reconnection issue. Please retry or re-send your question.',
         );
       }
     },
@@ -161,10 +187,25 @@ export default function StudentAiTutorPage() {
           </p>
         </div>
 
-        <Badge variant="outline" className="text-[11px] self-start sm:self-center border-brand-border dark:border-stone-700 bg-brand-creamy dark:bg-stone-800 text-brand-coffee dark:text-stone-200">
-          <Sparkles className="h-3 w-3 text-brand-orange mr-1" />
-          {engineLabel}
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+          {quota && (
+            <Badge
+              variant="outline"
+              className="text-[11px] border-orange-200 dark:border-orange-900/60 bg-orange-50/70 dark:bg-orange-950/40 text-brand-orange font-semibold"
+            >
+              <Zap className="h-3 w-3 mr-1" />
+              {quota.remaining} / {quota.dailyLimit} queries remaining today
+            </Badge>
+          )}
+
+          <Badge
+            variant="outline"
+            className="text-[11px] border-brand-border dark:border-stone-700 bg-brand-creamy dark:bg-stone-800 text-brand-coffee dark:text-stone-200"
+          >
+            <Sparkles className="h-3 w-3 text-brand-orange mr-1" />
+            {engineLabel}
+          </Badge>
+        </div>
       </div>
 
       {/* Course Context & Language Bar */}
@@ -217,14 +258,14 @@ export default function StudentAiTutorPage() {
           disabled={askMutation.isPending}
           onClick={() =>
             askMutation.mutate({
-              prompt: 'Provide a concise overview summary and study checklist for this course.',
-              mode: 'SUMMARY',
+              prompt: 'Explain the foundational core concepts of this subject in simple, everyday language with intuitive analogies.',
+              mode: 'EXPLAIN_SIMPLE',
             })
           }
-          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40"
+          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40 hover:bg-orange-50/50"
         >
-          <FileText className="h-3.5 w-3.5 text-brand-orange" />
-          <span>Course Overview Summary</span>
+          <HelpCircle className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Explain Simply</span>
         </Button>
 
         <Button
@@ -234,14 +275,48 @@ export default function StudentAiTutorPage() {
           disabled={askMutation.isPending}
           onClick={() =>
             askMutation.mutate({
-              prompt: 'Explain the foundational core concepts of this subject simply.',
-              mode: 'EXPLAIN_SIMPLE',
+              prompt: 'Generate 3-5 grounded multiple-choice practice questions strictly based on this course curriculum, with answer keys and explanations.',
+              mode: 'PRACTICE_QUESTIONS',
             })
           }
-          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40"
+          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40 hover:bg-orange-50/50"
         >
-          <HelpCircle className="h-3.5 w-3.5 text-brand-orange" />
-          <span>Explain Fundamentals</span>
+          <CheckSquare className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Practice Questions</span>
+        </Button>
+
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={askMutation.isPending}
+          onClick={() =>
+            askMutation.mutate({
+              prompt: 'Provide a concise overview summary and study checklist for this curriculum.',
+              mode: 'SUMMARY',
+            })
+          }
+          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40 hover:bg-orange-50/50"
+        >
+          <FileText className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Lesson Summary</span>
+        </Button>
+
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={askMutation.isPending}
+          onClick={() =>
+            askMutation.mutate({
+              prompt: 'Provide progressive Socratic hints and conceptual guidance for tackling assignments without giving direct answers.',
+              mode: 'HINTS',
+            })
+          }
+          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40 hover:bg-orange-50/50"
+        >
+          <Lightbulb className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Assignment Hints</span>
         </Button>
 
         <Button
@@ -255,7 +330,7 @@ export default function StudentAiTutorPage() {
               mode: 'FLASHCARDS',
             })
           }
-          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40"
+          className="h-8 text-xs gap-1.5 border-brand-border dark:border-stone-800 hover:border-brand-orange/40 hover:bg-orange-50/50"
         >
           <Layers className="h-3.5 w-3.5 text-brand-orange" />
           <span>Revision Flashcards</span>
@@ -283,16 +358,36 @@ export default function StudentAiTutorPage() {
             {isHistoryLoading ? (
               <p className="text-xs text-brand-slate dark:text-stone-400">Loading study history...</p>
             ) : history.length === 0 ? (
-              <div className="py-10 text-center space-y-2">
-                <div className="h-10 w-10 rounded-full bg-orange-100/80 text-brand-orange dark:bg-orange-950/60 dark:text-orange-400 mx-auto flex items-center justify-center">
-                  <BookOpenCheck className="h-5 w-5" />
+              <div className="py-10 text-center space-y-4">
+                <div className="h-12 w-12 rounded-full bg-orange-100/80 text-brand-orange dark:bg-orange-950/60 dark:text-orange-400 mx-auto flex items-center justify-center">
+                  <BookOpenCheck className="h-6 w-6" />
                 </div>
-                <p className="text-sm font-bold text-brand-coffee dark:text-stone-100">
-                  Start an Academic Study Session
-                </p>
-                <p className="text-xs text-brand-slate dark:text-stone-400 max-w-md mx-auto">
-                  Choose an enrolled course above or ask any concept question below. Your thread is automatically saved across sessions.
-                </p>
+                <div className="space-y-1">
+                  <p className="text-base font-extrabold text-brand-coffee dark:text-stone-100">
+                    Start an Academic Study Session
+                  </p>
+                  <p className="text-xs text-brand-slate dark:text-stone-400 max-w-md mx-auto">
+                    Select an enrolled course above for curriculum-grounded guidance, or ask any academic question below.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-lg mx-auto text-left pt-2">
+                  <div className="p-2.5 rounded-lg border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40 text-[11px] text-brand-coffee dark:text-stone-300 flex items-start gap-2">
+                    <HelpCircle className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+                    <span><strong>Explain Simply:</strong> Break down difficult topics and academic theories with clear, relatable analogies.</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40 text-[11px] text-brand-coffee dark:text-stone-300 flex items-start gap-2">
+                    <CheckSquare className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+                    <span><strong>Practice Questions:</strong> Self-test with grounded multiple-choice questions and detailed answer rationales.</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40 text-[11px] text-brand-coffee dark:text-stone-300 flex items-start gap-2">
+                    <FileText className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+                    <span><strong>Lesson Summary:</strong> Extract key takeaways, core definitions, and fast revision checklists.</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40 text-[11px] text-brand-coffee dark:text-stone-300 flex items-start gap-2">
+                    <Lightbulb className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+                    <span><strong>Assignment Hints:</strong> Socratic guidance pointing to key formulas and concepts without spoiling answers.</span>
+                  </div>
+                </div>
               </div>
             ) : (
               history.map((msg) => {

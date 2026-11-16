@@ -11,13 +11,22 @@ import {
   Layers,
   HelpCircle,
   Globe,
+  Lightbulb,
+  CheckSquare,
+  Zap,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 
-export type TutorMode = 'TUTOR' | 'SUMMARY' | 'FLASHCARDS' | 'EXPLAIN_SIMPLE';
+export type TutorMode =
+  | 'TUTOR'
+  | 'SUMMARY'
+  | 'FLASHCARDS'
+  | 'EXPLAIN_SIMPLE'
+  | 'PRACTICE_QUESTIONS'
+  | 'HINTS';
 export type TutorLanguage = 'en' | 'bilingual' | 'am';
 
 interface TutorMessage {
@@ -59,6 +68,17 @@ export function LessonAiTutor({
     staleTime: 1000 * 60 * 5,
   });
 
+  const { data: quota, refetch: refetchQuota } = useQuery<{
+    dailyLimit: number;
+    usedToday: number;
+    remaining: number;
+    resetsAt: string;
+  }>({
+    queryKey: ['ai-tutor-quota'],
+    queryFn: () => apiClient.get('/ai/tutor/quota'),
+    staleTime: 1000 * 30,
+  });
+
   const { data: history = [], isLoading: isHistoryLoading } = useQuery<TutorMessage[]>({
     queryKey: ['ai-tutor-history', courseId, lessonId],
     queryFn: () =>
@@ -80,6 +100,7 @@ export function LessonAiTutor({
     onSuccess: (response: any) => {
       setErrorMsg(null);
       setQuestion('');
+      refetchQuota();
       queryClient.invalidateQueries({
         queryKey: ['ai-tutor-history', courseId, lessonId],
       });
@@ -164,6 +185,20 @@ export function LessonAiTutor({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {quota && (
+            <Badge
+              variant="outline"
+              className={
+                isDark
+                  ? 'border-orange-900/60 bg-orange-950/40 text-orange-400 text-[10px] font-medium'
+                  : 'border-orange-200 bg-orange-50 text-brand-orange text-[10px] font-medium'
+              }
+            >
+              <Zap className="h-3 w-3 mr-1" />
+              {quota.remaining} / {quota.dailyLimit} queries left
+            </Badge>
+          )}
+
           <Badge
             variant="outline"
             className={
@@ -203,16 +238,16 @@ export function LessonAiTutor({
           variant="outline"
           disabled={askMutation.isPending}
           onClick={() =>
-            handleQuickAction('SUMMARY', `Provide a concise study summary of "${lessonTitle}".`)
+            handleQuickAction('EXPLAIN_SIMPLE', `Explain "${lessonTitle}" in simple, beginner-friendly terms with everyday analogies.`)
           }
           className={
             isDark
               ? 'h-8 text-xs border-slate-700 bg-slate-950/60 text-slate-200 hover:bg-slate-800 gap-1.5'
-              : 'h-8 text-xs gap-1.5'
+              : 'h-8 text-xs gap-1.5 border-brand-border hover:border-brand-orange/40 hover:bg-orange-50/50'
           }
         >
-          <FileText className="h-3.5 w-3.5 text-brand-orange" />
-          <span>Summarize Lesson</span>
+          <HelpCircle className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Explain Simply</span>
         </Button>
 
         <Button
@@ -221,16 +256,52 @@ export function LessonAiTutor({
           variant="outline"
           disabled={askMutation.isPending}
           onClick={() =>
-            handleQuickAction('EXPLAIN_SIMPLE', `Explain "${lessonTitle}" in simple beginner terms.`)
+            handleQuickAction('PRACTICE_QUESTIONS', `Generate 3-5 grounded multiple-choice practice questions from "${lessonTitle}" with answer keys.`)
           }
           className={
             isDark
               ? 'h-8 text-xs border-slate-700 bg-slate-950/60 text-slate-200 hover:bg-slate-800 gap-1.5'
-              : 'h-8 text-xs gap-1.5'
+              : 'h-8 text-xs gap-1.5 border-brand-border hover:border-brand-orange/40 hover:bg-orange-50/50'
           }
         >
-          <HelpCircle className="h-3.5 w-3.5 text-brand-orange" />
-          <span>Explain Simply</span>
+          <CheckSquare className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Practice Questions</span>
+        </Button>
+
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={askMutation.isPending}
+          onClick={() =>
+            handleQuickAction('SUMMARY', `Provide a concise study summary and revision checklist for "${lessonTitle}".`)
+          }
+          className={
+            isDark
+              ? 'h-8 text-xs border-slate-700 bg-slate-950/60 text-slate-200 hover:bg-slate-800 gap-1.5'
+              : 'h-8 text-xs gap-1.5 border-brand-border hover:border-brand-orange/40 hover:bg-orange-50/50'
+          }
+        >
+          <FileText className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Lesson Summary</span>
+        </Button>
+
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={askMutation.isPending}
+          onClick={() =>
+            handleQuickAction('HINTS', `Provide Socratic conceptual hints and guidance for assignments related to "${lessonTitle}".`)
+          }
+          className={
+            isDark
+              ? 'h-8 text-xs border-slate-700 bg-slate-950/60 text-slate-200 hover:bg-slate-800 gap-1.5'
+              : 'h-8 text-xs gap-1.5 border-brand-border hover:border-brand-orange/40 hover:bg-orange-50/50'
+          }
+        >
+          <Lightbulb className="h-3.5 w-3.5 text-brand-orange" />
+          <span>Assignment Hints</span>
         </Button>
 
         <Button
@@ -244,11 +315,11 @@ export function LessonAiTutor({
           className={
             isDark
               ? 'h-8 text-xs border-slate-700 bg-slate-950/60 text-slate-200 hover:bg-slate-800 gap-1.5'
-              : 'h-8 text-xs gap-1.5'
+              : 'h-8 text-xs gap-1.5 border-brand-border hover:border-brand-orange/40 hover:bg-orange-50/50'
           }
         >
           <Layers className="h-3.5 w-3.5 text-brand-orange" />
-          <span>Study Flashcards</span>
+          <span>Flashcards</span>
         </Button>
 
         {history.length > 0 && (

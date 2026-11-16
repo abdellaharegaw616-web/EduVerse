@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -75,11 +76,11 @@ export class AiService {
   // -------------------------------------------------------------
 
   getStatus() {
-    const providerPref = this.config.get<string>('ai.provider', 'auto').toLowerCase();
-    const geminiKey = this.config.get<string>('ai.geminiApiKey', '').trim();
-    const openaiKey = this.config.get<string>('ai.openaiApiKey', '').trim();
-    const geminiModel = this.config.get<string>('ai.geminiModel', 'gemini-2.5-flash');
-    const openaiModel = this.config.get<string>('ai.openaiModel', 'gpt-4o-mini');
+    const providerPref = (this.config.get<string>('ai.provider') || 'auto').toLowerCase();
+    const geminiKey = (this.config.get<string>('ai.geminiApiKey') || '').trim();
+    const openaiKey = (this.config.get<string>('ai.openaiApiKey') || '').trim();
+    const geminiModel = this.config.get<string>('ai.geminiModel') || 'gemini-2.5-flash';
+    const openaiModel = this.config.get<string>('ai.openaiModel') || 'gpt-4o-mini';
 
     let activeEngine: 'gemini' | 'openai' | 'contextual-offline' = 'contextual-offline';
     let model = 'eduverse-academic-v1';
@@ -113,8 +114,57 @@ export class AiService {
   }
 
   // -------------------------------------------------------------
-  // 2. STUDENT AI STUDY TUTOR (WITH PERSISTENT CONVERSATION)
+  // 2. STUDENT AI STUDY TUTOR (WITH PERSISTENT CONVERSATION & QUOTAS)
   // -------------------------------------------------------------
+
+  async getTutorQuota(userId: string) {
+    let role: Role = Role.STUDENT;
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, role: true },
+      });
+      if (user?.role) {
+        role = user.role;
+      }
+    } catch (e) {
+      this.logger.warn(`Could not fetch user role for quota: ${(e as Error).message}`);
+    }
+
+    const isElevated =
+      role === Role.SUPER_ADMIN ||
+      role === Role.TEACHER ||
+      role === Role.INDEPENDENT_INSTRUCTOR;
+    const dailyLimit = isElevated ? 200 : 50;
+
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const nextMidnight = new Date(startOfDay);
+    nextMidnight.setDate(nextMidnight.getDate() + 1);
+
+    let usedToday = 0;
+    try {
+      usedToday = await this.prisma.aiTutorMessage.count({
+        where: {
+          userId,
+          role: AiMessageRole.USER,
+          createdAt: { gte: startOfDay },
+        },
+      });
+    } catch (dbErr) {
+      this.logger.warn(`Could not compute daily AI tutor quota: ${(dbErr as Error).message}`);
+    }
+
+    const remaining = Math.max(0, dailyLimit - usedToday);
+
+    return {
+      dailyLimit,
+      usedToday,
+      remaining,
+      resetsAt: nextMidnight.toISOString(),
+    };
+  }
 
   async askTutor(userId: string, dto: AskTutorDto) {
     try {
@@ -127,14 +177,37 @@ export class AiService {
         throw new ForbiddenException('Account is suspended or inactive.');
       }
 
-      const cleanCourseId = dto.courseId && dto.courseId.trim() ? dto.courseId.trim() : undefined;
-      const cleanLessonId = dto.lessonId && dto.lessonId.trim() ? dto.lessonId.trim() : undefined;
+      const quota = await this.getTutorQuota(userId);
+      if (quota.remaining <= 0) {
+        throw new BadRequestException(
+          `Daily AI Study Assistant limit of ${quota.dailyLimit} queries reached. Your quota resets at midnight.`,
+        );
+      }
+
+      const safeQuestion = (
+        dto?.question && typeof dto.question === 'string'
+          ? dto.question
+          : 'Study session inquiry'
+      ).trim();
+
+      const cleanCourseId =
+        dto?.courseId && typeof dto.courseId === 'string' && dto.courseId.trim()
+          ? dto.courseId.trim()
+          : undefined;
+      const cleanLessonId =
+        dto?.lessonId && typeof dto.lessonId === 'string' && dto.lessonId.trim()
+          ? dto.lessonId.trim()
+          : undefined;
 
       let context: AcademicContext = { learningObjectives: [] };
       try {
         context = await this.resolveAcademicContext(user, cleanCourseId, cleanLessonId);
       } catch (contextErr) {
-        if (contextErr instanceof ForbiddenException || contextErr instanceof NotFoundException) {
+        if (
+          contextErr instanceof ForbiddenException ||
+          contextErr instanceof NotFoundException ||
+          contextErr instanceof BadRequestException
+        ) {
           throw contextErr;
         }
         this.logger.warn(
@@ -146,8 +219,8 @@ export class AiService {
           lessonId: cleanLessonId,
         };
       }
-      const mode = dto.mode || AiTutorMode.TUTOR;
-      const language = dto.language || AiTutorLanguage.EN;
+      const mode = dto?.mode || AiTutorMode.TUTOR;
+      const language = dto?.language || AiTutorLanguage.EN;
 
       const historyWhere: any = { userId };
       if (context.lessonId) {
@@ -185,14 +258,14 @@ export class AiService {
       try {
         llmResult = await this.generateCompletion(
           systemPrompt,
-          dto.question.trim(),
+          safeQuestion,
           chronologicalHistory,
-          () => this.buildOfflineTutorReply(dto.question.trim(), context, mode, language),
+          () => this.buildOfflineTutorReply(safeQuestion, context, mode, language),
         );
       } catch (genErr) {
         this.logger.warn(`AI completion generation fallback triggered: ${(genErr as Error).message}`);
         llmResult = {
-          text: this.buildOfflineTutorReply(dto.question.trim(), context, mode, language),
+          text: this.buildOfflineTutorReply(safeQuestion, context, mode, language),
           engine: 'contextual-offline',
           model: 'eduverse-academic-v1',
         };
@@ -205,7 +278,7 @@ export class AiService {
         lessonId: context.lessonId || null,
         role: AiMessageRole.USER,
         mode,
-        content: dto.question.trim(),
+        content: safeQuestion,
         createdAt: new Date(),
       };
 
@@ -233,7 +306,7 @@ export class AiService {
               lessonId: context.lessonId || null,
               role: AiMessageRole.USER,
               mode,
-              content: dto.question.trim(),
+              content: safeQuestion,
             },
           }),
           this.prisma.aiTutorMessage.create({
@@ -261,13 +334,23 @@ export class AiService {
         assistantMessage,
         engine: llmResult.engine,
         model: llmResult.model,
+        quota: {
+          dailyLimit: quota.dailyLimit,
+          usedToday: quota.usedToday + 1,
+          remaining: Math.max(0, quota.remaining - 1),
+          resetsAt: quota.resetsAt,
+        },
         contextSummary: {
           courseTitle: context.courseTitle || null,
           lessonTitle: context.lessonTitle || null,
         },
       };
     } catch (err) {
-      if (err instanceof ForbiddenException || err instanceof NotFoundException) {
+      if (
+        err instanceof ForbiddenException ||
+        err instanceof NotFoundException ||
+        err instanceof BadRequestException
+      ) {
         throw err;
       }
 
@@ -276,10 +359,21 @@ export class AiService {
         (err as Error).stack,
       );
 
+      const safeQuestion = (
+        dto?.question && typeof dto.question === 'string'
+          ? dto.question
+          : 'Study session inquiry'
+      ).trim();
+      const safeCourseId =
+        dto?.courseId && typeof dto.courseId === 'string' ? dto.courseId.trim() : null;
+      const safeLessonId =
+        dto?.lessonId && typeof dto.lessonId === 'string' ? dto.lessonId.trim() : null;
+      const safeMode = dto?.mode || AiTutorMode.TUTOR;
+
       const fallbackText = [
         '### Academic Guidance & Study Assistance',
         '',
-        `Regarding your question: *"${dto.question.trim()}"*`,
+        `Regarding your question: *"${safeQuestion}"*`,
         '',
         'Focus on understanding the core definitions and foundational principles of this subject. Break complex problems into inputs, processing logic, and expected outcomes.',
         '',
@@ -290,26 +384,32 @@ export class AiService {
         userMessage: {
           id: `usr_${Date.now()}`,
           userId,
-          courseId: dto.courseId || null,
-          lessonId: dto.lessonId || null,
+          courseId: safeCourseId,
+          lessonId: safeLessonId,
           role: AiMessageRole.USER,
-          mode: dto.mode || AiTutorMode.TUTOR,
-          content: dto.question.trim(),
+          mode: safeMode,
+          content: safeQuestion,
           createdAt: new Date(),
         },
         assistantMessage: {
           id: `ast_${Date.now()}`,
           userId,
-          courseId: dto.courseId || null,
-          lessonId: dto.lessonId || null,
+          courseId: safeCourseId,
+          lessonId: safeLessonId,
           role: AiMessageRole.ASSISTANT,
-          mode: dto.mode || AiTutorMode.TUTOR,
+          mode: safeMode,
           content: fallbackText,
           engine: 'contextual-offline',
           createdAt: new Date(),
         },
         engine: 'contextual-offline',
         model: 'eduverse-academic-v1',
+        quota: {
+          dailyLimit: 50,
+          usedToday: 1,
+          remaining: 49,
+          resetsAt: new Date(Date.now() + 86400000).toISOString(),
+        },
         contextSummary: {
           courseTitle: null,
           lessonTitle: null,
@@ -603,9 +703,9 @@ Desired Modules Count: ${sectionCount}`;
     courseId?: string,
     lessonId?: string,
   ): Promise<AcademicContext> {
-    if (lessonId) {
-      const lesson = await this.prisma.lesson.findUnique({
-        where: { id: lessonId },
+    if (lessonId && lessonId.trim()) {
+      const lesson: any = await this.prisma.lesson.findUnique({
+        where: { id: lessonId.trim() },
         include: {
           section: {
             include: {
@@ -628,7 +728,7 @@ Desired Modules Count: ${sectionCount}`;
         throw new NotFoundException('Lesson not found');
       }
 
-      const course = lesson.section.course;
+      const course: any = lesson.section.course;
       const isPrivileged =
         user.role === Role.SUPER_ADMIN || course.authorId === user.id;
 
@@ -662,7 +762,7 @@ Desired Modules Count: ${sectionCount}`;
     }
 
     if (courseId && courseId.trim()) {
-      const course = await this.prisma.course.findUnique({
+      const course: any = await this.prisma.course.findUnique({
         where: { id: courseId.trim() },
         include: {
           sections: {
@@ -688,12 +788,28 @@ Desired Modules Count: ${sectionCount}`;
         throw new ForbiddenException('You do not have access to this unpublished course.');
       }
 
+      if (!isPrivileged) {
+        const enrollment = await this.prisma.enrollment.findUnique({
+          where: {
+            userId_courseId: {
+              userId: user.id,
+              courseId: course.id,
+            },
+          },
+        });
+        if (!enrollment) {
+          throw new ForbiddenException(
+            'Enroll in this course to use the AI Study Tutor for this curriculum.',
+          );
+        }
+      }
+
       const safeObjectives = Array.isArray(course.learningObjectives)
         ? course.learningObjectives
         : [];
 
-      const syllabusOutline = (course.sections || []).map((s) => {
-        const lessons = (s.lessons || []).map((l) => l.title).filter(Boolean);
+      const syllabusOutline = (course.sections || []).map((s: any) => {
+        const lessons = (s.lessons || []).map((l: any) => l.title).filter(Boolean);
         return `${s.title}: ${lessons.length > 0 ? lessons.join(', ') : 'Introductory overview'}`;
       });
 
@@ -732,11 +848,15 @@ Desired Modules Count: ${sectionCount}`;
         'Generate 4 concise Question & Answer study flashcards formatted clearly for rapid revision.',
       [AiTutorMode.EXPLAIN_SIMPLE]:
         'Explain the concept in plain, beginner-friendly language using a relatable everyday analogy and zero unnecessary jargon.',
+      [AiTutorMode.PRACTICE_QUESTIONS]:
+        'Generate 3-5 grounded multiple-choice practice questions strictly based on the approved course/lesson material. For each question, provide 4 options (A, B, C, D) and an answer key at the bottom with detailed rationales for why the correct option is right.',
+      [AiTutorMode.HINTS]:
+        'Act as a strict Socratic tutor enforcing academic integrity. NEVER output direct answers, complete solutions, or executable homework code. Instead, identify the underlying principle, direct the student to the relevant curriculum concepts, and provide progressive hints and leading questions.',
     };
 
     const parts: string[] = [
       'You are the EduVerse Academic Study Assistant serving university and vocational learners in Ethiopia and globally.',
-      modeGuidance[mode],
+      modeGuidance[mode] || modeGuidance[AiTutorMode.TUTOR],
       languageGuidance,
     ];
 
@@ -809,7 +929,7 @@ Desired Modules Count: ${sectionCount}`;
     history: Array<{ role: 'user' | 'assistant'; content: string }>,
     model: string,
   ): Promise<string> {
-    const apiKey = this.config.get<string>('ai.geminiApiKey', '').trim();
+    const apiKey = (this.config.get<string>('ai.geminiApiKey') || '').trim();
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
     const contents = [
@@ -862,8 +982,8 @@ Desired Modules Count: ${sectionCount}`;
     history: Array<{ role: 'user' | 'assistant'; content: string }>,
     model: string,
   ): Promise<string> {
-    const apiKey = this.config.get<string>('ai.openaiApiKey', '').trim();
-    const baseUrl = this.config.get<string>('ai.openaiBaseUrl', 'https://api.openai.com/v1').replace(/\/$/, '');
+    const apiKey = (this.config.get<string>('ai.openaiApiKey') || '').trim();
+    const baseUrl = (this.config.get<string>('ai.openaiBaseUrl') || 'https://api.openai.com/v1').replace(/\/$/, '');
 
     const response = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
@@ -1020,6 +1140,109 @@ Desired Modules Count: ${sectionCount}`;
         ]
           .filter(Boolean)
           .join('\n');
+      }
+
+      if (mode === AiTutorMode.PRACTICE_QUESTIONS) {
+        const topicName = topicTitle;
+        const questions = [
+          {
+            stem: `In ${topicName}, what is the foundational design principle emphasized for robust and correct implementations?`,
+            options: [
+              `A) Structured verification, explicit boundaries, and testable components.`,
+              `B) Direct mutation of unvalidated external inputs without safety guards.`,
+              `C) Disabling error logging to reduce runtime CPU overhead.`,
+              `D) Replacing verified domain models with hardcoded string literals.`,
+            ],
+            answer: 'A',
+            rationale: `Systematic verification and clear structural boundaries ensure maintainability and prevent cascading failures.`,
+          },
+          {
+            stem: `When working through an assignment or lesson topic in ${topicName}, which strategy yields the most dependable results?`,
+            options: [
+              `A) Decomposing complex logic into inputs, processing invariants, and verified outcomes.`,
+              `B) Implementing arbitrary trial-and-error changes until no runtime syntax error appears.`,
+              `C) Bypassing intermediate test assertions to speed up delivery.`,
+              `D) Overriding system access controls in local debugging sessions.`,
+            ],
+            answer: 'A',
+            rationale: `Decomposing problems into invariants and verifying each step ensures correctness and clarity.`,
+          },
+          {
+            stem: `How should students validate their understanding of ${topicName} before submitting assessments?`,
+            options: [
+              `A) Self-testing with practice questions and verifying edge cases against lesson objectives.`,
+              `B) Memorizing sample responses without understanding the underlying mechanism.`,
+              `C) Assuming solutions are correct if they match a classmate's work.`,
+              `D) Skipping the review step if the course video has already been watched.`,
+            ],
+            answer: 'A',
+            rationale: `Active retrieval and boundary testing confirm deep comprehension of academic material.`,
+          },
+        ];
+
+        const renderedQuestions = questions.map((q, idx) => {
+          return [
+            `**Question ${idx + 1}:** ${q.stem}`,
+            ...q.options,
+          ].join('\n');
+        });
+
+        const answerKey = questions.map((q, idx) => {
+          return `- **Q${idx + 1}: ${q.answer}** — *Rationale:* ${q.rationale}`;
+        });
+
+        const practiceParts = [
+          `### Grounded Practice Questions: ${topicName}`,
+          '',
+          'Test your mastery of this syllabus topic with the self-assessment questions below:',
+          '',
+          renderedQuestions.join('\n\n'),
+          '',
+          '---',
+          '#### Answer Key & Explanations',
+          answerKey.join('\n'),
+        ];
+
+        if (language !== AiTutorLanguage.EN) {
+          practiceParts.push(
+            '',
+            '**የጥናት ማስታወሻ (Practice Tip):** ከላይ ያሉትን ጥያቄዎች በራስዎ ሞክረው መልሶችን ይፈትሹ።',
+          );
+        }
+
+        return practiceParts.join('\n');
+      }
+
+      if (mode === AiTutorMode.HINTS) {
+        const hintParts = [
+          `### Socratic Assignment Guidance: ${topicTitle}`,
+          '',
+          `Regarding your question: *"${question}"*`,
+          '',
+          '> **Academic Integrity Notice:** The AI Study Assistant provides conceptual guidance and progressive clues, but does not provide direct homework answers or completed solutions.',
+          '',
+          '**Progressive Hints to Help You Solve This:**',
+          '',
+          `1. **Core Concept:** Identify the foundational principle governing ${topicTitle}. What are the specified inputs, rules, and expected output types?`,
+          context.sectionTitle
+            ? `2. **Syllabus Location:** Check the section on **"${context.sectionTitle}"**, reviewing the key formulas and step-by-step examples.`
+            : `2. **Syllabus Location:** Review the module summary and core definitions introduced in the course material.`,
+          bullets[0]
+            ? `3. **Key Clue:** Consider how *"${bullets[0]}"* applies to this problem scenario.`
+            : `3. **Key Clue:** Break the task into smaller sub-tasks: solve the simplest base case first before generalizing.`,
+          `4. **Guiding Question:** What would happen if an edge-case input is passed? Does your proposed step maintain consistency?`,
+          '',
+          '**Next Step:** Document your deduction in your personal Study Notebook and verify each step against the lesson rubric.',
+        ];
+
+        if (language !== AiTutorLanguage.EN) {
+          hintParts.push(
+            '',
+            '**የመሪ ፍንጭ (Guiding Hint):** ቀጥተኛ መልስ ሳይሆን መፍትሄውን በራስዎ ደረጃ በደረጃ ለመድረስ ይሞክሩ።',
+          );
+        }
+
+        return hintParts.join('\n');
       }
 
       // Mode: TUTOR — keyword match against lesson sentences/syllabus

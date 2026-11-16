@@ -59,6 +59,13 @@ export class AiController {
     return this.aiService.askTutor(userId, dto);
   }
 
+  @Get('tutor/quota')
+  @ApiOperation({ summary: 'Retrieve daily AI Study Tutor query quota for current user' })
+  @ApiResponse({ status: 200, description: 'Daily quota details returned' })
+  async getTutorQuota(@CurrentUser('id') userId: string) {
+    return this.aiService.getTutorQuota(userId);
+  }
+
   @Get('tutor/history')
   @ApiOperation({ summary: 'Retrieve persisted AI Study Tutor conversation history' })
   @ApiQuery({ name: 'courseId', required: false })

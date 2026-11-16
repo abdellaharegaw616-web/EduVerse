@@ -37,6 +37,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof Error) {
       // In development, log internal error details without leaking to client
       this.logger.error(`Unhandled Exception at ${request.url}: ${exception.message}`, exception.stack);
+      if (process.env.NODE_ENV !== 'production') {
+        message = exception.message || 'An unexpected internal server error occurred.';
+      }
     }
 
     const errorPayload: ApiErrorResponse = {

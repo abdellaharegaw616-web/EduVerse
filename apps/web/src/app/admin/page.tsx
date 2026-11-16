@@ -398,11 +398,10 @@ export default function AdminPortalPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as AdminTab)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
-                    isActive
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${isActive
                       ? 'bg-brand-orange text-white shadow-sm'
                       : 'text-stone-300 hover:text-white hover:bg-stone-800'
-                  }`}
+                    }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
                   <span>{tab.label}</span>
@@ -571,11 +570,10 @@ export default function AdminPortalPage() {
                       <div className="space-y-1 max-w-xl">
                         <div className="flex items-center gap-2">
                           <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-sm">{c.title}</h3>
-                          <Badge variant="outline" className={`text-[10px] ${
-                            c.status === 'PUBLISHED'
+                          <Badge variant="outline" className={`text-[10px] ${c.status === 'PUBLISHED'
                               ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800'
                               : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300'
-                          }`}>
+                            }`}>
                             {c.status}
                           </Badge>
                           {c.category && (
@@ -1003,11 +1001,10 @@ export default function AdminPortalPage() {
                         <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100">{inst.name}</CardTitle>
                         <CardDescription className="text-xs font-mono text-brand-orange">{inst.slug}.eduverse.et</CardDescription>
                       </div>
-                      <Badge variant="outline" className={`text-[10px] ${
-                        inst.isActive
+                      <Badge variant="outline" className={`text-[10px] ${inst.isActive
                           ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300'
                           : 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300'
-                      }`}>
+                        }`}>
                         {inst.isActive ? 'Active' : 'Suspended'}
                       </Badge>
                     </CardHeader>
