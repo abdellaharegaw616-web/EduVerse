@@ -14,6 +14,8 @@ import { AuditQueryDto } from './dto/audit-query.dto';
 import { SuspendUserAdminDto } from './dto/suspend-user-admin.dto';
 import { UserQueryDto } from './dto/user-query.dto';
 import { ContentModerationDto } from './dto/content-moderation.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto/category-admin.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @Injectable()
 export class AdminService {
@@ -927,5 +929,214 @@ export class AdminService {
     }
 
     return log;
+  }
+
+  // -------------------------------------------------------------
+  // 8. USER ROLE MANAGEMENT
+  // -------------------------------------------------------------
+
+  async setUserRole(adminId: string, targetUserId: string, dto: UpdateUserRoleDto) {
+    const targetUser = await this.prisma.user.findUnique({
+      where: { id: targetUserId },
+    });
+
+    if (!targetUser) {
+      throw new NotFoundException(`User with ID ${targetUserId} not found`);
+    }
+
+    if (adminId === targetUserId && targetUser.role === Role.SUPER_ADMIN && dto.role !== Role.SUPER_ADMIN) {
+      throw new ForbiddenException('Super Administrators cannot demote their own account.');
+    }
+
+    const previousRole = targetUser.role;
+    const updatedUser = await this.prisma.user.update({
+      where: { id: targetUserId },
+      data: { role: dto.role },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        isActive: true,
+        updatedAt: true,
+      },
+    });
+
+    await this.recordAuditLog({
+      actorId: adminId,
+      action: 'USER_ROLE_CHANGED',
+      entityType: 'User',
+      entityId: targetUserId,
+      metadata: {
+        previousRole,
+        newRole: dto.role,
+        targetEmail: targetUser.email,
+      },
+      outcome: 'SUCCESS',
+    });
+
+    await this.prisma.notification
+      .create({
+        data: {
+          userId: targetUserId,
+          title: 'Platform Role Updated',
+          message: `Your platform role has been updated from ${previousRole} to ${dto.role}.`,
+          actionUrl: '/app/dashboard',
+        },
+      })
+      .catch(() => null);
+
+    return updatedUser;
+  }
+
+  // -------------------------------------------------------------
+  // 9. COURSE CATEGORY MANAGEMENT
+  // -------------------------------------------------------------
+
+  async getCategories() {
+    return this.prisma.courseCategory.findMany({
+      include: {
+        _count: {
+          select: { courses: true },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
+  }
+
+  async createCategory(adminId: string, dto: CreateCategoryDto) {
+    const slug = dto.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    const existing = await this.prisma.courseCategory.findFirst({
+      where: {
+        OR: [{ name: dto.name.trim() }, { slug }],
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException(`Category "${dto.name}" or slug "${slug}" already exists.`);
+    }
+
+    const category = await this.prisma.courseCategory.create({
+      data: {
+        name: dto.name.trim(),
+        slug,
+        description: dto.description?.trim() || null,
+      },
+      include: {
+        _count: { select: { courses: true } },
+      },
+    });
+
+    await this.recordAuditLog({
+      actorId: adminId,
+      action: 'CATEGORY_CREATED',
+      entityType: 'CourseCategory',
+      entityId: category.id,
+      metadata: {
+        name: category.name,
+        slug: category.slug,
+      },
+      outcome: 'SUCCESS',
+    });
+
+    return category;
+  }
+
+  async updateCategory(adminId: string, id: string, dto: UpdateCategoryDto) {
+    const category = await this.prisma.courseCategory.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found.`);
+    }
+
+    const data: any = {};
+    if (dto.name && dto.name.trim() !== category.name) {
+      const slug = dto.name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      const duplicate = await this.prisma.courseCategory.findFirst({
+        where: {
+          id: { not: id },
+          OR: [{ name: dto.name.trim() }, { slug }],
+        },
+      });
+
+      if (duplicate) {
+        throw new ConflictException(
+          `Another category with name "${dto.name}" or slug "${slug}" already exists.`,
+        );
+      }
+
+      data.name = dto.name.trim();
+      data.slug = slug;
+    }
+
+    if (dto.description !== undefined) {
+      data.description = dto.description ? dto.description.trim() : null;
+    }
+
+    const updated = await this.prisma.courseCategory.update({
+      where: { id },
+      data,
+      include: {
+        _count: { select: { courses: true } },
+      },
+    });
+
+    await this.recordAuditLog({
+      actorId: adminId,
+      action: 'CATEGORY_UPDATED',
+      entityType: 'CourseCategory',
+      entityId: id,
+      metadata: {
+        previousName: category.name,
+        updatedName: updated.name,
+      },
+      outcome: 'SUCCESS',
+    });
+
+    return updated;
+  }
+
+  async deleteCategory(adminId: string, id: string) {
+    const category = await this.prisma.courseCategory.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { courses: true } },
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found.`);
+    }
+
+    await this.prisma.courseCategory.delete({
+      where: { id },
+    });
+
+    await this.recordAuditLog({
+      actorId: adminId,
+      action: 'CATEGORY_DELETED',
+      entityType: 'CourseCategory',
+      entityId: id,
+      metadata: {
+        name: category.name,
+        slug: category.slug,
+        coursesCount: category._count.courses,
+      },
+      outcome: 'SUCCESS',
+    });
+
+    return { message: `Category "${category.name}" removed successfully.` };
   }
 }

@@ -33,6 +33,8 @@ import { AuditQueryDto } from './dto/audit-query.dto';
 import { SuspendUserAdminDto } from './dto/suspend-user-admin.dto';
 import { UserQueryDto } from './dto/user-query.dto';
 import { ContentModerationDto } from './dto/content-moderation.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto/category-admin.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @ApiTags('Super Admin Administration & Moderation')
 @Controller('admin')
@@ -91,6 +93,19 @@ export class AdminController {
     @Body() dto: SuspendUserAdminDto,
   ) {
     return this.adminService.setUserStatus(admin.id, id, dto);
+  }
+
+  @Patch('users/:id/role')
+  @ApiOperation({ summary: 'Update user platform role (e.g. promote to Teacher, Instructor, or Admin)' })
+  @ApiResponse({ status: 200, description: 'User platform role updated successfully' })
+  @ApiResponse({ status: 403, description: 'Forbidden: Cannot demote self from Super Admin' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async setUserRole(
+    @CurrentUser() admin: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateUserRoleDto,
+  ) {
+    return this.adminService.setUserRole(admin.id, id, dto);
   }
 
   // -------------------------------------------------------------
@@ -244,5 +259,51 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Audit log record not found' })
   async getAuditLogById(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminService.getAuditLogById(id);
+  }
+
+  // -------------------------------------------------------------
+  // 8. COURSE CATEGORY MANAGEMENT
+  // -------------------------------------------------------------
+
+  @Get('categories')
+  @ApiOperation({ summary: 'List all course categories with associated course counts' })
+  @ApiResponse({ status: 200, description: 'Categories list returned' })
+  async getCategories() {
+    return this.adminService.getCategories();
+  }
+
+  @Post('categories')
+  @ApiOperation({ summary: 'Create a new course category' })
+  @ApiResponse({ status: 201, description: 'Category created successfully' })
+  @ApiResponse({ status: 409, description: 'Conflict: Category name or slug already exists' })
+  async createCategory(
+    @CurrentUser() admin: AuthenticatedUser,
+    @Body() dto: CreateCategoryDto,
+  ) {
+    return this.adminService.createCategory(admin.id, dto);
+  }
+
+  @Patch('categories/:id')
+  @ApiOperation({ summary: 'Update an existing course category' })
+  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @ApiResponse({ status: 404, description: 'Category not found' })
+  @ApiResponse({ status: 409, description: 'Conflict: Category name or slug already exists' })
+  async updateCategory(
+    @CurrentUser() admin: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateCategoryDto,
+  ) {
+    return this.adminService.updateCategory(admin.id, id, dto);
+  }
+
+  @Delete('categories/:id')
+  @ApiOperation({ summary: 'Delete a course category' })
+  @ApiResponse({ status: 200, description: 'Category removed successfully' })
+  @ApiResponse({ status: 404, description: 'Category not found' })
+  async deleteCategory(
+    @CurrentUser() admin: AuthenticatedUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.adminService.deleteCategory(admin.id, id);
   }
 }

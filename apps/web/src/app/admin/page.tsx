@@ -22,6 +22,9 @@ import {
   Trash2,
   PlusCircle,
   FileCheck2,
+  Layers,
+  Edit,
+  UserCheck,
 } from 'lucide-react';
 
 import { apiClient } from '@/lib/api';
@@ -43,7 +46,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-type AdminTab = 'overview' | 'courses' | 'users' | 'reviews' | 'institutions' | 'settings' | 'audit';
+type AdminTab = 'overview' | 'courses' | 'users' | 'categories' | 'reviews' | 'institutions' | 'settings' | 'audit';
 
 export default function AdminPortalPage() {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -60,6 +63,17 @@ export default function AdminPortalPage() {
   const [userStatusModal, setUserStatusModal] = useState<{ user: any; action: 'suspend' | 'reactivate' } | null>(null);
   const [userStatusReason, setUserStatusReason] = useState('');
   const [userStatusError, setUserStatusError] = useState<string | null>(null);
+
+  const [userRoleModal, setUserRoleModal] = useState<any | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string>('STUDENT');
+  const [userRoleError, setUserRoleError] = useState<string | null>(null);
+
+  const [categoryModal, setCategoryModal] = useState<{ isEditing: boolean; category?: any } | null>(null);
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryDescription, setCategoryDescription] = useState('');
+  const [categoryError, setCategoryError] = useState<string | null>(null);
+
+  const [deleteCategoryModal, setDeleteCategoryModal] = useState<any | null>(null);
 
   const [reviewModerateModal, setReviewModerateModal] = useState<any | null>(null);
   const [reviewModerateReason, setReviewModerateReason] = useState('');
@@ -78,6 +92,7 @@ export default function AdminPortalPage() {
   const [userSearch, setUserSearch] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState('');
   const [courseStatusFilter, setCourseStatusFilter] = useState('PENDING_REVIEW');
+  const [categorySearch, setCategorySearch] = useState('');
   const [auditActionFilter, setAuditActionFilter] = useState('');
   const [auditSearch, setAuditSearch] = useState('');
 
@@ -100,50 +115,58 @@ export default function AdminPortalPage() {
     queryKey: ['admin-users', userSearch, userRoleFilter],
     queryFn: () => {
       const params = new URLSearchParams();
-      if (userSearch.trim()) params.set('search', userSearch.trim());
-      if (userRoleFilter) params.set('role', userRoleFilter);
+      if (userSearch) params.append('search', userSearch);
+      if (userRoleFilter) params.append('role', userRoleFilter);
       return apiClient.get<any>(`/admin/users?${params.toString()}`);
     },
     enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'users',
   });
 
-  // 4. CONTENT MODERATION (REVIEWS)
+  // 4. CATEGORIES LIST
+  const { data: categories = [], isLoading: isCategoriesLoading, refetch: refetchCategories } = useQuery<any[]>({
+    queryKey: ['admin-categories'],
+    queryFn: () => apiClient.get<any[]>('/admin/categories'),
+    enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'categories',
+  });
+
+  // 5. REVIEWS FOR MODERATION
   const { data: reviewsData, isLoading: isReviewsLoading, refetch: refetchReviews } = useQuery({
-    queryKey: ['admin-reviews'],
+    queryKey: ['admin-reviews-moderation'],
     queryFn: () => apiClient.get<any>('/admin/moderation/reviews'),
     enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'reviews',
   });
 
-  // 5. INSTITUTIONS
+  // 6. INSTITUTIONS
   const { data: institutions, isLoading: isInstitutionsLoading } = useQuery({
     queryKey: ['admin-institutions'],
     queryFn: () => apiClient.get<any[]>('/admin/institutions'),
     enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'institutions',
   });
 
-  // 6. GLOBAL SETTINGS
+  // 7. SETTINGS
   const { data: settings, isLoading: isSettingsLoading } = useQuery({
     queryKey: ['admin-settings'],
     queryFn: () => apiClient.get<any>('/admin/settings'),
     enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'settings',
   });
 
-  // 7. AUDIT LOGS
+  // 8. AUDIT LOGS
   const { data: auditData, isLoading: isAuditLoading } = useQuery({
     queryKey: ['admin-audit-logs', auditActionFilter, auditSearch],
     queryFn: () => {
       const params = new URLSearchParams();
-      if (auditActionFilter) params.set('action', auditActionFilter);
-      if (auditSearch.trim()) params.set('search', auditSearch.trim());
-      params.set('limit', '25');
+      if (auditActionFilter) params.append('action', auditActionFilter);
+      if (auditSearch) params.append('entityType', auditSearch);
       return apiClient.get<any>(`/admin/audit-logs?${params.toString()}`);
     },
     enabled: user?.role === 'SUPER_ADMIN' && activeTab === 'audit',
   });
 
+  // =========================================================================
   // MUTATIONS
+  // =========================================================================
 
-  // Course Approval
+  // Approve Course
   const approveCourseMutation = useMutation({
     mutationFn: (courseId: string) =>
       apiClient.patch(`/admin/courses/${courseId}/moderation`, { action: 'APPROVE' }),
@@ -154,7 +177,7 @@ export default function AdminPortalPage() {
     },
   });
 
-  // Course Rejection
+  // Reject Course
   const rejectCourseMutation = useMutation({
     mutationFn: ({ courseId, reason }: { courseId: string; reason: string }) =>
       apiClient.patch(`/admin/courses/${courseId}/moderation`, { action: 'REJECT', reason }),
@@ -170,9 +193,9 @@ export default function AdminPortalPage() {
     },
   });
 
-  // User Status Toggle (Suspend / Reactivate)
+  // Suspend / Reactivate User
   const updateUserStatusMutation = useMutation({
-    mutationFn: ({ userId, isActive, reason }: { userId: string; isActive: boolean; reason?: string }) =>
+    mutationFn: ({ userId, isActive, reason }: { userId: string; isActive: boolean; reason: string }) =>
       apiClient.patch(`/admin/users/${userId}/status`, { isActive, reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
@@ -186,14 +209,69 @@ export default function AdminPortalPage() {
     },
   });
 
-  // Review Moderation (Delete Review)
+  // Change User Role
+  const updateUserRoleMutation = useMutation({
+    mutationFn: ({ userId, role }: { userId: string; role: string }) =>
+      apiClient.patch(`/admin/users/${userId}/role`, { role }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-overview'] });
+      setUserRoleModal(null);
+      setUserRoleError(null);
+    },
+    onError: (err: any) => {
+      setUserRoleError(err?.message || 'Failed to update user role');
+    },
+  });
+
+  // Category Mutations
+  const createCategoryMutation = useMutation({
+    mutationFn: (dto: { name: string; description?: string }) =>
+      apiClient.post('/admin/categories', dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      setCategoryModal(null);
+      setCategoryName('');
+      setCategoryDescription('');
+      setCategoryError(null);
+    },
+    onError: (err: any) => {
+      setCategoryError(err?.message || 'Failed to create category');
+    },
+  });
+
+  const updateCategoryMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: { name?: string; description?: string } }) =>
+      apiClient.patch(`/admin/categories/${id}`, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      setCategoryModal(null);
+      setCategoryName('');
+      setCategoryDescription('');
+      setCategoryError(null);
+    },
+    onError: (err: any) => {
+      setCategoryError(err?.message || 'Failed to update category');
+    },
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (id: string) => apiClient.delete(`/admin/categories/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      setDeleteCategoryModal(null);
+    },
+  });
+
+  // Moderate Review
   const moderateReviewMutation = useMutation({
     mutationFn: ({ reviewId, reason }: { reviewId: string; reason: string }) =>
       apiClient.delete(`/admin/moderation/reviews/${reviewId}`, {
         body: JSON.stringify({ reason }),
+        headers: { 'Content-Type': 'application/json' },
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-reviews-moderation'] });
       setReviewModerateModal(null);
       setReviewModerateReason('');
       setReviewModerateError(null);
@@ -255,13 +333,13 @@ export default function AdminPortalPage() {
   if (!user || user.role !== 'SUPER_ADMIN') {
     return (
       <div className="container mx-auto max-w-2xl py-16 px-4">
-        <Card className="border-red-200 bg-red-50/50 text-center p-8 space-y-4">
-          <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+        <Card className="border-red-200 bg-red-50/50 dark:bg-red-950/20 text-center p-8 space-y-4">
+          <div className="mx-auto w-12 h-12 rounded-full bg-red-100 dark:bg-red-950/60 flex items-center justify-center text-red-600">
             <ShieldAlert className="h-6 w-6" />
           </div>
-          <CardTitle className="text-xl text-red-900">Restricted Administration Access</CardTitle>
-          <CardDescription className="text-red-700">
-            The EduVerse Administrative Portal is restricted strictly to platform Super Administrators. Your current role ({user?.role || 'Guest'}) lacks the necessary authorization credentials.
+          <CardTitle className="text-xl text-red-900 dark:text-red-300">Restricted Administration Access</CardTitle>
+          <CardDescription className="text-red-700 dark:text-red-400">
+            The EduVerse Administrative Portal is restricted strictly to platform Super Administrators. Your current role ({user?.role || 'Guest'}) lacks administrative credentials.
           </CardDescription>
           <div>
             <Link href="/app/dashboard">
@@ -275,32 +353,40 @@ export default function AdminPortalPage() {
     );
   }
 
+  const filteredCategories = categories.filter((cat: any) =>
+    cat.name.toLowerCase().includes(categorySearch.toLowerCase()) ||
+    cat.slug.toLowerCase().includes(categorySearch.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-20">
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-stone-950 pb-20">
       {/* Top Banner */}
-      <div className="border-b border-brand-border bg-white sticky top-16 z-30 shadow-xs">
+      <div className="border-b border-[#2A1B14] bg-[#19100C] text-white sticky top-16 z-30 shadow-md">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-brand-navy text-white flex items-center justify-center shadow-xs">
-              <ShieldCheck className="h-6 w-6 text-brand-emerald" />
+            <div className="h-10 w-10 rounded-xl bg-orange-600/20 border border-orange-500/30 text-brand-orange flex items-center justify-center shadow-xs">
+              <ShieldCheck className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-brand-navy">EduVerse Administration</h1>
-                <Badge variant="emerald" className="text-[10px]">Super Admin</Badge>
+                <h1 className="text-xl sm:text-2xl font-black text-white">EduVerse Administration</h1>
+                <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/40 text-[10px] font-bold">
+                  Super Admin
+                </Badge>
               </div>
-              <p className="text-xs text-brand-slate">
-                Platform Moderation, User Enforcement, Content Quality & Immutable Audit Trail
+              <p className="text-xs text-stone-300">
+                Platform Moderation, User Role Enforcement, Quality Approvals & Immutable Audit Trail
               </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0">
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {[
               { id: 'overview', label: 'KPI Overview', icon: BarChart3 },
               { id: 'courses', label: 'Course Review', icon: BookOpen },
-              { id: 'users', label: 'Users & Bans', icon: Users },
+              { id: 'users', label: 'Users & Roles', icon: Users },
+              { id: 'categories', label: 'Categories', icon: Layers },
               { id: 'reviews', label: 'Content Moderation', icon: Star },
               { id: 'institutions', label: 'Institutions', icon: Building2 },
               { id: 'settings', label: 'Platform Config', icon: SettingsIcon },
@@ -314,8 +400,8 @@ export default function AdminPortalPage() {
                   onClick={() => setActiveTab(tab.id as AdminTab)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                     isActive
-                      ? 'bg-brand-navy text-white shadow-xs'
-                      : 'text-brand-slate hover:text-brand-navy hover:bg-slate-100'
+                      ? 'bg-brand-orange text-white shadow-sm'
+                      : 'text-stone-300 hover:text-white hover:bg-stone-800'
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -335,11 +421,16 @@ export default function AdminPortalPage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">Platform Vital Statistics & Telemetry</h2>
-                <p className="text-xs text-brand-slate">Live indicators aggregated across PostgreSQL storage engines.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Platform Vital Statistics & Telemetry</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Live indicators aggregated across PostgreSQL storage engines.</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => refetchOverview()} className="gap-1.5 text-xs">
-                <RefreshCw className="h-3.5 w-3.5" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetchOverview()}
+                className="gap-1.5 text-xs border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
+              >
+                <RefreshCw className="h-3.5 w-3.5 text-brand-orange" />
                 <span>Refresh</span>
               </Button>
             </div>
@@ -353,57 +444,57 @@ export default function AdminPortalPage() {
             ) : overview ? (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Card className="border-brand-border bg-white shadow-xs">
+                  <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-semibold text-brand-slate uppercase tracking-wider">Total Users</span>
-                        <div className="text-2xl font-black text-brand-navy mt-1">{overview.users.total}</div>
-                        <span className="text-[11px] text-emerald-600 font-medium">
+                        <span className="text-xs font-semibold text-brand-slate dark:text-stone-400 uppercase tracking-wider">Total Users</span>
+                        <div className="text-2xl font-black text-brand-coffee dark:text-stone-100 mt-1 font-mono">{overview.users.total}</div>
+                        <span className="text-[11px] text-brand-orange font-medium">
                           {overview.users.active} Active &bull; {overview.users.suspended} Suspended
                         </span>
                       </div>
-                      <div className="p-3 bg-brand-mint text-brand-emerald rounded-xl">
+                      <div className="p-3 bg-orange-100 text-brand-orange dark:bg-orange-950/50 rounded-xl">
                         <Users className="h-5 w-5" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-brand-border bg-white shadow-xs">
+                  <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-semibold text-brand-slate uppercase tracking-wider">Course Catalog</span>
-                        <div className="text-2xl font-black text-brand-navy mt-1">{overview.courses.total}</div>
-                        <span className="text-[11px] text-brand-slate">
+                        <span className="text-xs font-semibold text-brand-slate dark:text-stone-400 uppercase tracking-wider">Course Catalog</span>
+                        <div className="text-2xl font-black text-brand-coffee dark:text-stone-100 mt-1 font-mono">{overview.courses.total}</div>
+                        <span className="text-[11px] text-brand-slate dark:text-stone-400">
                           {overview.courses.published} Published &bull; {overview.courses.pendingReview} In Review
                         </span>
                       </div>
-                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                      <div className="p-3 bg-orange-100 text-brand-orange dark:bg-orange-950/50 rounded-xl">
                         <BookOpen className="h-5 w-5" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-brand-border bg-white shadow-xs">
+                  <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-semibold text-brand-slate uppercase tracking-wider">Enrollments</span>
-                        <div className="text-2xl font-black text-brand-navy mt-1">{overview.enrollments.total}</div>
-                        <span className="text-[11px] text-brand-slate">Total Student Course Seats</span>
+                        <span className="text-xs font-semibold text-brand-slate dark:text-stone-400 uppercase tracking-wider">Enrollments</span>
+                        <div className="text-2xl font-black text-brand-coffee dark:text-stone-100 mt-1 font-mono">{overview.enrollments.total}</div>
+                        <span className="text-[11px] text-brand-slate dark:text-stone-400">Total Student Seats</span>
                       </div>
-                      <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
-                        <FileCheck2 className="h-5 w-5 text-purple-600" />
+                      <div className="p-3 bg-orange-100 text-brand-orange dark:bg-orange-950/50 rounded-xl">
+                        <FileCheck2 className="h-5 w-5" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-brand-border bg-white shadow-xs">
+                  <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-semibold text-brand-slate uppercase tracking-wider">Active Tenants</span>
-                        <div className="text-2xl font-black text-brand-navy mt-1">{overview.institutions.total}</div>
-                        <span className="text-[11px] text-brand-slate">Universities & Colleges</span>
+                        <span className="text-xs font-semibold text-brand-slate dark:text-stone-400 uppercase tracking-wider">Active Tenants</span>
+                        <div className="text-2xl font-black text-brand-coffee dark:text-stone-100 mt-1 font-mono">{overview.institutions.total}</div>
+                        <span className="text-[11px] text-brand-slate dark:text-stone-400">Universities & Colleges</span>
                       </div>
-                      <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
+                      <div className="p-3 bg-orange-100 text-brand-orange dark:bg-orange-950/50 rounded-xl">
                         <Building2 className="h-5 w-5" />
                       </div>
                     </CardContent>
@@ -411,29 +502,29 @@ export default function AdminPortalPage() {
                 </div>
 
                 {/* System Diagnostics Box */}
-                <Card className="border-brand-border bg-white shadow-xs">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-bold text-brand-navy flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+                  <CardHeader className="pb-3 border-b border-brand-border dark:border-stone-800">
+                    <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-brand-orange" />
                       <span>Node.js Runtime & Infrastructure Status</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                      <span className="text-brand-slate block font-medium">Cluster Health</span>
-                      <span className="font-bold text-emerald-600 text-sm">{overview.system.status}</span>
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs pt-4">
+                    <div className="p-3 bg-brand-creamy dark:bg-stone-800/60 rounded-xl border border-brand-border dark:border-stone-700">
+                      <span className="text-brand-slate dark:text-stone-400 block font-medium">Cluster Health</span>
+                      <span className="font-bold text-brand-orange text-sm">{overview.system.status}</span>
                     </div>
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                      <span className="text-brand-slate block font-medium">Uptime</span>
-                      <span className="font-bold text-brand-navy text-sm">{Math.floor(overview.system.uptimeSeconds / 60)} minutes</span>
+                    <div className="p-3 bg-brand-creamy dark:bg-stone-800/60 rounded-xl border border-brand-border dark:border-stone-700">
+                      <span className="text-brand-slate dark:text-stone-400 block font-medium">Uptime</span>
+                      <span className="font-bold text-brand-coffee dark:text-stone-100 text-sm font-mono">{Math.floor(overview.system.uptimeSeconds / 60)} minutes</span>
                     </div>
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                      <span className="text-brand-slate block font-medium">Memory Allocation</span>
-                      <span className="font-bold text-brand-navy text-sm">{overview.system.memoryUsageMb} MB RSS</span>
+                    <div className="p-3 bg-brand-creamy dark:bg-stone-800/60 rounded-xl border border-brand-border dark:border-stone-700">
+                      <span className="text-brand-slate dark:text-stone-400 block font-medium">Memory Allocation</span>
+                      <span className="font-bold text-brand-coffee dark:text-stone-100 text-sm font-mono">{overview.system.memoryUsageMb} MB RSS</span>
                     </div>
-                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                      <span className="text-brand-slate block font-medium">Runtime Engine</span>
-                      <span className="font-bold text-brand-navy text-sm">{overview.system.nodeVersion}</span>
+                    <div className="p-3 bg-brand-creamy dark:bg-stone-800/60 rounded-xl border border-brand-border dark:border-stone-700">
+                      <span className="text-brand-slate dark:text-stone-400 block font-medium">Runtime Engine</span>
+                      <span className="font-bold text-brand-coffee dark:text-stone-100 text-sm font-mono">{overview.system.nodeVersion}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -449,16 +540,16 @@ export default function AdminPortalPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">Instructor Course Moderation Queue</h2>
-                <p className="text-xs text-brand-slate">Review submitted course syllabi, verify academic standards, and approve or reject with reasons.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Instructor Course Moderation Queue</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Review submitted course syllabi, verify academic standards, and approve or reject with actionable feedback.</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-brand-slate font-medium">Filter Status:</span>
+                <span className="text-xs text-brand-slate dark:text-stone-400 font-medium">Filter Status:</span>
                 <select
                   value={courseStatusFilter}
                   onChange={(e) => setCourseStatusFilter(e.target.value)}
-                  className="rounded-lg border border-brand-border bg-white px-3 py-1.5 text-xs font-semibold text-brand-navy shadow-xs focus:outline-none"
+                  className="rounded-lg border border-brand-border dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-1.5 text-xs font-semibold text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange"
                 >
                   <option value="PENDING_REVIEW">Pending Review</option>
                   <option value="PUBLISHED">Published</option>
@@ -475,22 +566,26 @@ export default function AdminPortalPage() {
             ) : moderationCourses && moderationCourses.length > 0 ? (
               <div className="space-y-3">
                 {moderationCourses.map((c) => (
-                  <Card key={c.id} className="border-brand-border bg-white shadow-xs hover:border-brand-navy/30 transition-colors">
+                  <Card key={c.id} className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm hover:border-brand-orange/40 transition-colors">
                     <CardContent className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="space-y-1 max-w-xl">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-brand-navy text-sm">{c.title}</h3>
-                          <Badge variant={c.status === 'PUBLISHED' ? 'emerald' : c.status === 'PENDING_REVIEW' ? 'outline' : 'secondary'} className="text-[10px]">
+                          <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-sm">{c.title}</h3>
+                          <Badge variant="outline" className={`text-[10px] ${
+                            c.status === 'PUBLISHED'
+                              ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800'
+                              : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300'
+                          }`}>
                             {c.status}
                           </Badge>
                           {c.category && (
-                            <Badge variant="outline" className="text-[10px] bg-slate-50">
+                            <Badge variant="outline" className="text-[10px] bg-brand-creamy dark:bg-stone-800 text-brand-coffee dark:text-stone-200">
                               {c.category.name}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-xs text-brand-slate">
-                          Instructor: <span className="font-semibold text-brand-navy">{c.author.fullName}</span> ({c.author.email}) &bull; {c._count?.sections || 0} Sections &bull; {c._count?.enrollments || 0} Learners
+                        <p className="text-xs text-brand-slate dark:text-stone-400">
+                          Instructor: <span className="font-semibold text-brand-coffee dark:text-stone-200">{c.author.fullName}</span> ({c.author.email}) &bull; {c._count?.sections || 0} Sections &bull; {c._count?.enrollments || 0} Learners
                         </p>
                       </div>
 
@@ -499,22 +594,22 @@ export default function AdminPortalPage() {
                           variant="outline"
                           size="sm"
                           onClick={async () => {
-                            const details = await apiClient.get<any>(`/admin/courses/${c.id}/review`);
-                            setCourseReviewModal(details);
+                            const detail = await apiClient.get(`/admin/courses/${c.id}/review`);
+                            setCourseReviewModal(detail);
                           }}
-                          className="gap-1.5 text-xs h-8"
+                          className="gap-1.5 text-xs h-8 border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
                         >
-                          <Eye className="h-3.5 w-3.5" />
+                          <Eye className="h-3.5 w-3.5 text-brand-orange" />
                           <span>Inspect Syllabus</span>
                         </Button>
 
                         {c.status !== 'PUBLISHED' && (
                           <Button
-                            variant="emerald"
+                            variant="orange"
                             size="sm"
                             disabled={approveCourseMutation.isPending}
                             onClick={() => approveCourseMutation.mutate(c.id)}
-                            className="gap-1.5 text-xs h-8"
+                            className="gap-1.5 text-xs h-8 shadow-sm"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" />
                             <span>Approve</span>
@@ -552,35 +647,36 @@ export default function AdminPortalPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 3. USERS MODERATION TAB */}
+        {/* 3. USERS & ROLES TAB */}
         {/* ========================================================================= */}
         {activeTab === 'users' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">User Enforcement & Account Status</h2>
-                <p className="text-xs text-brand-slate">Suspend bad actors, restore rehabilitated accounts, and revoke active login tokens.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">User Enforcement & Role Management</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Suspend bad actors, promote verified instructors, and manage account statuses.</p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-brand-slate" />
                   <Input
                     placeholder="Search name or email..."
                     value={userSearch}
                     onChange={(e) => setUserSearch(e.target.value)}
-                    className="pl-8 text-xs h-8 w-48 sm:w-60"
+                    className="pl-8 text-xs h-8 w-48 sm:w-60 border-brand-border dark:border-stone-700"
                   />
                 </div>
 
                 <select
                   value={userRoleFilter}
                   onChange={(e) => setUserRoleFilter(e.target.value)}
-                  className="rounded-lg border border-brand-border bg-white px-3 py-1 text-xs font-semibold text-brand-navy h-8 shadow-xs focus:outline-none"
+                  className="rounded-lg border border-brand-border dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-1 text-xs font-semibold text-brand-coffee dark:text-stone-100 h-8 focus:outline-none focus:ring-2 focus:ring-brand-orange"
                 >
                   <option value="">All Roles</option>
                   <option value="STUDENT">Student</option>
                   <option value="TEACHER">Teacher</option>
+                  <option value="INDEPENDENT_INSTRUCTOR">Instructor</option>
                   <option value="INSTITUTION_ADMIN">Institution Admin</option>
                   <option value="SUPER_ADMIN">Super Admin</option>
                 </select>
@@ -593,10 +689,10 @@ export default function AdminPortalPage() {
                 <Skeleton className="h-16 w-full rounded-xl" />
               </div>
             ) : usersData?.users && usersData.users.length > 0 ? (
-              <div className="border border-brand-border bg-white rounded-xl shadow-xs overflow-hidden">
+              <div className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 rounded-xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 border-b border-brand-border text-brand-slate font-semibold uppercase tracking-wider">
+                    <thead className="bg-[#FAF7F2] dark:bg-stone-800 border-b border-brand-border dark:border-stone-700 text-brand-coffee dark:text-stone-300 font-bold uppercase tracking-wider">
                       <tr>
                         <th className="py-3 px-4">User</th>
                         <th className="py-3 px-4">Role</th>
@@ -605,29 +701,45 @@ export default function AdminPortalPage() {
                         <th className="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-brand-border/60">
+                    <tbody className="divide-y divide-brand-border/60 dark:divide-stone-800">
                       {usersData.users.map((u: any) => (
-                        <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
+                        <tr key={u.id} className="hover:bg-orange-50/20 dark:hover:bg-stone-800/40 transition-colors">
                           <td className="py-3 px-4">
-                            <span className="font-bold text-brand-navy block">{u.fullName}</span>
-                            <span className="text-[11px] text-brand-slate block">{u.email}</span>
+                            <span className="font-bold text-brand-coffee dark:text-stone-100 block">{u.fullName}</span>
+                            <span className="text-[11px] text-brand-slate dark:text-stone-400 block">{u.email}</span>
                           </td>
                           <td className="py-3 px-4">
-                            <Badge variant="outline" className="text-[10px] bg-slate-50 font-mono">
+                            <Badge variant="outline" className="text-[10px] bg-brand-creamy dark:bg-stone-800 font-mono text-brand-coffee dark:text-stone-200">
                               {u.role}
                             </Badge>
                           </td>
                           <td className="py-3 px-4">
                             {u.isActive ? (
-                              <Badge variant="emerald" className="text-[10px]">Active</Badge>
+                              <Badge variant="outline" className="text-[10px] bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300">
+                                Active
+                              </Badge>
                             ) : (
                               <Badge variant="destructive" className="text-[10px]">Suspended</Badge>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-brand-slate text-[11px]">
+                          <td className="py-3 px-4 text-brand-slate dark:text-stone-400 text-[11px]">
                             {u._count.enrollments} enrollments &bull; {u._count.authoredCourses} courses
                           </td>
-                          <td className="py-3 px-4 text-right">
+                          <td className="py-3 px-4 text-right space-x-1.5">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setUserRoleModal(u);
+                                setSelectedRole(u.role);
+                                setUserRoleError(null);
+                              }}
+                              className="text-xs h-7 px-2 border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
+                            >
+                              <UserCheck className="h-3 w-3 mr-1 text-brand-orange" />
+                              <span>Role</span>
+                            </Button>
+
                             {u.role !== 'SUPER_ADMIN' ? (
                               u.isActive ? (
                                 <Button
@@ -644,7 +756,7 @@ export default function AdminPortalPage() {
                                 </Button>
                               ) : (
                                 <Button
-                                  variant="emerald"
+                                  variant="orange"
                                   size="sm"
                                   onClick={() => {
                                     setUserStatusModal({ user: u, action: 'reactivate' });
@@ -677,17 +789,128 @@ export default function AdminPortalPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 4. CONTENT MODERATION (REVIEWS) TAB */}
+        {/* 4. CATEGORIES MANAGEMENT TAB (NEW) */}
+        {/* ========================================================================= */}
+        {activeTab === 'categories' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Course Categories & Academic Disciplines</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Organize marketplace offerings and course catalogs across Ethiopian curricula.</p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-brand-slate" />
+                  <Input
+                    placeholder="Search categories..."
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    className="pl-8 text-xs h-8 w-48 sm:w-60 border-brand-border dark:border-stone-700"
+                  />
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => refetchCategories()}
+                  className="h-8 text-xs border-brand-border dark:border-stone-700"
+                >
+                  <RefreshCw className="h-3.5 w-3.5 text-brand-orange" />
+                </Button>
+
+                <Button
+                  variant="orange"
+                  size="sm"
+                  onClick={() => {
+                    setCategoryModal({ isEditing: false });
+                    setCategoryName('');
+                    setCategoryDescription('');
+                    setCategoryError(null);
+                  }}
+                  className="gap-1.5 text-xs h-8 shadow-sm"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span>New Category</span>
+                </Button>
+              </div>
+            </div>
+
+            {isCategoriesLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-28 rounded-xl" />
+                ))}
+              </div>
+            ) : filteredCategories.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredCategories.map((cat: any) => (
+                  <Card key={cat.id} className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm hover:border-brand-orange/40 transition-colors">
+                    <CardHeader className="p-4 pb-2 flex flex-row items-start justify-between">
+                      <div className="space-y-0.5">
+                        <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100">{cat.name}</CardTitle>
+                        <CardDescription className="text-[11px] font-mono text-brand-orange">/{cat.slug}</CardDescription>
+                      </div>
+                      <Badge variant="outline" className="bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 text-[10px]">
+                        {cat._count?.courses || 0} Courses
+                      </Badge>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2 space-y-3 text-xs">
+                      <p className="text-brand-slate dark:text-stone-400 line-clamp-2 min-h-[2rem]">
+                        {cat.description || 'No description provided for this academic category.'}
+                      </p>
+
+                      <div className="flex items-center justify-end gap-2 pt-2 border-t border-brand-border dark:border-stone-800">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setCategoryModal({ isEditing: true, category: cat });
+                            setCategoryName(cat.name);
+                            setCategoryDescription(cat.description || '');
+                            setCategoryError(null);
+                          }}
+                          className="h-7 text-[11px] gap-1 border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
+                        >
+                          <Edit className="h-3 w-3 text-brand-orange" />
+                          <span>Edit</span>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteCategoryModal(cat)}
+                          className="h-7 text-[11px] gap-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                          <span>Delete</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                icon={Layers}
+                title="No Categories Configured"
+                description="Click 'New Category' to establish subject taxonomies for course authors."
+              />
+            )}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* 5. CONTENT MODERATION (REVIEWS) TAB */}
         {/* ========================================================================= */}
         {activeTab === 'reviews' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">User Reviews Moderation</h2>
-                <p className="text-xs text-brand-slate">Purge inappropriate comments, abusive language, or promotional spam.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">User Reviews Moderation</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Purge inappropriate comments, abusive language, or promotional spam.</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => refetchReviews()} className="gap-1.5 text-xs">
-                <RefreshCw className="h-3.5 w-3.5" />
+              <Button variant="outline" size="sm" onClick={() => refetchReviews()} className="gap-1.5 text-xs border-brand-border dark:border-stone-700">
+                <RefreshCw className="h-3.5 w-3.5 text-brand-orange" />
                 <span>Refresh</span>
               </Button>
             </div>
@@ -700,19 +923,19 @@ export default function AdminPortalPage() {
             ) : reviewsData?.reviews && reviewsData.reviews.length > 0 ? (
               <div className="space-y-3">
                 {reviewsData.reviews.map((r: any) => (
-                  <Card key={r.id} className="border-brand-border bg-white shadow-xs">
+                  <Card key={r.id} className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-brand-navy text-xs">{r.user.fullName}</span>
-                          <span className="text-[10px] text-brand-slate">on &ldquo;{r.course.title}&rdquo;</span>
+                          <span className="font-bold text-brand-coffee dark:text-stone-100 text-xs">{r.user.fullName}</span>
+                          <span className="text-[10px] text-brand-slate dark:text-stone-400">on &ldquo;{r.course.title}&rdquo;</span>
                           <div className="flex items-center text-amber-500 gap-0.5">
                             {[...Array(r.rating)].map((_, i) => (
                               <Star key={i} className="h-3 w-3 fill-amber-500" />
                             ))}
                           </div>
                         </div>
-                        <p className="text-xs text-brand-navy/90 italic bg-slate-50 p-2 rounded-md border border-slate-100">
+                        <p className="text-xs text-brand-coffee/90 dark:text-stone-200 italic bg-brand-creamy dark:bg-stone-800 p-2 rounded-md border border-brand-border dark:border-stone-700">
                           &ldquo;{r.comment || 'No written text'}&rdquo;
                         </p>
                       </div>
@@ -737,7 +960,7 @@ export default function AdminPortalPage() {
             ) : (
               <EmptyState
                 icon={Star}
-                title="No Reviews Found"
+                title="No Reviews Flagged"
                 description="The review moderation queue has no pending items."
               />
             )}
@@ -745,21 +968,21 @@ export default function AdminPortalPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 5. INSTITUTIONS TAB */}
+        {/* 6. INSTITUTIONS TAB */}
         {/* ========================================================================= */}
         {activeTab === 'institutions' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">Institutional Tenants & Universities</h2>
-                <p className="text-xs text-brand-slate">Configure higher-education universities, academic domains, and multi-tenant quotas.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Institutional Tenants & Universities</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Configure higher-education universities, academic domains, and multi-tenant quotas.</p>
               </div>
 
               <Button
-                variant="emerald"
+                variant="orange"
                 size="sm"
                 onClick={() => setInstitutionModalOpen(true)}
-                className="gap-1.5 text-xs"
+                className="gap-1.5 text-xs shadow-sm"
               >
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span>Onboard Institution</span>
@@ -774,39 +997,43 @@ export default function AdminPortalPage() {
             ) : institutions && institutions.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {institutions.map((inst: any) => (
-                  <Card key={inst.id} className="border-brand-border bg-white shadow-xs">
+                  <Card key={inst.id} className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                     <CardHeader className="pb-3 flex flex-row items-start justify-between">
                       <div>
-                        <CardTitle className="text-sm font-bold text-brand-navy">{inst.name}</CardTitle>
-                        <CardDescription className="text-xs font-mono">{inst.slug}.eduverse.et</CardDescription>
+                        <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100">{inst.name}</CardTitle>
+                        <CardDescription className="text-xs font-mono text-brand-orange">{inst.slug}.eduverse.et</CardDescription>
                       </div>
-                      <Badge variant={inst.isActive ? 'emerald' : 'destructive'} className="text-[10px]">
+                      <Badge variant="outline" className={`text-[10px] ${
+                        inst.isActive
+                          ? 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300'
+                          : 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300'
+                      }`}>
                         {inst.isActive ? 'Active' : 'Suspended'}
                       </Badge>
                     </CardHeader>
                     <CardContent className="space-y-3 text-xs">
-                      <div className="grid grid-cols-3 gap-2 p-2 bg-slate-50 rounded-lg text-center">
+                      <div className="grid grid-cols-3 gap-2 p-2 bg-brand-creamy dark:bg-stone-800 rounded-lg text-center">
                         <div>
-                          <span className="font-bold text-brand-navy block text-sm">{inst._count?.members || 0}</span>
-                          <span className="text-[10px] text-brand-slate">Members</span>
+                          <span className="font-bold text-brand-coffee dark:text-stone-100 block text-sm">{inst._count?.members || 0}</span>
+                          <span className="text-[10px] text-brand-slate dark:text-stone-400">Members</span>
                         </div>
                         <div>
-                          <span className="font-bold text-brand-navy block text-sm">{inst._count?.departments || 0}</span>
-                          <span className="text-[10px] text-brand-slate">Depts</span>
+                          <span className="font-bold text-brand-coffee dark:text-stone-100 block text-sm">{inst._count?.departments || 0}</span>
+                          <span className="text-[10px] text-brand-slate dark:text-stone-400">Depts</span>
                         </div>
                         <div>
-                          <span className="font-bold text-brand-navy block text-sm">{inst._count?.courses || 0}</span>
-                          <span className="text-[10px] text-brand-slate">Courses</span>
+                          <span className="font-bold text-brand-coffee dark:text-stone-100 block text-sm">{inst._count?.courses || 0}</span>
+                          <span className="text-[10px] text-brand-slate dark:text-stone-400">Courses</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                        <span className="text-brand-slate text-[11px] truncate max-w-[200px]">Contact: {inst.contactEmail}</span>
+                      <div className="flex items-center justify-between pt-2 border-t border-brand-border dark:border-stone-800">
+                        <span className="text-brand-slate dark:text-stone-400 text-[11px] truncate max-w-[200px]">Contact: {inst.contactEmail}</span>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => toggleInstitutionStatusMutation.mutate({ id: inst.id, isActive: !inst.isActive })}
-                          className="text-xs h-7"
+                          className="text-xs h-7 border-brand-border dark:border-stone-700"
                         >
                           {inst.isActive ? 'Deactivate' : 'Activate'}
                         </Button>
@@ -826,85 +1053,85 @@ export default function AdminPortalPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 6. PLATFORM SETTINGS TAB */}
+        {/* 7. PLATFORM SETTINGS TAB */}
         {/* ========================================================================= */}
         {activeTab === 'settings' && (
           <div className="max-w-2xl mx-auto space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-brand-navy">Global Platform Runtime Configuration</h2>
-              <p className="text-xs text-brand-slate">Tune moderation requirements, maintenance modes, and systemic parameters.</p>
+              <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Global Platform Runtime Configuration</h2>
+              <p className="text-xs text-brand-slate dark:text-stone-400">Tune moderation requirements, maintenance modes, and systemic parameters.</p>
             </div>
 
             {settingsSuccess && (
-              <Alert variant="success">
-                <CheckCircle2 className="h-4 w-4" />
-                <AlertTitle>Configuration Saved</AlertTitle>
-                <AlertDescription>Platform settings updated and logged to the audit stream.</AlertDescription>
+              <Alert className="bg-orange-50 border-orange-200 text-orange-900 dark:bg-orange-950/40 dark:border-orange-900 dark:text-orange-200">
+                <CheckCircle2 className="h-4 w-4 text-brand-orange" />
+                <AlertTitle className="text-xs font-bold">Configuration Saved</AlertTitle>
+                <AlertDescription className="text-xs">Platform settings updated and logged to the audit stream.</AlertDescription>
               </Alert>
             )}
 
             {isSettingsLoading ? (
               <Skeleton className="h-64 w-full rounded-xl" />
             ) : (
-              <Card className="border-brand-border bg-white shadow-xs">
+              <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
                 <CardContent className="p-6 space-y-4">
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-brand-navy">Platform Name</Label>
+                    <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Platform Name</Label>
                     <Input
                       defaultValue={settings?.platformName}
                       id="platformNameInput"
-                      className="text-xs h-9"
+                      className="text-xs h-9 border-brand-border dark:border-stone-700"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-brand-navy">Support Email</Label>
+                    <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Support Email</Label>
                     <Input
                       defaultValue={settings?.supportEmail}
                       id="supportEmailInput"
-                      className="text-xs h-9"
+                      className="text-xs h-9 border-brand-border dark:border-stone-700"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-brand-navy">Max Upload Size (MB)</Label>
+                    <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Max Upload Size (MB)</Label>
                     <Input
                       type="number"
                       defaultValue={settings?.maxUploadSizeMb}
                       id="maxUploadInput"
-                      className="text-xs h-9"
+                      className="text-xs h-9 border-brand-border dark:border-stone-700"
                     />
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-2 border-t border-brand-border dark:border-stone-800 flex items-center justify-between">
                     <div>
-                      <Label className="text-xs font-semibold text-brand-navy block">Require Administrative Course Approval</Label>
-                      <span className="text-[11px] text-brand-slate">Courses must be approved by Super Admin before publication</span>
+                      <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200 block">Require Administrative Course Approval</Label>
+                      <span className="text-[11px] text-brand-slate dark:text-stone-400">Courses must be approved by Super Admin before publication</span>
                     </div>
                     <input
                       type="checkbox"
                       defaultChecked={settings?.requireCourseApproval}
                       id="requireApprovalInput"
-                      className="h-4 w-4 text-brand-emerald rounded border-slate-300"
+                      className="h-4 w-4 text-brand-orange rounded border-stone-300 focus:ring-brand-orange"
                     />
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-2 border-t border-brand-border dark:border-stone-800 flex items-center justify-between">
                     <div>
-                      <Label className="text-xs font-semibold text-brand-navy block">Maintenance Mode</Label>
-                      <span className="text-[11px] text-brand-slate">Temporarily restrict access for scheduled upgrades</span>
+                      <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200 block">Maintenance Mode</Label>
+                      <span className="text-[11px] text-brand-slate dark:text-stone-400">Temporarily restrict access for scheduled upgrades</span>
                     </div>
                     <input
                       type="checkbox"
                       defaultChecked={settings?.maintenanceMode}
                       id="maintenanceModeInput"
-                      className="h-4 w-4 text-brand-emerald rounded border-slate-300"
+                      className="h-4 w-4 text-brand-orange rounded border-stone-300 focus:ring-brand-orange"
                     />
                   </div>
 
                   <div className="pt-4 flex justify-end">
                     <Button
-                      variant="emerald"
+                      variant="orange"
                       size="sm"
                       disabled={updateSettingsMutation.isPending}
                       onClick={() => {
@@ -922,7 +1149,7 @@ export default function AdminPortalPage() {
                           maintenanceMode,
                         });
                       }}
-                      className="text-xs h-9 px-4"
+                      className="text-xs h-9 px-4 shadow-sm"
                     >
                       Save Configuration
                     </Button>
@@ -934,37 +1161,41 @@ export default function AdminPortalPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 7. AUDIT TRAIL TAB */}
+        {/* 8. AUDIT TRAIL TAB */}
         {/* ========================================================================= */}
         {activeTab === 'audit' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-brand-navy">Immutable Audit Trail & Forensics</h2>
-                <p className="text-xs text-brand-slate">Tamper-proof event logs detailing administrative mutations, sanitized metadata, and outcomes.</p>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Immutable Audit Trail & Forensics</h2>
+                <p className="text-xs text-brand-slate dark:text-stone-400">Tamper-proof event logs detailing administrative mutations, sanitized metadata, and outcomes.</p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-brand-slate" />
                   <Input
-                    placeholder="Search action or entity..."
+                    placeholder="Search entity..."
                     value={auditSearch}
                     onChange={(e) => setAuditSearch(e.target.value)}
-                    className="pl-8 text-xs h-8 w-48 sm:w-60"
+                    className="pl-8 text-xs h-8 w-48 sm:w-60 border-brand-border dark:border-stone-700"
                   />
                 </div>
 
                 <select
                   value={auditActionFilter}
                   onChange={(e) => setAuditActionFilter(e.target.value)}
-                  className="rounded-lg border border-brand-border bg-white px-3 py-1 text-xs font-semibold text-brand-navy h-8 shadow-xs focus:outline-none"
+                  className="rounded-lg border border-brand-border dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-1 text-xs font-semibold text-brand-coffee dark:text-stone-100 h-8 focus:outline-none focus:ring-2 focus:ring-brand-orange"
                 >
                   <option value="">All Actions</option>
                   <option value="USER_ACCOUNT_SUSPENDED">Suspensions</option>
                   <option value="USER_ACCOUNT_REACTIVATED">Reactivations</option>
+                  <option value="USER_ROLE_CHANGED">Role Changes</option>
                   <option value="COURSE_APPROVED">Course Approvals</option>
                   <option value="COURSE_REJECTED">Course Rejections</option>
+                  <option value="CATEGORY_CREATED">Category Created</option>
+                  <option value="CATEGORY_UPDATED">Category Updated</option>
+                  <option value="CATEGORY_DELETED">Category Deleted</option>
                   <option value="REVIEW_MODERATED">Review Moderations</option>
                   <option value="PLATFORM_SETTINGS_UPDATED">Settings Updates</option>
                 </select>
@@ -977,10 +1208,10 @@ export default function AdminPortalPage() {
                 <Skeleton className="h-12 w-full rounded-xl" />
               </div>
             ) : auditData?.logs && auditData.logs.length > 0 ? (
-              <div className="border border-brand-border bg-white rounded-xl shadow-xs overflow-hidden">
+              <div className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 rounded-xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 border-b border-brand-border text-brand-slate font-semibold uppercase tracking-wider">
+                    <thead className="bg-[#FAF7F2] dark:bg-stone-800 border-b border-brand-border dark:border-stone-700 text-brand-coffee dark:text-stone-300 font-bold uppercase tracking-wider">
                       <tr>
                         <th className="py-3 px-4">Action</th>
                         <th className="py-3 px-4">Actor</th>
@@ -989,22 +1220,22 @@ export default function AdminPortalPage() {
                         <th className="py-3 px-4 text-right">Forensic Details</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-brand-border/60">
+                    <tbody className="divide-y divide-brand-border/60 dark:divide-stone-800">
                       {auditData.logs.map((log: any) => (
-                        <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-3 px-4 font-mono font-bold text-brand-navy">
-                            <span className="p-1 rounded bg-slate-100 text-[10px] border border-slate-200">
+                        <tr key={log.id} className="hover:bg-orange-50/20 dark:hover:bg-stone-800/40 transition-colors">
+                          <td className="py-3 px-4 font-mono font-bold text-brand-coffee dark:text-stone-100">
+                            <span className="p-1 rounded bg-brand-creamy dark:bg-stone-800 text-[10px] border border-brand-border dark:border-stone-700">
                               {log.action}
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="font-semibold text-brand-navy block">{log.user?.fullName || 'System Root'}</span>
-                            <span className="text-[10px] text-brand-slate block">{log.user?.email || 'N/A'}</span>
+                            <span className="font-semibold text-brand-coffee dark:text-stone-100 block">{log.user?.fullName || 'System Root'}</span>
+                            <span className="text-[10px] text-brand-slate dark:text-stone-400 block">{log.user?.email || 'N/A'}</span>
                           </td>
-                          <td className="py-3 px-4 text-brand-slate font-mono text-[11px]">
+                          <td className="py-3 px-4 text-brand-slate dark:text-stone-400 font-mono text-[11px]">
                             {log.entityType}: {log.entityId?.slice(0, 8)}...
                           </td>
-                          <td className="py-3 px-4 text-brand-slate text-[11px] whitespace-nowrap">
+                          <td className="py-3 px-4 text-brand-slate dark:text-stone-400 text-[11px] whitespace-nowrap">
                             {new Date(log.createdAt).toLocaleString()}
                           </td>
                           <td className="py-3 px-4 text-right">
@@ -1012,7 +1243,7 @@ export default function AdminPortalPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => setAuditDetailModal(log)}
-                              className="text-[11px] h-7 px-2"
+                              className="text-[11px] h-7 px-2 border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
                             >
                               Inspect Meta
                             </Button>
@@ -1043,7 +1274,7 @@ export default function AdminPortalPage() {
         <Dialog open={Boolean(courseReviewModal)} onOpenChange={() => setCourseReviewModal(null)}>
           <div className="max-h-[80vh] overflow-y-auto space-y-4">
             <DialogHeader>
-              <DialogTitle className="text-lg font-bold text-brand-navy">
+              <DialogTitle className="text-lg font-bold text-brand-coffee dark:text-stone-100">
                 Curriculum Review: {courseReviewModal.title}
               </DialogTitle>
               <DialogDescription className="text-xs">
@@ -1052,24 +1283,24 @@ export default function AdminPortalPage() {
             </DialogHeader>
 
             <div className="space-y-4 text-xs py-2">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="font-semibold text-brand-navy block mb-1">Course Description:</span>
-                <p className="text-brand-slate whitespace-pre-wrap">{courseReviewModal.description}</p>
+              <div className="p-3 bg-brand-creamy dark:bg-stone-800/60 rounded-xl border border-brand-border dark:border-stone-700">
+                <span className="font-semibold text-brand-coffee dark:text-stone-100 block mb-1">Course Description:</span>
+                <p className="text-brand-slate dark:text-stone-300 whitespace-pre-wrap">{courseReviewModal.description}</p>
               </div>
 
               <div className="space-y-2">
-                <span className="font-bold text-brand-navy text-sm block">Syllabus Breakdown ({courseReviewModal.sections?.length || 0} Sections)</span>
+                <span className="font-bold text-brand-coffee dark:text-stone-100 text-sm block">Syllabus Breakdown ({courseReviewModal.sections?.length || 0} Sections)</span>
                 {courseReviewModal.sections?.map((sec: any, idx: number) => (
-                  <div key={sec.id} className="border border-brand-border rounded-lg p-3 space-y-2 bg-white">
-                    <div className="font-semibold text-brand-navy">
+                  <div key={sec.id} className="border border-brand-border dark:border-stone-800 rounded-xl p-3 space-y-2 bg-white dark:bg-stone-900">
+                    <div className="font-semibold text-brand-coffee dark:text-stone-100">
                       Section {idx + 1}: {sec.title} ({sec.lessons?.length || 0} lessons)
                     </div>
-                    <ul className="pl-4 list-disc space-y-1 text-brand-slate">
+                    <ul className="pl-4 list-disc space-y-1 text-brand-slate dark:text-stone-400">
                       {sec.lessons?.map((les: any) => (
                         <li key={les.id}>
-                          <span className="font-medium text-brand-navy">{les.title}</span> ({les.durationMinutes} min, {les.type})
-                          {les.quiz && <Badge variant="outline" className="ml-2 text-[9px] bg-amber-50">Quiz Attached</Badge>}
-                          {les.assignment && <Badge variant="outline" className="ml-2 text-[9px] bg-purple-50">Assignment Attached</Badge>}
+                          <span className="font-medium text-brand-coffee dark:text-stone-200">{les.title}</span> ({les.durationMinutes} min, {les.type})
+                          {les.quiz && <Badge variant="outline" className="ml-2 text-[9px] bg-orange-50 text-orange-800 border-orange-200">Quiz Attached</Badge>}
+                          {les.assignment && <Badge variant="outline" className="ml-2 text-[9px] bg-amber-50 text-amber-800 border-amber-200">Assignment Attached</Badge>}
                         </li>
                       ))}
                     </ul>
@@ -1094,7 +1325,7 @@ export default function AdminPortalPage() {
                   Reject with Reason
                 </Button>
                 <Button
-                  variant="emerald"
+                  variant="orange"
                   size="sm"
                   onClick={() => approveCourseMutation.mutate(courseReviewModal.id)}
                 >
@@ -1110,7 +1341,7 @@ export default function AdminPortalPage() {
       {rejectionModalCourse && (
         <Dialog open={Boolean(rejectionModalCourse)} onOpenChange={() => setRejectionModalCourse(null)}>
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-brand-navy">
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
               Reject Course: {rejectionModalCourse.title}
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -1126,7 +1357,7 @@ export default function AdminPortalPage() {
           )}
 
           <div className="space-y-2 py-2">
-            <Label className="text-xs font-semibold text-brand-navy">Rejection Feedback / Justification *</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Rejection Feedback / Justification *</Label>
             <Textarea
               rows={4}
               value={rejectionReason}
@@ -1161,7 +1392,7 @@ export default function AdminPortalPage() {
       {userStatusModal && (
         <Dialog open={Boolean(userStatusModal)} onOpenChange={() => setUserStatusModal(null)}>
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-brand-navy">
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
               {userStatusModal.action === 'suspend' ? 'Suspend User Account' : 'Reactivate User Account'}
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -1177,7 +1408,7 @@ export default function AdminPortalPage() {
           )}
 
           <div className="space-y-2 py-2">
-            <Label className="text-xs font-semibold text-brand-navy">
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
               {userStatusModal.action === 'suspend' ? 'Suspension Reason *' : 'Reactivation Reason'}
             </Label>
             <Textarea
@@ -1198,7 +1429,7 @@ export default function AdminPortalPage() {
               Cancel
             </Button>
             <Button
-              variant={userStatusModal.action === 'suspend' ? 'destructive' : 'emerald'}
+              variant={userStatusModal.action === 'suspend' ? 'destructive' : 'orange'}
               size="sm"
               disabled={updateUserStatusMutation.isPending}
               onClick={() =>
@@ -1215,11 +1446,167 @@ export default function AdminPortalPage() {
         </Dialog>
       )}
 
-      {/* 4. Review Moderation Modal */}
+      {/* 4. User Role Modal (NEW) */}
+      {userRoleModal && (
+        <Dialog open={Boolean(userRoleModal)} onOpenChange={() => setUserRoleModal(null)}>
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
+              Assign Platform Role
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Target User: {userRoleModal.fullName} ({userRoleModal.email})
+            </DialogDescription>
+          </DialogHeader>
+
+          {userRoleError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs">{userRoleError}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-3 py-3 text-xs">
+            <Label className="font-semibold text-brand-coffee dark:text-stone-200">Select Platform Role *</Label>
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="w-full rounded-lg border border-brand-border dark:border-stone-700 bg-white dark:bg-stone-800 p-2.5 text-xs font-semibold text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange"
+            >
+              <option value="STUDENT">Student (Standard learner)</option>
+              <option value="TEACHER">Teacher (Institutional instructor)</option>
+              <option value="INDEPENDENT_INSTRUCTOR">Independent Instructor (Marketplace author)</option>
+              <option value="INSTITUTION_ADMIN">Institution Admin (Department manager)</option>
+              <option value="SUPER_ADMIN">Super Admin (Platform governance)</option>
+            </select>
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" size="sm" onClick={() => setUserRoleModal(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="orange"
+              size="sm"
+              disabled={updateUserRoleMutation.isPending}
+              onClick={() =>
+                updateUserRoleMutation.mutate({
+                  userId: userRoleModal.id,
+                  role: selectedRole,
+                })
+              }
+            >
+              Apply Role Change
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )}
+
+      {/* 5. Create / Edit Category Modal (NEW) */}
+      {categoryModal && (
+        <Dialog open={Boolean(categoryModal)} onOpenChange={() => setCategoryModal(null)}>
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
+              {categoryModal.isEditing ? 'Edit Category' : 'Create Course Category'}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Define academic categorization and taxonomy tags for instructors.
+            </DialogDescription>
+          </DialogHeader>
+
+          {categoryError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs">{categoryError}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-3 py-2 text-xs">
+            <div>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Category Name *</Label>
+              <Input
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                placeholder="e.g. Artificial Intelligence & Data Science"
+                className="text-xs h-9 border-brand-border dark:border-stone-700"
+              />
+            </div>
+
+            <div>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Description (Optional)</Label>
+              <Textarea
+                rows={3}
+                value={categoryDescription}
+                onChange={(e) => setCategoryDescription(e.target.value)}
+                placeholder="Brief summary of topics encompassed by this academic domain..."
+                className="text-xs border-brand-border dark:border-stone-700"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" size="sm" onClick={() => setCategoryModal(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="orange"
+              size="sm"
+              disabled={!categoryName.trim() || createCategoryMutation.isPending || updateCategoryMutation.isPending}
+              onClick={() => {
+                if (categoryModal.isEditing) {
+                  updateCategoryMutation.mutate({
+                    id: categoryModal.category.id,
+                    dto: {
+                      name: categoryName.trim(),
+                      description: categoryDescription.trim() || undefined,
+                    },
+                  });
+                } else {
+                  createCategoryMutation.mutate({
+                    name: categoryName.trim(),
+                    description: categoryDescription.trim() || undefined,
+                  });
+                }
+              }}
+            >
+              {categoryModal.isEditing ? 'Update Category' : 'Create Category'}
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )}
+
+      {/* 6. Delete Category Confirmation Modal (NEW) */}
+      {deleteCategoryModal && (
+        <Dialog open={Boolean(deleteCategoryModal)} onOpenChange={() => setDeleteCategoryModal(null)}>
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-red-600">
+              Delete Category: {deleteCategoryModal.name}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Are you sure you want to remove this course category? Associated courses ({deleteCategoryModal._count?.courses || 0}) will remain safe but will be unassigned from this category.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button variant="ghost" size="sm" onClick={() => setDeleteCategoryModal(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              disabled={deleteCategoryMutation.isPending}
+              onClick={() => deleteCategoryMutation.mutate(deleteCategoryModal.id)}
+            >
+              Confirm Delete
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )}
+
+      {/* 7. Review Moderation Modal */}
       {reviewModerateModal && (
         <Dialog open={Boolean(reviewModerateModal)} onOpenChange={() => setReviewModerateModal(null)}>
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-brand-navy">
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
               Remove Inappropriate Review
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -1235,10 +1622,10 @@ export default function AdminPortalPage() {
           )}
 
           <div className="space-y-2 py-2">
-            <div className="p-2.5 bg-slate-50 border rounded-md text-xs italic">
+            <div className="p-2.5 bg-brand-creamy dark:bg-stone-800 border rounded-md text-xs italic">
               &ldquo;{reviewModerateModal.comment}&rdquo;
             </div>
-            <Label className="text-xs font-semibold text-brand-navy">Removal Reason *</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Removal Reason *</Label>
             <Input
               value={reviewModerateReason}
               onChange={(e) => setReviewModerateReason(e.target.value)}
@@ -1268,11 +1655,11 @@ export default function AdminPortalPage() {
         </Dialog>
       )}
 
-      {/* 5. Create Institution Modal */}
+      {/* 8. Create Institution Modal */}
       {institutionModalOpen && (
         <Dialog open={institutionModalOpen} onOpenChange={() => setInstitutionModalOpen(false)}>
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-brand-navy">
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
               Onboard New Higher-Education Tenant
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -1289,42 +1676,42 @@ export default function AdminPortalPage() {
 
           <div className="space-y-3 py-2 text-xs">
             <div>
-              <Label className="font-semibold text-brand-navy">Institution Name *</Label>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Institution Name *</Label>
               <Input
                 value={instName}
                 onChange={(e) => setInstName(e.target.value)}
                 placeholder="e.g. Addis Ababa University"
-                className="text-xs h-8"
+                className="text-xs h-8 border-brand-border dark:border-stone-700"
               />
             </div>
 
             <div>
-              <Label className="font-semibold text-brand-navy">Slug Code *</Label>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Slug Code *</Label>
               <Input
                 value={instSlug}
                 onChange={(e) => setInstSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                 placeholder="e.g. aau"
-                className="text-xs h-8 font-mono"
+                className="text-xs h-8 font-mono border-brand-border dark:border-stone-700"
               />
             </div>
 
             <div>
-              <Label className="font-semibold text-brand-navy">Official Domain (Optional)</Label>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Official Domain (Optional)</Label>
               <Input
                 value={instDomain}
                 onChange={(e) => setInstDomain(e.target.value.toLowerCase())}
                 placeholder="e.g. aau.edu.et"
-                className="text-xs h-8 font-mono"
+                className="text-xs h-8 font-mono border-brand-border dark:border-stone-700"
               />
             </div>
 
             <div>
-              <Label className="font-semibold text-brand-navy">Contact Email *</Label>
+              <Label className="font-semibold text-brand-coffee dark:text-stone-200">Contact Email *</Label>
               <Input
                 value={instContactEmail}
                 onChange={(e) => setInstContactEmail(e.target.value)}
                 placeholder="e.g. administration@aau.edu.et"
-                className="text-xs h-8"
+                className="text-xs h-8 border-brand-border dark:border-stone-700"
               />
             </div>
           </div>
@@ -1334,7 +1721,7 @@ export default function AdminPortalPage() {
               Cancel
             </Button>
             <Button
-              variant="emerald"
+              variant="orange"
               size="sm"
               disabled={!instName.trim() || !instSlug.trim() || !instContactEmail.trim() || createInstitutionMutation.isPending}
               onClick={() =>
@@ -1352,11 +1739,11 @@ export default function AdminPortalPage() {
         </Dialog>
       )}
 
-      {/* 6. Forensic Metadata Modal */}
+      {/* 9. Forensic Metadata Modal */}
       {auditDetailModal && (
         <Dialog open={Boolean(auditDetailModal)} onOpenChange={() => setAuditDetailModal(null)}>
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-brand-navy">
+            <DialogTitle className="text-base font-bold text-brand-coffee dark:text-stone-100">
               Audit Record Forensics: {auditDetailModal.action}
             </DialogTitle>
             <DialogDescription className="text-xs font-mono">
@@ -1365,15 +1752,15 @@ export default function AdminPortalPage() {
           </DialogHeader>
 
           <div className="space-y-3 py-2 text-xs">
-            <div className="p-3 bg-slate-50 border rounded-lg space-y-1">
-              <div><span className="font-semibold text-brand-navy">Actor:</span> {auditDetailModal.user?.fullName} ({auditDetailModal.user?.email || 'N/A'})</div>
-              <div><span className="font-semibold text-brand-navy">Target Resource:</span> {auditDetailModal.entityType} ({auditDetailModal.entityId})</div>
-              <div><span className="font-semibold text-brand-navy">Timestamp:</span> {new Date(auditDetailModal.createdAt).toISOString()}</div>
+            <div className="p-3 bg-brand-creamy dark:bg-stone-800 border rounded-xl space-y-1">
+              <div><span className="font-semibold text-brand-coffee dark:text-stone-200">Actor:</span> {auditDetailModal.user?.fullName} ({auditDetailModal.user?.email || 'N/A'})</div>
+              <div><span className="font-semibold text-brand-coffee dark:text-stone-200">Target Resource:</span> {auditDetailModal.entityType} ({auditDetailModal.entityId})</div>
+              <div><span className="font-semibold text-brand-coffee dark:text-stone-200">Timestamp:</span> {new Date(auditDetailModal.createdAt).toISOString()}</div>
             </div>
 
             <div>
-              <span className="font-semibold text-brand-navy block mb-1">Sanitized Metadata Payload:</span>
-              <pre className="p-3 bg-slate-900 text-emerald-400 rounded-lg text-[11px] font-mono overflow-x-auto max-h-56">
+              <span className="font-semibold text-brand-coffee dark:text-stone-200 block mb-1">Sanitized Metadata Payload:</span>
+              <pre className="p-3 bg-[#19100C] text-orange-300 rounded-xl text-[11px] font-mono overflow-x-auto max-h-56 border border-[#2A1B14]">
                 {JSON.stringify(auditDetailModal.metadata || {}, null, 2)}
               </pre>
             </div>

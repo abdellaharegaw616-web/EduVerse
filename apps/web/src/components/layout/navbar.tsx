@@ -120,9 +120,9 @@ export function Navbar() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-1.5 text-xs border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-950/50"
+                    className="gap-1.5 text-xs border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
                   >
-                    <ShieldCheck className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                    <ShieldCheck className="h-4 w-4 text-brand-orange" />
                     <span>Admin</span>
                   </Button>
                 </Link>
@@ -275,9 +275,9 @@ export function Navbar() {
                   <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
                     <Button
                       variant="outline"
-                      className="w-full justify-start gap-2.5 h-10 border-purple-200 text-purple-700 dark:border-purple-800 dark:text-purple-300"
+                      className="w-full justify-start gap-2.5 h-10 border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
                     >
-                      <ShieldCheck className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                      <ShieldCheck className="h-4 w-4 text-brand-orange" />
                       <span>Administrative Portal</span>
                     </Button>
                   </Link>

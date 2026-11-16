@@ -41,6 +41,11 @@ describe('AdminService (Phase 8J: Platform Moderation & Audit Logs)', () => {
       },
       courseCategory: {
         findMany: jest.fn(),
+        findUnique: jest.fn(),
+        findFirst: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
       },
       review: {
         count: jest.fn(),
@@ -711,6 +716,104 @@ describe('AdminService (Phase 8J: Platform Moderation & Audit Logs)', () => {
       expect(metadata.refreshToken).toBeUndefined();
       expect(metadata.accessToken).toBeUndefined();
       expect(metadata.authorization).toBeUndefined();
+    });
+  });
+
+  describe('User Role Management & Category Management', () => {
+    it('should update user role, record audit log and send notification', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'user-1',
+        email: 'instructor@eduverse.et',
+        role: Role.STUDENT,
+      });
+      prisma.user.update.mockResolvedValue({
+        id: 'user-1',
+        fullName: 'Abebe Bikila',
+        email: 'instructor@eduverse.et',
+        role: Role.TEACHER,
+        isActive: true,
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+      prisma.notification.create.mockResolvedValue({});
+
+      const res = await service.setUserRole('admin-1', 'user-1', { role: Role.TEACHER });
+      expect(res.role).toBe(Role.TEACHER);
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { role: Role.TEACHER },
+        select: expect.any(Object),
+      });
+      expect(prisma.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'USER_ROLE_CHANGED',
+            entityType: 'User',
+            entityId: 'user-1',
+          }),
+        }),
+      );
+    });
+
+    it('should prevent super admin from demoting self', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'admin-1',
+        role: Role.SUPER_ADMIN,
+      });
+
+      await expect(
+        service.setUserRole('admin-1', 'admin-1', { role: Role.STUDENT }),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('should list categories with course counts', async () => {
+      prisma.courseCategory.findMany.mockResolvedValue([
+        { id: 'cat-1', name: 'Computer Science', slug: 'computer-science', _count: { courses: 5 } },
+      ]);
+
+      const res = await service.getCategories();
+      expect(res).toHaveLength(1);
+      expect(res[0]!.name).toBe('Computer Science');
+    });
+
+    it('should create new category and record audit log', async () => {
+      prisma.courseCategory.findFirst.mockResolvedValue(null);
+      prisma.courseCategory.create.mockResolvedValue({
+        id: 'cat-2',
+        name: 'Data Science',
+        slug: 'data-science',
+        description: 'AI & Data Science',
+        _count: { courses: 0 },
+      });
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const res = await service.createCategory('admin-1', {
+        name: 'Data Science',
+        description: 'AI & Data Science',
+      });
+      expect(res.slug).toBe('data-science');
+      expect(prisma.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'CATEGORY_CREATED',
+            entityType: 'CourseCategory',
+          }),
+        }),
+      );
+    });
+
+    it('should delete category and record audit log', async () => {
+      prisma.courseCategory.findUnique.mockResolvedValue({
+        id: 'cat-2',
+        name: 'Data Science',
+        slug: 'data-science',
+        _count: { courses: 0 },
+      });
+      prisma.courseCategory.delete.mockResolvedValue({});
+      prisma.auditLog.create.mockResolvedValue({});
+
+      const res = await service.deleteCategory('admin-1', 'cat-2');
+      expect(res.message).toContain('Data Science');
+      expect(prisma.courseCategory.delete).toHaveBeenCalledWith({ where: { id: 'cat-2' } });
     });
   });
 });
