@@ -226,6 +226,54 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
       const cleared = await service.clearTutorHistory(studentId, courseId, lessonId);
       expect(cleared.deletedCount).toBe(2);
     });
+
+    it('should gracefully provide study assistance even if database table persistence fails (unmigrated DB)', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.lesson.findUnique.mockResolvedValue(mockLesson);
+      prisma.enrollment.findUnique.mockResolvedValue({ id: 'enr-1' });
+
+      // Simulate missing database table throwing P2021
+      prisma.aiTutorMessage.findMany.mockRejectedValueOnce(new Error('Table public.AiTutorMessage does not exist'));
+      prisma.$transaction.mockRejectedValueOnce(new Error('Table public.AiTutorMessage does not exist'));
+
+      const result = await service.askTutor(studentId, {
+        question: 'Explain indexes in simple terms',
+        lessonId,
+        mode: AiTutorMode.EXPLAIN_SIMPLE,
+      });
+
+      expect(result).toBeDefined();
+      expect(result.assistantMessage).toBeDefined();
+      expect(result.assistantMessage.content).toBeTruthy();
+      expect(result.userMessage.content).toBe('Explain indexes in simple terms');
+    });
+
+    it('should safely handle courses with undefined or empty learning objectives without throwing slice error', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      prisma.course.findUnique.mockResolvedValue({
+        id: courseId,
+        title: 'Python for Beginners',
+        description: null,
+        status: CourseStatus.PUBLISHED,
+        authorId: teacherId,
+        learningObjectives: null, // null from database
+        sections: [
+          {
+            title: 'Getting Started',
+            lessons: [{ title: 'Variables' }],
+          },
+        ],
+      });
+
+      const result = await service.askTutor(studentId, {
+        question: 'Give me a summary',
+        courseId,
+        mode: AiTutorMode.SUMMARY,
+      });
+
+      expect(result).toBeDefined();
+      expect(result.assistantMessage.content).toContain('Study Summary');
+    });
   });
 
   describe('Instructor Co-Author Tools', () => {

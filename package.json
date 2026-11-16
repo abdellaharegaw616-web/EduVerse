@@ -9,6 +9,7 @@
     "dev:api": "pnpm --filter @eduverse/api run dev",
     "dev:web": "pnpm --filter @eduverse/web run dev",
     "seed": "pnpm --filter @eduverse/api run prisma:seed",
+    "db:push": "pnpm --filter @eduverse/api exec prisma db push",
     "build": "pnpm --filter \"@eduverse/*\" run build",
     "build:api": "pnpm --filter @eduverse/api run build",
     "build:web": "pnpm --filter @eduverse/web run build",

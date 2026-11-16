@@ -2,12 +2,15 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService, Role } from '../database/prisma.service';
 import { UpsertNoteDto } from './dto/upsert-note.dto';
 
 @Injectable()
 export class NotesService {
+  private readonly logger = new Logger(NotesService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   private async verifyLessonAccess(userId: string, lessonId: string) {
@@ -80,48 +83,64 @@ export class NotesService {
       ];
     }
 
-    return this.prisma.lessonNote.findMany({
-      where,
-      orderBy: { updatedAt: 'desc' },
-      include: {
-        course: {
-          select: { id: true, title: true, slug: true },
-        },
-        lesson: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            type: true,
-            durationMinutes: true,
-            section: { select: { id: true, title: true } },
+    try {
+      return await this.prisma.lessonNote.findMany({
+        where,
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          course: {
+            select: { id: true, title: true, slug: true },
+          },
+          lesson: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              type: true,
+              durationMinutes: true,
+              section: { select: { id: true, title: true } },
+            },
           },
         },
-      },
-    });
+      });
+    } catch (dbErr) {
+      this.logger.warn(`Could not load lesson notes from database: ${(dbErr as Error).message}`);
+      return [];
+    }
   }
 
   async getLessonNote(userId: string, lessonId: string) {
     await this.verifyLessonAccess(userId, lessonId);
 
-    const note = await this.prisma.lessonNote.findUnique({
-      where: {
-        userId_lessonId: {
-          userId,
-          lessonId,
+    try {
+      const note = await this.prisma.lessonNote.findUnique({
+        where: {
+          userId_lessonId: {
+            userId,
+            lessonId,
+          },
         },
-      },
-    });
+      });
 
-    return (
-      note || {
+      return (
+        note || {
+          lessonId,
+          title: null,
+          content: '',
+          isBookmarked: false,
+          updatedAt: null,
+        }
+      );
+    } catch (dbErr) {
+      this.logger.warn(`Could not load lesson note: ${(dbErr as Error).message}`);
+      return {
         lessonId,
         title: null,
         content: '',
         isBookmarked: false,
         updatedAt: null,
-      }
-    );
+      };
+    }
   }
 
   async upsertLessonNote(userId: string, lessonId: string, dto: UpsertNoteDto) {

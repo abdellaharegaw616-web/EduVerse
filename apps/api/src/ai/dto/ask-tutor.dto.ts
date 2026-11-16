@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum AiTutorMode {
@@ -32,11 +33,13 @@ export class AskTutorDto {
 
   @ApiPropertyOptional({ description: 'Optional course ID for syllabus context' })
   @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' && value.trim() ? value.trim() : undefined))
   @IsUUID()
   courseId?: string;
 
   @ApiPropertyOptional({ description: 'Optional lesson ID for granular lesson context' })
   @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' && value.trim() ? value.trim() : undefined))
   @IsUUID()
   lessonId?: string;
 

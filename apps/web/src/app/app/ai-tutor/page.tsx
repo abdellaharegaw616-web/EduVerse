@@ -78,18 +78,31 @@ export default function StudentAiTutorPage() {
 
   const askMutation = useMutation({
     mutationFn: (payload: { prompt: string; mode: TutorMode }) =>
-      apiClient.post('/ai/tutor/ask', {
+      apiClient.post<any>('/ai/tutor/ask', {
         question: payload.prompt,
-        courseId: selectedCourseId || undefined,
+        courseId: selectedCourseId && selectedCourseId.trim() ? selectedCourseId.trim() : undefined,
         mode: payload.mode,
         language,
       }),
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       setErrorMsg(null);
       setQuestion('');
       queryClient.invalidateQueries({
         queryKey: ['ai-tutor-workspace-history', selectedCourseId],
       });
+      if (response?.userMessage && response?.assistantMessage) {
+        queryClient.setQueryData(
+          ['ai-tutor-workspace-history', selectedCourseId],
+          (prev: TutorMessage[] | undefined) => {
+            const list = Array.isArray(prev) ? [...prev] : [];
+            const exists = list.some((m) => m.id === response.assistantMessage.id);
+            if (!exists) {
+              list.push(response.userMessage, response.assistantMessage);
+            }
+            return list;
+          },
+        );
+      }
     },
     onError: (err: any) => {
       setErrorMsg(err?.message || 'Unable to generate study assistance right now.');
