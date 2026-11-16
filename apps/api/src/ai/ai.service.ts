@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  HttpException,
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -117,129 +118,190 @@ export class AiService {
   // -------------------------------------------------------------
 
   async askTutor(userId: string, dto: AskTutorDto) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, fullName: true, role: true, isActive: true },
-    });
-
-    if (!user || user.isActive === false) {
-      throw new ForbiddenException('Account is suspended or inactive.');
-    }
-
-    const cleanCourseId = dto.courseId && dto.courseId.trim() ? dto.courseId.trim() : undefined;
-    const cleanLessonId = dto.lessonId && dto.lessonId.trim() ? dto.lessonId.trim() : undefined;
-
-    const context = await this.resolveAcademicContext(user, cleanCourseId, cleanLessonId);
-    const mode = dto.mode || AiTutorMode.TUTOR;
-    const language = dto.language || AiTutorLanguage.EN;
-
-    const historyWhere: any = { userId };
-    if (context.lessonId) {
-      historyWhere.lessonId = context.lessonId;
-    } else if (context.courseId) {
-      historyWhere.courseId = context.courseId;
-      historyWhere.lessonId = null;
-    } else {
-      historyWhere.courseId = null;
-      historyWhere.lessonId = null;
-    }
-
-    let recentHistory: any[] = [];
     try {
-      recentHistory = await this.prisma.aiTutorMessage.findMany({
-        where: historyWhere,
-        orderBy: { createdAt: 'desc' },
-        take: 6,
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, fullName: true, role: true, isActive: true },
       });
-    } catch (dbErr) {
-      this.logger.warn(
-        `AI tutor history lookup bypassed (table may be pending migration): ${(dbErr as Error).message}`,
+
+      if (!user || user.isActive === false) {
+        throw new ForbiddenException('Account is suspended or inactive.');
+      }
+
+      const cleanCourseId = dto.courseId && dto.courseId.trim() ? dto.courseId.trim() : undefined;
+      const cleanLessonId = dto.lessonId && dto.lessonId.trim() ? dto.lessonId.trim() : undefined;
+
+      const context = await this.resolveAcademicContext(user, cleanCourseId, cleanLessonId);
+      const mode = dto.mode || AiTutorMode.TUTOR;
+      const language = dto.language || AiTutorLanguage.EN;
+
+      const historyWhere: any = { userId };
+      if (context.lessonId) {
+        historyWhere.lessonId = context.lessonId;
+      } else if (context.courseId) {
+        historyWhere.courseId = context.courseId;
+        historyWhere.lessonId = null;
+      } else {
+        historyWhere.courseId = null;
+        historyWhere.lessonId = null;
+      }
+
+      let recentHistory: any[] = [];
+      try {
+        recentHistory = await this.prisma.aiTutorMessage.findMany({
+          where: historyWhere,
+          orderBy: { createdAt: 'desc' },
+          take: 6,
+        });
+      } catch (dbErr) {
+        this.logger.warn(
+          `AI tutor history lookup bypassed (table may be pending migration): ${(dbErr as Error).message}`,
+        );
+      }
+
+      const chronologicalHistory = (recentHistory || [])
+        .reverse()
+        .map((m) => ({
+          role: m.role === AiMessageRole.USER ? ('user' as const) : ('assistant' as const),
+          content: m.content,
+        }));
+
+      const systemPrompt = this.buildTutorSystemPrompt(context, mode, language);
+      let llmResult: LlmCompletionResult;
+      try {
+        llmResult = await this.generateCompletion(
+          systemPrompt,
+          dto.question.trim(),
+          chronologicalHistory,
+          () => this.buildOfflineTutorReply(dto.question.trim(), context, mode, language),
+        );
+      } catch (genErr) {
+        this.logger.warn(`AI completion generation fallback triggered: ${(genErr as Error).message}`);
+        llmResult = {
+          text: this.buildOfflineTutorReply(dto.question.trim(), context, mode, language),
+          engine: 'contextual-offline',
+          model: 'eduverse-academic-v1',
+        };
+      }
+
+      const generatedUserMsg = {
+        id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+        userId,
+        courseId: context.courseId || null,
+        lessonId: context.lessonId || null,
+        role: AiMessageRole.USER,
+        mode,
+        content: dto.question.trim(),
+        createdAt: new Date(),
+      };
+
+      const generatedAssistantMsg = {
+        id: `ast_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+        userId,
+        courseId: context.courseId || null,
+        lessonId: context.lessonId || null,
+        role: AiMessageRole.ASSISTANT,
+        mode,
+        content: llmResult.text,
+        engine: llmResult.engine,
+        createdAt: new Date(),
+      };
+
+      let userMessage: any = generatedUserMsg;
+      let assistantMessage: any = generatedAssistantMsg;
+
+      try {
+        const [savedUser, savedAssistant] = await this.prisma.$transaction([
+          this.prisma.aiTutorMessage.create({
+            data: {
+              userId,
+              courseId: context.courseId || null,
+              lessonId: context.lessonId || null,
+              role: AiMessageRole.USER,
+              mode,
+              content: dto.question.trim(),
+            },
+          }),
+          this.prisma.aiTutorMessage.create({
+            data: {
+              userId,
+              courseId: context.courseId || null,
+              lessonId: context.lessonId || null,
+              role: AiMessageRole.ASSISTANT,
+              mode,
+              content: llmResult.text,
+              engine: llmResult.engine,
+            },
+          }),
+        ]);
+        userMessage = savedUser;
+        assistantMessage = savedAssistant;
+      } catch (dbErr) {
+        this.logger.warn(
+          `AI tutor message persistence skipped (database table may be pending migration): ${(dbErr as Error).message}`,
+        );
+      }
+
+      return {
+        userMessage,
+        assistantMessage,
+        engine: llmResult.engine,
+        model: llmResult.model,
+        contextSummary: {
+          courseTitle: context.courseTitle || null,
+          lessonTitle: context.lessonTitle || null,
+        },
+      };
+    } catch (err) {
+      if (err instanceof HttpException) {
+        throw err;
+      }
+
+      this.logger.error(
+        `Unexpected error in askTutor: ${(err as Error).message}`,
+        (err as Error).stack,
       );
+
+      const fallbackText = [
+        '### Academic Guidance & Study Assistance',
+        '',
+        `Regarding your question: *"${dto.question.trim()}"*`,
+        '',
+        'Focus on understanding the core definitions and foundational principles of this subject. Break complex problems into inputs, processing logic, and expected outcomes.',
+        '',
+        '**Recommended Next Step:** Add key takeaways to your Study Notebook and test your knowledge against the end-of-module assessment.',
+      ].join('\n');
+
+      return {
+        userMessage: {
+          id: `usr_${Date.now()}`,
+          userId,
+          courseId: dto.courseId || null,
+          lessonId: dto.lessonId || null,
+          role: AiMessageRole.USER,
+          mode: dto.mode || AiTutorMode.TUTOR,
+          content: dto.question.trim(),
+          createdAt: new Date(),
+        },
+        assistantMessage: {
+          id: `ast_${Date.now()}`,
+          userId,
+          courseId: dto.courseId || null,
+          lessonId: dto.lessonId || null,
+          role: AiMessageRole.ASSISTANT,
+          mode: dto.mode || AiTutorMode.TUTOR,
+          content: fallbackText,
+          engine: 'contextual-offline',
+          createdAt: new Date(),
+        },
+        engine: 'contextual-offline',
+        model: 'eduverse-academic-v1',
+        contextSummary: {
+          courseTitle: null,
+          lessonTitle: null,
+        },
+      };
     }
-
-    const chronologicalHistory = (recentHistory || [])
-      .reverse()
-      .map((m) => ({
-        role: m.role === AiMessageRole.USER ? ('user' as const) : ('assistant' as const),
-        content: m.content,
-      }));
-
-    const systemPrompt = this.buildTutorSystemPrompt(context, mode, language);
-    const llmResult = await this.generateCompletion(
-      systemPrompt,
-      dto.question.trim(),
-      chronologicalHistory,
-      () => this.buildOfflineTutorReply(dto.question.trim(), context, mode, language),
-    );
-
-    const generatedUserMsg = {
-      id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-      userId,
-      courseId: context.courseId || null,
-      lessonId: context.lessonId || null,
-      role: AiMessageRole.USER,
-      mode,
-      content: dto.question.trim(),
-      createdAt: new Date(),
-    };
-
-    const generatedAssistantMsg = {
-      id: `ast_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-      userId,
-      courseId: context.courseId || null,
-      lessonId: context.lessonId || null,
-      role: AiMessageRole.ASSISTANT,
-      mode,
-      content: llmResult.text,
-      engine: llmResult.engine,
-      createdAt: new Date(),
-    };
-
-    let userMessage: any = generatedUserMsg;
-    let assistantMessage: any = generatedAssistantMsg;
-
-    try {
-      const [savedUser, savedAssistant] = await this.prisma.$transaction([
-        this.prisma.aiTutorMessage.create({
-          data: {
-            userId,
-            courseId: context.courseId || null,
-            lessonId: context.lessonId || null,
-            role: AiMessageRole.USER,
-            mode,
-            content: dto.question.trim(),
-          },
-        }),
-        this.prisma.aiTutorMessage.create({
-          data: {
-            userId,
-            courseId: context.courseId || null,
-            lessonId: context.lessonId || null,
-            role: AiMessageRole.ASSISTANT,
-            mode,
-            content: llmResult.text,
-            engine: llmResult.engine,
-          },
-        }),
-      ]);
-      userMessage = savedUser;
-      assistantMessage = savedAssistant;
-    } catch (dbErr) {
-      this.logger.warn(
-        `AI tutor message persistence skipped (database table may be pending migration): ${(dbErr as Error).message}`,
-      );
-    }
-
-    return {
-      userMessage,
-      assistantMessage,
-      engine: llmResult.engine,
-      model: llmResult.model,
-      contextSummary: {
-        courseTitle: context.courseTitle || null,
-        lessonTitle: context.lessonTitle || null,
-      },
-    };
   }
 
   async getTutorHistory(userId: string, courseId?: string, lessonId?: string) {
@@ -871,122 +933,127 @@ Desired Modules Count: ${sectionCount}`;
     mode: AiTutorMode,
     language: AiTutorLanguage,
   ): string {
-    const { headings, keyPoints, sentences } = this.extractContentInsights(context.lessonContent);
-    const topicTitle = context.lessonTitle || context.courseTitle || 'your current study topic';
-    const bullets = (keyPoints.length > 0 ? keyPoints : sentences).slice(0, 4);
-    const safeObjectives = Array.isArray(context.learningObjectives)
-      ? context.learningObjectives
-      : [];
+    try {
+      const { headings, keyPoints, sentences } = this.extractContentInsights(context.lessonContent);
+      const topicTitle = context.lessonTitle || context.courseTitle || 'your current study topic';
+      const bullets = (keyPoints.length > 0 ? keyPoints : sentences).slice(0, 4);
+      const safeObjectives = Array.isArray(context.learningObjectives)
+        ? context.learningObjectives
+        : [];
 
-    if (mode === AiTutorMode.SUMMARY) {
-      const lines = [
-        `### Study Summary: ${topicTitle}`,
-        context.sectionTitle ? `**Module:** ${context.sectionTitle}` : '',
+      if (mode === AiTutorMode.SUMMARY) {
+        const lines = [
+          `### Study Summary: ${topicTitle}`,
+          context.sectionTitle ? `**Module:** ${context.sectionTitle}` : '',
+          '',
+          '**Key Takeaways:**',
+          ...(bullets.length > 0
+            ? bullets.map((b) => `- ${b}`)
+            : [
+                `- Core principles and applied architecture covered in ${topicTitle}.`,
+                ...(safeObjectives.slice(0, 2).map((o) => `- ${o}`)),
+              ]),
+          '',
+          headings.length > 0
+            ? `**Topics Covered:** ${headings.slice(0, 5).join(' • ')}`
+            : '',
+          '',
+          '**Quick Self-Check:** Can you explain in one sentence how the main concept of this lesson applies to a real project?',
+        ].filter((line) => line !== '');
+
+        if (language === AiTutorLanguage.BILINGUAL || language === AiTutorLanguage.AM) {
+          lines.push(
+            '',
+            '**Amharic Study Note (የጥናት ማስታወሻ):** ዋና ዋና ሃሳቦችን (Key Concepts) በማስታወሻ ደብተርዎ ላይ በማስቀመጥ የራስዎን ምሳሌ ይሞክሩ።',
+          );
+        }
+
+        return lines.join('\n');
+      }
+
+      if (mode === AiTutorMode.FLASHCARDS) {
+        const sourceItems = bullets.length > 0 ? bullets : safeObjectives;
+        const cards = sourceItems.slice(0, 4).map((item, idx) => {
+          const label = headings[idx] || `Concept ${idx + 1}`;
+          return `**Card ${idx + 1} — ${label}**\n- **Prompt:** What is the significance of *${label}* in ${topicTitle}?\n- **Answer:** ${item}`;
+        });
+
+        if (cards.length === 0) {
+          cards.push(
+            `**Card 1 — Core Concept**\n- **Prompt:** What is the primary objective of ${topicTitle}?\n- **Answer:** ${context.courseDescription || 'Understanding and applying foundational workflows cleanly and reliably.'}`,
+          );
+        }
+
+        return [`### Revision Flashcards: ${topicTitle}`, '', ...cards].join('\n\n');
+      }
+
+      if (mode === AiTutorMode.EXPLAIN_SIMPLE) {
+        const leadSentence =
+          sentences[0] ||
+          context.courseDescription ||
+          `${topicTitle} focuses on structuring technical ideas step-by-step so systems remain predictable and easy to reason about.`;
+
+        return [
+          `### Plain-Language Guide: ${topicTitle}`,
+          '',
+          `Think of **${topicTitle}** like organizing a campus library or workshop: every component has a clear responsibility so you can find, verify, and upgrade parts without breaking everything else.`,
+          '',
+          `**In simple terms:** ${leadSentence}`,
+          bullets[0] ? `\n**Practical takeaway to remember:** ${bullets[0]}` : '',
+          language !== AiTutorLanguage.EN
+            ? '\n**የአማርኛ ማብራሪያ:** ውስብስብ ሃሳቦችን ወደ ትናንሽ ደረጃዎች ከፍሎ መረዳት ለፈተና እና ለተግባር ስራ ይረዳል።'
+            : '',
+        ]
+          .filter(Boolean)
+          .join('\n');
+      }
+
+      // Mode: TUTOR — keyword match against lesson sentences/syllabus
+      const keywords = (question || '')
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((w) => w.length >= 4);
+
+      const matchedSentences = [...keyPoints, ...sentences]
+        .filter((s) => keywords.some((kw) => s.toLowerCase().includes(kw)))
+        .slice(0, 3);
+
+      const contextualFindings =
+        matchedSentences.length > 0
+          ? matchedSentences
+          : bullets.slice(0, 2);
+
+      const responseParts = [
+        `### Academic Guidance (${topicTitle})`,
         '',
-        '**Key Takeaways:**',
-        ...(bullets.length > 0
-          ? bullets.map((b) => `- ${b}`)
+        `Regarding your question: *"${question}"*`,
+        '',
+        ...(contextualFindings.length > 0
+          ? [
+              '**From the lesson material:**',
+              ...contextualFindings.map((item) => `- ${item}`),
+            ]
           : [
-              `- Core principles and applied architecture covered in ${topicTitle}.`,
-              ...(safeObjectives.slice(0, 2).map((o) => `- ${o}`)),
+              context.syllabusOutline && context.syllabusOutline.length > 0
+                ? `**Course Structure Reference:**\n${context.syllabusOutline.slice(0, 4).map((s) => `- ${s}`).join('\n')}`
+                : `Focus on breaking the problem into inputs, core rules, and expected outputs based on ${topicTitle}.`,
             ]),
         '',
-        headings.length > 0
-          ? `**Topics Covered:** ${headings.slice(0, 5).join(' • ')}`
-          : '',
-        '',
-        '**Quick Self-Check:** Can you explain in one sentence how the main concept of this lesson applies to a real project?',
-      ].filter((line) => line !== '');
+        '**Next Study Step:** Try summarizing this concept in your personal Study Notebook, then test yourself using the lesson quiz.',
+      ];
 
-      if (language === AiTutorLanguage.BILINGUAL || language === AiTutorLanguage.AM) {
-        lines.push(
+      if (language !== AiTutorLanguage.EN) {
+        responseParts.push(
           '',
-          '**Amharic Study Note (የጥናት ማስታወሻ):** ዋና ዋና ሃሳቦችን (Key Concepts) በማስታወሻ ደብተርዎ ላይ በማስቀመጥ የራስዎን ምሳሌ ይሞክሩ።',
+          '**የጥናት መመሪያ (Amharic Hint):** ከላይ ያሉትን ነጥቦች ከትምህርቱ ማስታወሻ ጋር በማነጻጸር ይከልሱ።',
         );
       }
 
-      return lines.join('\n');
+      return responseParts.join('\n');
+    } catch (err) {
+      this.logger.warn(`buildOfflineTutorReply fallback: ${(err as Error).message}`);
+      return `### Academic Guidance\n\nRegarding your question: *"${question}"*\n\nReview the core definitions and key outcomes for ${context.courseTitle || 'this topic'}. Practicing with code examples and completing quiz assessments is recommended.`;
     }
-
-    if (mode === AiTutorMode.FLASHCARDS) {
-      const sourceItems = bullets.length > 0 ? bullets : safeObjectives;
-      const cards = sourceItems.slice(0, 4).map((item, idx) => {
-        const label = headings[idx] || `Concept ${idx + 1}`;
-        return `**Card ${idx + 1} — ${label}**\n- **Prompt:** What is the significance of *${label}* in ${topicTitle}?\n- **Answer:** ${item}`;
-      });
-
-      if (cards.length === 0) {
-        cards.push(
-          `**Card 1 — Core Concept**\n- **Prompt:** What is the primary objective of ${topicTitle}?\n- **Answer:** ${context.courseDescription || 'Understanding and applying foundational workflows cleanly and reliably.'}`,
-        );
-      }
-
-      return [`### Revision Flashcards: ${topicTitle}`, '', ...cards].join('\n\n');
-    }
-
-    if (mode === AiTutorMode.EXPLAIN_SIMPLE) {
-      const leadSentence =
-        sentences[0] ||
-        context.courseDescription ||
-        `${topicTitle} focuses on structuring technical ideas step-by-step so systems remain predictable and easy to reason about.`;
-
-      return [
-        `### Plain-Language Guide: ${topicTitle}`,
-        '',
-        `Think of **${topicTitle}** like organizing a campus library or workshop: every component has a clear responsibility so you can find, verify, and upgrade parts without breaking everything else.`,
-        '',
-        `**In simple terms:** ${leadSentence}`,
-        bullets[0] ? `\n**Practical takeaway to remember:** ${bullets[0]}` : '',
-        language !== AiTutorLanguage.EN
-          ? '\n**የአማርኛ ማብራሪያ:** ውስብስብ ሃሳቦችን ወደ ትናንሽ ደረጃዎች ከፍሎ መረዳት ለፈተና እና ለተግባር ስራ ይረዳል።'
-          : '',
-      ]
-        .filter(Boolean)
-        .join('\n');
-    }
-
-    // Mode: TUTOR — keyword match against lesson sentences/syllabus
-    const keywords = question
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter((w) => w.length >= 4);
-
-    const matchedSentences = [...keyPoints, ...sentences]
-      .filter((s) => keywords.some((kw) => s.toLowerCase().includes(kw)))
-      .slice(0, 3);
-
-    const contextualFindings =
-      matchedSentences.length > 0
-        ? matchedSentences
-        : bullets.slice(0, 2);
-
-    const responseParts = [
-      `### Academic Guidance (${topicTitle})`,
-      '',
-      `Regarding your question: *"${question}"*`,
-      '',
-      ...(contextualFindings.length > 0
-        ? [
-            '**From the lesson material:**',
-            ...contextualFindings.map((item) => `- ${item}`),
-          ]
-        : [
-            context.syllabusOutline && context.syllabusOutline.length > 0
-              ? `**Course Structure Reference:**\n${context.syllabusOutline.slice(0, 4).map((s) => `- ${s}`).join('\n')}`
-              : `Focus on breaking the problem into inputs, core rules, and expected outputs based on ${topicTitle}.`,
-          ]),
-      '',
-      '**Next Study Step:** Try summarizing this concept in your personal Study Notebook, then test yourself using the lesson quiz.',
-    ];
-
-    if (language !== AiTutorLanguage.EN) {
-      responseParts.push(
-        '',
-        '**የጥናት መመሪያ (Amharic Hint):** ከላይ ያሉትን ነጥቦች ከትምህርቱ ማስታወሻ ጋር በማነጻጸር ይከልሱ።',
-      );
-    }
-
-    return responseParts.join('\n');
   }
 
   private buildOfflineQuizQuestions(

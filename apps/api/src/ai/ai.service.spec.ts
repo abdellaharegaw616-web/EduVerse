@@ -274,6 +274,21 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
       expect(result).toBeDefined();
       expect(result.assistantMessage.content).toContain('Study Summary');
     });
+
+    it('should catch unexpected exceptions and return a graceful academic guidance fallback instead of throwing 500', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: studentId, isActive: true, role: Role.STUDENT });
+      // Simulate unexpected database crash during course lookup
+      prisma.course.findUnique.mockRejectedValueOnce(new Error('Connection terminated unexpectedly'));
+
+      const result = await service.askTutor(studentId, {
+        question: 'How do neural networks learn?',
+        courseId,
+      });
+
+      expect(result).toBeDefined();
+      expect(result.assistantMessage.content).toContain('Academic Guidance');
+      expect(result.engine).toBe('contextual-offline');
+    });
   });
 
   describe('Instructor Co-Author Tools', () => {
@@ -299,7 +314,7 @@ Regular vacuuming keeps statistics accurate for the query planner.`,
       expect(result.questions).toHaveLength(3);
       for (const q of result.questions) {
         expect(q.options).toHaveLength(4);
-        expect(q.options.filter((o) => o.isCorrect)).toHaveLength(1);
+        expect(q.options.filter((o: any) => o.isCorrect)).toHaveLength(1);
       }
     });
 

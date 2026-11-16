@@ -149,11 +149,11 @@ export function LessonAiTutor({
               isDark ? 'text-white' : 'text-brand-navy dark:text-white'
             }`}
           >
-            <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+            <BookOpenCheck className="h-4 w-4 text-brand-orange" />
             <span>Academic Study Assistant</span>
           </h3>
           <p className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-brand-slate dark:text-slate-400'}`}>
-            Grounded in: <strong className={isDark ? 'text-slate-200' : 'text-brand-navy dark:text-slate-200'}>{lessonTitle}</strong>
+            Grounded in: <strong className={isDark ? 'text-slate-200' : 'text-brand-coffee dark:text-slate-200'}>{lessonTitle}</strong>
           </p>
         </div>
 
@@ -177,8 +177,8 @@ export function LessonAiTutor({
               aria-label="Study assistant language"
               className={
                 isDark
-                  ? 'h-7 rounded border border-slate-700 bg-slate-950 px-2 text-[11px] text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-emerald'
-                  : 'h-7 rounded border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-2 text-[11px] text-brand-navy dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-emerald'
+                  ? 'h-7 rounded border border-slate-700 bg-slate-950 px-2 text-[11px] text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-orange'
+                  : 'h-7 rounded border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-2 text-[11px] text-brand-coffee dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-orange'
               }
             >
               <option value="en">English</option>
@@ -205,7 +205,7 @@ export function LessonAiTutor({
               : 'h-8 text-xs gap-1.5'
           }
         >
-          <FileText className="h-3.5 w-3.5 text-brand-emerald" />
+          <FileText className="h-3.5 w-3.5 text-brand-orange" />
           <span>Summarize Lesson</span>
         </Button>
 
@@ -223,7 +223,7 @@ export function LessonAiTutor({
               : 'h-8 text-xs gap-1.5'
           }
         >
-          <HelpCircle className="h-3.5 w-3.5 text-brand-emerald" />
+          <HelpCircle className="h-3.5 w-3.5 text-brand-orange" />
           <span>Explain Simply</span>
         </Button>
 
@@ -241,7 +241,7 @@ export function LessonAiTutor({
               : 'h-8 text-xs gap-1.5'
           }
         >
-          <Layers className="h-3.5 w-3.5 text-brand-emerald" />
+          <Layers className="h-3.5 w-3.5 text-brand-orange" />
           <span>Study Flashcards</span>
         </Button>
 
@@ -272,7 +272,7 @@ export function LessonAiTutor({
           <p className="text-xs text-slate-400">Loading study conversation...</p>
         ) : history.length === 0 ? (
           <div className="py-6 text-center space-y-1">
-            <p className={`text-xs font-semibold ${isDark ? 'text-slate-300' : 'text-brand-navy dark:text-slate-300'}`}>
+            <p className={`text-xs font-semibold ${isDark ? 'text-slate-300' : 'text-brand-coffee dark:text-slate-300'}`}>
               No study questions asked for this lesson yet.
             </p>
             <p className="text-[11px] text-slate-400">
@@ -288,15 +288,15 @@ export function LessonAiTutor({
                 className={`rounded-lg p-3 text-xs leading-relaxed ${
                   isUser
                     ? isDark
-                      ? 'bg-brand-navy/80 border border-slate-700 text-white ml-6'
-                      : 'bg-brand-navy text-white ml-6'
+                      ? 'bg-brand-coffee/90 border border-slate-700 text-white ml-6'
+                      : 'bg-brand-coffee text-white ml-6'
                     : isDark
                       ? 'bg-slate-900 border border-slate-800 text-slate-200 mr-4'
-                      : 'bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 text-brand-navy dark:text-slate-200 mr-4'
+                      : 'bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 text-brand-coffee dark:text-slate-200 mr-4'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-emerald">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">
                     {isUser ? 'You' : 'EduVerse Tutor'}
                   </span>
                   <span className="text-[10px] text-slate-400">
@@ -313,7 +313,7 @@ export function LessonAiTutor({
         )}
 
         {askMutation.isPending && (
-          <div className="flex items-center gap-2 text-xs text-brand-emerald p-2">
+          <div className="flex items-center gap-2 text-xs text-brand-orange p-2">
             <Loader2 className="h-4 w-4 animate-spin" />
             <span>Synthesizing academic explanation...</span>
           </div>
@@ -321,7 +321,16 @@ export function LessonAiTutor({
       </div>
 
       {errorMsg && (
-        <p className="text-xs text-red-400 font-medium">{errorMsg}</p>
+        <div className="rounded-lg p-2.5 bg-red-950/40 border border-red-900/60 flex items-center justify-between text-xs text-red-300">
+          <span>{errorMsg}</span>
+          <button
+            type="button"
+            onClick={() => setErrorMsg(null)}
+            className="text-red-400 hover:text-red-200 text-[11px] font-semibold ml-2"
+          >
+            Dismiss
+          </button>
+        </div>
       )}
 
       {/* Ask Form */}
@@ -341,7 +350,7 @@ export function LessonAiTutor({
           <Button
             type="submit"
             size="sm"
-            variant="emerald"
+            variant="orange"
             disabled={!question.trim() || askMutation.isPending}
             className="text-xs gap-1.5"
           >
