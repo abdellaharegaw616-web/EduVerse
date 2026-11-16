@@ -98,8 +98,8 @@ export function Navbar() {
                 className={cn(
                   'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
                   isActive
-                    ? 'text-brand-emerald bg-brand-mint dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
-                    : 'text-brand-slate dark:text-slate-300 hover:text-brand-navy dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800',
+                    ? 'text-brand-orange bg-brand-mint dark:bg-orange-950/60 dark:text-orange-400 font-semibold'
+                    : 'text-brand-slate dark:text-slate-300 hover:text-brand-coffee dark:hover:text-white hover:bg-brand-mint/50 dark:hover:bg-slate-800',
                 )}
               >
                 {link.label}
@@ -133,7 +133,7 @@ export function Navbar() {
                 user.role === 'SUPER_ADMIN') && (
                 <Link href="/teacher/dashboard">
                   <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                    <GraduationCap className="h-4 w-4 text-brand-emerald" />
+                    <GraduationCap className="h-4 w-4 text-brand-orange" />
                     <span>Studio</span>
                   </Button>
                 </Link>
@@ -141,7 +141,7 @@ export function Navbar() {
 
               <Link href="/app/dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                  <LayoutDashboard className="h-4 w-4 text-brand-navy dark:text-slate-200" />
+                  <LayoutDashboard className="h-4 w-4 text-brand-coffee dark:text-slate-200" />
                   <span>Dashboard</span>
                 </Button>
               </Link>
@@ -149,7 +149,7 @@ export function Navbar() {
               <div className="flex items-center gap-2 pl-2 border-l border-brand-border dark:border-slate-800">
                 <Link
                   href="/app/profile"
-                  className="h-8 w-8 rounded-full bg-brand-mint dark:bg-emerald-950 text-brand-emerald dark:text-emerald-400 flex items-center justify-center text-xs font-bold border border-brand-emerald/20 overflow-hidden hover:ring-2 hover:ring-brand-emerald transition-all"
+                  className="h-8 w-8 rounded-full bg-brand-mint dark:bg-orange-950 text-brand-orange dark:text-orange-400 flex items-center justify-center text-xs font-bold border border-brand-orange/20 overflow-hidden hover:ring-2 hover:ring-brand-orange transition-all"
                   title="View Profile"
                 >
                   {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
@@ -239,7 +239,7 @@ export function Navbar() {
                   </p>
                 </div>
               </Link>
-              <span className="text-[10px] font-bold text-brand-emerald dark:text-emerald-400 bg-brand-mint dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-brand-emerald/20 shrink-0">
+              <span className="text-[10px] font-bold text-brand-orange dark:text-orange-400 bg-brand-mint dark:bg-orange-950/60 px-2 py-0.5 rounded border border-brand-orange/20 shrink-0">
                 {user.role}
               </span>
             </div>
@@ -257,8 +257,8 @@ export function Navbar() {
                   className={cn(
                     'px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
                     isActive
-                      ? 'text-brand-emerald bg-brand-mint dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
-                      : 'text-brand-slate dark:text-slate-300 hover:text-brand-navy dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800',
+                      ? 'text-brand-orange bg-brand-mint dark:bg-orange-950/60 dark:text-orange-400 font-semibold'
+                      : 'text-brand-slate dark:text-slate-300 hover:text-brand-coffee dark:hover:text-white hover:bg-brand-mint/50 dark:hover:bg-slate-800',
                   )}
                 >
                   {link.label}

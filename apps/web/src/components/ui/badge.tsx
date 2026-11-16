@@ -7,12 +7,14 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-brand-navy text-white dark:bg-slate-800 dark:text-slate-100',
-        secondary: 'bg-brand-mint text-brand-emerald border border-brand-emerald/20 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800/40',
-        emerald: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border dark:border-emerald-800/40',
-        amber: 'bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800/40',
+        default: 'bg-brand-coffee text-white dark:bg-stone-800 dark:text-stone-100',
+        secondary: 'bg-brand-mint text-brand-orange border border-brand-orange/20 dark:bg-orange-950/60 dark:text-orange-400 dark:border-orange-800/40',
+        emerald: 'bg-orange-100 text-orange-900 border border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800/40',
+        orange: 'bg-orange-100 text-orange-900 border border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800/40',
+        coffee: 'bg-stone-900 text-stone-100 border border-stone-700 dark:bg-stone-800 dark:text-stone-100',
+        amber: 'bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800/40',
         destructive: 'bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-300 dark:border dark:border-red-800/40',
-        outline: 'border border-brand-border text-brand-slate dark:border-slate-800 dark:text-slate-300',
+        outline: 'border border-brand-border text-brand-slate dark:border-stone-800 dark:text-stone-300',
       },
     },
     defaultVariants: {

@@ -70,7 +70,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
         <Link
           href="/app/profile"
           onClick={handleLinkClick}
-          className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3 hover:border-brand-emerald/40 transition-colors block"
+          className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3 hover:border-brand-orange/40 transition-colors block"
         >
           <div className="h-9 w-9 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
             {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
@@ -108,7 +108,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
                 className={cn(
                   'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors',
                   isActive
-                    ? 'bg-brand-mint text-brand-emerald dark:bg-emerald-950/60 dark:text-emerald-400 font-semibold'
+                    ? 'bg-brand-mint text-brand-emerald dark:bg-orange-950/60 dark:text-orange-400 font-semibold'
                     : 'text-brand-slate dark:text-slate-400 hover:text-brand-navy dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800',
                 )}
               >
@@ -116,7 +116,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
                   className={cn(
                     'h-4 w-4 shrink-0',
                     isActive
-                      ? 'text-brand-emerald dark:text-emerald-400'
+                      ? 'text-brand-emerald dark:text-orange-400'
                       : 'text-brand-slate dark:text-slate-400',
                   )}
                 />

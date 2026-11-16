@@ -135,7 +135,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="border-brand-border dark:border-slate-800 hover:border-brand-emerald/40 transition-colors">
             <CardContent className="p-6 space-y-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-brand-emerald dark:text-emerald-400">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
                 <WifiOff className="h-6 w-6" />
               </div>
               <h3 className="font-bold text-brand-navy dark:text-slate-100 text-base">Low-Bandwidth Optimized</h3>

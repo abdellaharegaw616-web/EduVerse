@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98.4%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --background: 38 40% 96.5%;     /* #FAF7F2 Warm Cream */
+    --foreground: 18 44% 10%;       /* #24140E Deep Coffee */
+    --card: 0 0% 100%;              /* Pure White */
+    --card-foreground: 18 44% 10%;  /* #24140E Deep Coffee */
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 222 47% 11%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 171 73% 31%;
+    --popover-foreground: 18 44% 10%;
+    --primary: 18 44% 10%;          /* #24140E Coffee */
+    --primary-foreground: 38 40% 98%;
+    --secondary: 21 90% 48%;        /* #EA580C Academic Orange */
     --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 160 50% 94.5%;
-    --accent-foreground: 171 73% 31%;
+    --muted: 33 30% 92%;            /* #F4EAE0 Warm Latte */
+    --muted-foreground: 23 14% 41%; /* #78665A Coffee Slate */
+    --accent: 30 50% 94%;           /* #F6EFE7 Cream Accent */
+    --accent-foreground: 21 90% 48%;/* #EA580C Orange */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91.4%;
-    --input: 214 32% 91.4%;
-    --ring: 171 73% 31%;
+    --border: 33 25% 87%;           /* #E8DDD1 Parchment Border */
+    --input: 33 25% 87%;
+    --ring: 21 90% 48%;             /* #EA580C Focus Ring */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 10%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 10%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 171 73% 36%;
+    --background: 18 35% 6%;        /* #120B08 Espresso Night */
+    --foreground: 38 30% 95%;       /* #F8F5EE Warm Cream Text */
+    --card: 18 30% 10%;             /* #1F1511 Dark Roast Card */
+    --card-foreground: 38 30% 95%;
+    --popover: 18 30% 10%;
+    --popover-foreground: 38 30% 95%;
+    --primary: 38 30% 95%;
+    --primary-foreground: 18 44% 10%;
+    --secondary: 21 90% 52%;        /* #F97316 Vibrant Warm Orange */
     --secondary-foreground: 0 0% 100%;
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 171 73% 18%;
-    --accent-foreground: 160 50% 90%;
+    --muted: 18 20% 16%;
+    --muted-foreground: 30 15% 65%;
+    --accent: 21 50% 18%;           /* Deep Warm Coffee/Orange Tint */
+    --accent-foreground: 25 90% 75%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 171 73% 40%;
+    --border: 18 20% 18%;           /* #2E2019 */
+    --input: 18 20% 18%;
+    --ring: 21 90% 52%;
   }
 }
 
@@ -59,39 +59,39 @@
   }
 }
 
-/* Real Enterprise LMS Dark Mode Styling */
+/* Modern Enterprise LMS Dark Mode Styling - Orange + Coffee + Cream */
 .dark body {
-  background-color: #0B0F19;
-  color: #F8FAFC;
+  background-color: #120B08;
+  color: #F8F5EE;
 }
 
 .dark .bg-brand-page {
-  background-color: #0B0F19 !important;
+  background-color: #120B08 !important;
 }
 
 .dark .border-brand-border {
-  border-color: #1E293B !important;
+  border-color: #2E2019 !important;
 }
 
 .dark .text-brand-navy {
-  color: #F8FAFC !important;
+  color: #F8F5EE !important;
 }
 
 .dark .text-brand-slate {
-  color: #94A3B8 !important;
+  color: #B5A599 !important;
 }
 
 .dark .bg-brand-mint {
-  background-color: rgba(20, 184, 166, 0.16) !important;
-  color: #2DD4BF !important;
+  background-color: rgba(234, 88, 12, 0.16) !important;
+  color: #FB923C !important;
 }
 
 .dark .hover\:bg-brand-mint:hover {
-  background-color: rgba(20, 184, 166, 0.24) !important;
+  background-color: rgba(234, 88, 12, 0.24) !important;
 }
 
 /* Custom scrollbars & focus outline for accessibility */
 :focus-visible {
-  outline: 2px solid #168B79;
+  outline: 2px solid #EA580C;
   outline-offset: 2px;
 }

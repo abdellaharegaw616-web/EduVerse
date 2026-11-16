@@ -29,16 +29,16 @@ export function Footer() {
             </p>
             <div className="space-y-1.5 text-xs text-brand-slate dark:text-slate-400 pt-2">
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-brand-emerald shrink-0" />
+                <MapPin className="h-4 w-4 text-brand-orange shrink-0" />
                 <span>Bole Sub-City, Addis Ababa, Ethiopia</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-brand-emerald shrink-0" />
+                <Phone className="h-4 w-4 text-brand-orange shrink-0" />
                 <span>+251 97 956 7153 / 0979567153</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-brand-emerald shrink-0" />
-                <a href="mailto:abdellaj636@gmail.com" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Mail className="h-4 w-4 text-brand-orange shrink-0" />
+                <a href="mailto:abdellaj636@gmail.com" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   abdellaj636@gmail.com
                 </a>
               </div>
@@ -47,32 +47,32 @@ export function Footer() {
 
           {/* Catalog */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-navy dark:text-slate-200">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-coffee dark:text-slate-200">
               Top Disciplines
             </h4>
             <ul className="space-y-2 text-sm text-brand-slate dark:text-slate-400">
               <li>
-                <Link href="/courses?category=computer-science" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses?category=computer-science" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Computer Science & AI
                 </Link>
               </li>
               <li>
-                <Link href="/courses?category=engineering" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses?category=engineering" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Engineering & Robotics
                 </Link>
               </li>
               <li>
-                <Link href="/courses?category=business" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses?category=business" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Business & Accounting
                 </Link>
               </li>
               <li>
-                <Link href="/courses?category=health" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses?category=health" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Public Health & Medicine
                 </Link>
               </li>
               <li>
-                <Link href="/courses?category=languages" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses?category=languages" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Languages & Amharic Studies
                 </Link>
               </li>
@@ -81,32 +81,32 @@ export function Footer() {
 
           {/* Platform */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-navy dark:text-slate-200">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-coffee dark:text-slate-200">
               Platform
             </h4>
             <ul className="space-y-2 text-sm text-brand-slate dark:text-slate-400">
               <li>
-                <Link href="/courses" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/courses" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Course Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/instructors" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/instructors" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Verified Instructors
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/pricing" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Plans & Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/contact" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Institutional Partnerships
                 </Link>
               </li>
               <li className="flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-brand-emerald" />
+                <ShieldCheck className="h-4 w-4 text-brand-orange" />
                 <span className="text-xs text-brand-slate dark:text-slate-400">Verifiable Certificates</span>
               </li>
             </ul>
@@ -114,27 +114,27 @@ export function Footer() {
 
           {/* Company & Legal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-navy dark:text-slate-200">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-coffee dark:text-slate-200">
               Legal & Company
             </h4>
             <ul className="space-y-2 text-sm text-brand-slate dark:text-slate-400">
               <li>
-                <Link href="/about" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/about" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   About EduVerse
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/contact" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Help & Contact
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/privacy" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-brand-emerald dark:hover:text-emerald-400 transition-colors">
+                <Link href="/terms" className="hover:text-brand-orange dark:hover:text-orange-400 transition-colors">
                   Terms of Service
                 </Link>
               </li>

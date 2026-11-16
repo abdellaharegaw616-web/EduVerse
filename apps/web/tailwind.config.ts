@@ -18,13 +18,16 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          navy: '#14213D',
-          emerald: '#168B79',
-          mint: '#E9F7F2',
-          page: '#FAFBFC',
-          amber: '#F4B942',
-          slate: '#64748B',
-          border: '#E2E8F0',
+          coffee: '#24140E', // Deep Roasted Coffee / Espresso
+          navy: '#24140E',   // Coffee alias for backward compatibility
+          orange: '#EA580C', // Vibrant Academic Orange
+          emerald: '#EA580C',// Orange alias for backward compatibility
+          cream: '#FAF7F2',  // Warm Ivory Cream
+          page: '#FAF7F2',   // Cream page background
+          mint: '#F6EFE7',   // Latte Cream subtle accent
+          amber: '#D97706',  // Warm Honey Amber
+          slate: '#78665A',  // Warm Coffee Slate text
+          border: '#E8DDD1', // Warm Cream Parchment Border
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -32,12 +35,15 @@ const config: Config = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#14213D',
+          DEFAULT: '#24140E',
           foreground: '#FFFFFF',
-          emerald: '#168B79',
+          orange: '#EA580C',
+          coffee: '#24140E',
+          cream: '#FAF7F2',
+          emerald: '#EA580C',
         },
         secondary: {
-          DEFAULT: '#168B79',
+          DEFAULT: '#EA580C',
           foreground: '#FFFFFF',
         },
         destructive: {
@@ -45,13 +51,14 @@ const config: Config = {
           foreground: 'hsl(var(--destructive-foreground))',
         },
         muted: {
-          DEFAULT: '#F1F5F9',
-          foreground: '#64748B',
+          DEFAULT: '#F4EAE0',
+          foreground: '#78665A',
         },
         accent: {
-          DEFAULT: '#E9F7F2',
-          foreground: '#168B79',
-          amber: '#F4B942',
+          DEFAULT: '#F6EFE7',
+          foreground: '#EA580C',
+          orange: '#EA580C',
+          amber: '#D97706',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',

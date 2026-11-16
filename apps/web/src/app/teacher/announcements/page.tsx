@@ -131,8 +131,8 @@ export default function TeacherAnnouncementsPage() {
       </div>
 
       {publishResult && (
-        <Alert className="border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-200">
-          <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+        <Alert className="border-orange-300 bg-orange-50 text-orange-950 dark:border-orange-800 dark:bg-orange-950/30 dark:text-orange-200">
+          <CheckCircle2 className="h-4 w-4 text-brand-orange" />
           <AlertDescription className="text-xs font-medium">{publishResult}</AlertDescription>
         </Alert>
       )}

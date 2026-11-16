@@ -174,7 +174,7 @@ export default function StudentProfilePage() {
                   {user.role}
                 </Badge>
                 {user.isEmailVerified && (
-                  <Badge variant="emerald" className="gap-1 text-[11px] bg-emerald-600 text-white border-emerald-500">
+                  <Badge variant="emerald" className="gap-1 text-[11px] bg-orange-600 text-white border-orange-500">
                     <ShieldCheck className="h-3 w-3" />
                     Verified Email
                   </Badge>

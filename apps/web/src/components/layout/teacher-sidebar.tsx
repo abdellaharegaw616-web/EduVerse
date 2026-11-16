@@ -87,9 +87,9 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
         <Link
           href="/teacher/profile"
           onClick={handleLinkClick}
-          className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 flex items-center gap-3 hover:border-brand-emerald/40 transition-colors block"
+          className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 flex items-center gap-3 hover:border-brand-orange/40 transition-colors block"
         >
-          <div className="w-10 h-10 rounded-lg bg-brand-navy dark:bg-slate-700 text-brand-mint dark:text-emerald-300 font-bold flex items-center justify-center shrink-0 text-sm shadow-xs overflow-hidden">
+          <div className="w-10 h-10 rounded-lg bg-brand-navy dark:bg-slate-700 text-brand-orange dark:text-orange-300 font-bold flex items-center justify-center shrink-0 text-sm shadow-xs overflow-hidden">
             {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
               <img
                 src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
@@ -104,7 +104,7 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
             <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100 truncate">
               {user?.fullName || 'Educator'}
             </h4>
-            <span className="text-[10px] text-brand-emerald dark:text-emerald-400 font-semibold flex items-center gap-1">
+            <span className="text-[10px] text-brand-orange dark:text-orange-400 font-semibold flex items-center gap-1">
               <ShieldCheck className="h-3 w-3" />
               {user?.role || 'TEACHER'}
             </span>
@@ -134,7 +134,7 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
                       : 'text-brand-slate dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-navy dark:hover:text-slate-100'
                     }`}
                 >
-                  <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-amber-400' : ''}`} />
+                  <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-orange-400' : ''}`} />
                   <span className="truncate">{item.label}</span>
                 </Link>
               );

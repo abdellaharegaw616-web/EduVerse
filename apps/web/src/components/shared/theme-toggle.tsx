@@ -37,7 +37,7 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       type="button"
       onClick={toggleTheme}
       className={cn(
-        'relative inline-flex items-center justify-center h-9 px-2.5 rounded-lg border border-brand-border bg-white text-brand-navy hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-emerald dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800',
+        'relative inline-flex items-center justify-center h-9 px-2.5 rounded-lg border border-brand-border bg-white text-brand-coffee hover:bg-brand-mint transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800',
         showLabel && 'px-3 gap-2 w-full justify-start',
         className,
       )}
@@ -45,9 +45,9 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
     >
       {isDark ? (
-        <Sun className="h-4 w-4 text-amber-400 transition-transform hover:rotate-45" />
+        <Sun className="h-4 w-4 text-orange-400 transition-transform hover:rotate-45" />
       ) : (
-        <Moon className="h-4 w-4 text-slate-700 transition-transform hover:-rotate-12" />
+        <Moon className="h-4 w-4 text-stone-700 transition-transform hover:-rotate-12" />
       )}
       {showLabel && (
         <span className="text-xs font-medium">

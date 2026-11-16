@@ -8,19 +8,23 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-brand-navy text-white hover:bg-brand-navy/90 active:scale-[0.98] dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100',
+          'bg-brand-coffee text-white hover:bg-brand-coffee/90 active:scale-[0.98] dark:bg-stone-800 dark:hover:bg-stone-700 dark:text-stone-100 shadow-xs',
         emerald:
-          'bg-brand-emerald text-white hover:bg-brand-emerald/90 active:scale-[0.98] dark:bg-emerald-600 dark:hover:bg-emerald-500',
+          'bg-brand-orange text-white hover:bg-orange-700 active:scale-[0.98] dark:bg-orange-600 dark:hover:bg-orange-500 shadow-xs',
+        orange:
+          'bg-brand-orange text-white hover:bg-orange-700 active:scale-[0.98] dark:bg-orange-600 dark:hover:bg-orange-500 shadow-xs',
+        coffee:
+          'bg-brand-coffee text-white hover:bg-brand-coffee/90 active:scale-[0.98] dark:bg-stone-800 dark:hover:bg-stone-700 dark:text-stone-100 shadow-xs',
         destructive:
-          'bg-red-600 text-white hover:bg-red-700 active:scale-[0.98] dark:bg-red-700 dark:hover:bg-red-600',
+          'bg-red-600 text-white hover:bg-red-700 active:scale-[0.98] dark:bg-red-700 dark:hover:bg-red-600 shadow-xs',
         outline:
-          'border border-brand-border bg-white text-brand-navy hover:bg-slate-100 hover:text-brand-navy active:scale-[0.98] dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white',
+          'border border-brand-border bg-white text-brand-coffee hover:bg-brand-mint hover:text-brand-coffee active:scale-[0.98] dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800 dark:hover:text-white',
         secondary:
-          'bg-brand-mint text-brand-emerald hover:bg-brand-mint/80 active:scale-[0.98] dark:bg-emerald-950/60 dark:text-emerald-400 dark:hover:bg-emerald-900/60',
+          'bg-brand-mint text-brand-orange hover:bg-brand-mint/80 active:scale-[0.98] dark:bg-orange-950/60 dark:text-orange-400 dark:hover:bg-orange-900/60',
         ghost:
-          'text-brand-slate hover:bg-slate-100 hover:text-brand-navy dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
+          'text-brand-slate hover:bg-brand-mint/60 hover:text-brand-coffee dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100',
         link:
-          'text-brand-emerald underline-offset-4 hover:underline p-0 h-auto dark:text-emerald-400',
+          'text-brand-orange underline-offset-4 hover:underline p-0 h-auto dark:text-orange-400',
       },
       size: {
         default: 'h-10 px-4 py-2',
