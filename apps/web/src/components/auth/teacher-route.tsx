@@ -15,7 +15,7 @@ export function TeacherRoute({ children }: { children: React.ReactNode }) {
     <ProtectedRoute>
       {isLoading ? (
         <div className="flex h-screen items-center justify-center bg-brand-page">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-emerald border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-orange border-t-transparent" />
         </div>
       ) : user &&
         (user.role === 'TEACHER' ||

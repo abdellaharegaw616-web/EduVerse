@@ -51,17 +51,17 @@ function VerifyEmailContent() {
     <div className="rounded-xl border border-brand-border bg-white p-6 sm:p-8 shadow-sm space-y-6">
       {success ? (
         <div className="text-center space-y-5">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-brand-emerald mx-auto">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-brand-orange mx-auto">
             <CheckCircle2 className="h-8 w-8" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-xl font-bold text-brand-navy">Email Verified Successfully</h3>
+            <h3 className="text-xl font-bold text-brand-coffee dark:text-stone-100">Email Verified Successfully</h3>
             <p className="text-xs text-brand-slate">
               Your EduVerse student account is now fully activated and verified.
             </p>
           </div>
           <Link href="/login" className="block pt-2">
-            <Button variant="emerald" size="lg" className="w-full gap-2">
+            <Button variant="orange" size="lg" className="w-full gap-2">
               <span>Sign In to Your Dashboard</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -90,7 +90,7 @@ function VerifyEmailContent() {
             </div>
 
             <Button
-              variant="emerald"
+              variant="orange"
               size="lg"
               className="w-full gap-2 font-bold"
               isLoading={isVerifying}
@@ -103,7 +103,7 @@ function VerifyEmailContent() {
 
           <div className="pt-4 border-t border-brand-border text-center text-xs text-brand-slate">
             Need a new verification link?{' '}
-            <Link href="/contact" className="text-brand-emerald font-semibold hover:underline">
+            <Link href="/contact" className="text-brand-orange font-semibold hover:underline">
               Contact Support
             </Link>
           </div>
@@ -124,11 +124,11 @@ export default function VerifyEmailPage() {
               alt="EduVerse Logo"
               className="h-10 w-10 object-contain rounded-xl shadow-xs"
             />
-            <span className="font-extrabold tracking-tight text-brand-navy text-2xl">
-              Edu<span className="text-brand-emerald">Verse</span>
+            <span className="font-extrabold tracking-tight text-brand-coffee dark:text-stone-100 text-2xl">
+              Edu<span className="text-brand-orange">Verse</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-brand-navy">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-coffee dark:text-stone-100">
             Verify Your Email Address
           </h1>
           <p className="text-xs text-brand-slate">

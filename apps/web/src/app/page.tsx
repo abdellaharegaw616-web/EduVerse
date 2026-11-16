@@ -65,53 +65,53 @@ export default function HomePage() {
       <section className="relative bg-slate-50 dark:bg-slate-950 border-b border-brand-border dark:border-slate-800 pt-12 pb-16 md:pt-20 md:pb-24">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-emerald/30 bg-white dark:bg-slate-900 px-3 py-1 shadow-xs">
-              <ShieldCheck className="h-3.5 w-3.5 text-brand-emerald" />
-              <span className="text-xs font-semibold text-brand-emerald">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50/70 dark:bg-orange-950/40 px-3 py-1 shadow-xs">
+              <ShieldCheck className="h-3.5 w-3.5 text-brand-orange" />
+              <span className="text-xs font-semibold text-brand-orange">
                 Ethiopia's Modern Higher & Vocational Learning Platform
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-brand-navy dark:text-white leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-brand-coffee dark:text-white leading-tight">
               Learn Beyond Boundaries, <br className="hidden sm:inline" />
-              <span className="text-brand-emerald">Anywhere in Ethiopia.</span>
+              <span className="text-brand-orange">Anywhere in Ethiopia.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-brand-slate dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-brand-slate dark:text-stone-400 leading-relaxed max-w-2xl mx-auto">
               EduVerse connects ambitious students with leading university professors, structured curricula, and verifiable certificates — engineered to run reliably even on low-bandwidth 3G connections.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
               <Link href="/courses" className="w-full sm:w-auto">
-                <Button variant="emerald" size="lg" className="w-full sm:w-auto gap-2 shadow-xs">
+                <Button variant="orange" size="lg" className="w-full sm:w-auto gap-2 shadow-xs">
                   <span>Explore Catalog</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/register" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto border-brand-navy text-brand-navy dark:border-slate-700 dark:text-slate-200">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-brand-coffee text-brand-coffee dark:border-stone-700 dark:text-stone-200">
                   Create Student Account
                 </Button>
               </Link>
             </div>
 
             {/* Quick Metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-10 border-t border-brand-border/80 dark:border-slate-800">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-10 border-t border-brand-border/80 dark:border-stone-800">
               <div className="p-3">
-                <div className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-slate-100">15,000+</div>
-                <div className="text-xs text-brand-slate dark:text-slate-400 font-medium mt-1">Active Students</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">15,000+</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 font-medium mt-1">Active Students</div>
               </div>
               <div className="p-3">
-                <div className="text-2xl sm:text-3xl font-extrabold text-brand-emerald">42+</div>
-                <div className="text-xs text-brand-slate dark:text-slate-400 font-medium mt-1">Institutional Partners</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-brand-orange">42+</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 font-medium mt-1">Institutional Partners</div>
               </div>
               <div className="p-3">
-                <div className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-slate-100">98%</div>
-                <div className="text-xs text-brand-slate dark:text-slate-400 font-medium mt-1">3G Completion Rate</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">98%</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 font-medium mt-1">3G Completion Rate</div>
               </div>
               <div className="p-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">100%</div>
-                <div className="text-xs text-brand-slate dark:text-slate-400 font-medium mt-1">Verifiable Credentials</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 font-medium mt-1">Verifiable Credentials</div>
               </div>
             </div>
           </div>
@@ -121,61 +121,61 @@ export default function HomePage() {
       {/* 2. ETHIOPIAN EDUCATIONAL CHALLENGES SOLVED */}
       <section className="container mx-auto px-4 sm:px-6">
         <div className="max-w-2xl mx-auto text-center space-y-3 mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Architected for Purpose
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-navy dark:text-white">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-coffee dark:text-white">
             Engineered to Solve Real Ethiopian Realities
           </h2>
-          <p className="text-sm text-brand-slate dark:text-slate-400">
+          <p className="text-sm text-brand-slate dark:text-stone-400">
             Global platforms fail under high latency, unpredictable data costs, and foreign currency barriers. EduVerse is built from the ground up to solve these constraints.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border-brand-border dark:border-slate-800 hover:border-brand-emerald/40 transition-colors">
+          <Card className="border-brand-border dark:border-stone-800 hover:border-brand-orange/40 transition-colors bg-white dark:bg-stone-900">
             <CardContent className="p-6 space-y-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-100/80 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
                 <WifiOff className="h-6 w-6" />
               </div>
-              <h3 className="font-bold text-brand-navy dark:text-slate-100 text-base">Low-Bandwidth Optimized</h3>
-              <p className="text-xs text-brand-slate dark:text-slate-400 leading-relaxed">
+              <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Low-Bandwidth Optimized</h3>
+              <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                 Aggressive asset compression, offline text notes, and adaptive 360p streaming engineered to perform smoothly on intermittent 3G ethio telecom cellular connections.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-brand-border dark:border-slate-800 hover:border-brand-emerald/40 transition-colors">
+          <Card className="border-brand-border dark:border-stone-800 hover:border-brand-orange/40 transition-colors bg-white dark:bg-stone-900">
             <CardContent className="p-6 space-y-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-100/80 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
                 <CreditCard className="h-6 w-6" />
               </div>
-              <h3 className="font-bold text-brand-navy dark:text-slate-100 text-base">Local Birr Payments</h3>
-              <p className="text-xs text-brand-slate dark:text-slate-400 leading-relaxed">
+              <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Local Birr Payments</h3>
+              <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                 Eliminates foreign credit card dependency. Direct checkout support designed for Telebirr, CBE Birr, and Awash Bank domestic transfers.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-brand-border dark:border-slate-800 hover:border-brand-emerald/40 transition-colors">
+          <Card className="border-brand-border dark:border-stone-800 hover:border-brand-orange/40 transition-colors bg-white dark:bg-stone-900">
             <CardContent className="p-6 space-y-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-100/80 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
                 <Building2 className="h-6 w-6" />
               </div>
-              <h3 className="font-bold text-brand-navy dark:text-slate-100 text-base">Institutional Multi-Tenancy</h3>
-              <p className="text-xs text-brand-slate dark:text-slate-400 leading-relaxed">
+              <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Institutional Multi-Tenancy</h3>
+              <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                 Dedicated branded sub-tenants for Ethiopian universities. Department heads manage faculty rosters, student cohorts, and exam moderation under one roof.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-brand-border dark:border-slate-800 hover:border-brand-emerald/40 transition-colors">
+          <Card className="border-brand-border dark:border-stone-800 hover:border-brand-orange/40 transition-colors bg-white dark:bg-stone-900">
             <CardContent className="p-6 space-y-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-100/80 dark:bg-orange-950/60 text-brand-orange dark:text-orange-400">
                 <ShieldCheck className="h-6 w-6" />
               </div>
-              <h3 className="font-bold text-brand-navy dark:text-slate-100 text-base">Verifiable Certificates</h3>
-              <p className="text-xs text-brand-slate dark:text-slate-400 leading-relaxed">
+              <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Verifiable Certificates</h3>
+              <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                 Graduates receive cryptographically signed digital certificates with unique verification codes that employers and institutions can validate instantly online.
               </p>
             </CardContent>
@@ -188,12 +188,12 @@ export default function HomePage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
                 Featured Programs
               </span>
               <PreviewBadge />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-navy dark:text-white mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-coffee dark:text-white mt-1">
               Top Academic & Professional Courses
             </h2>
           </div>
@@ -220,34 +220,34 @@ export default function HomePage() {
                 </div>
 
                 <CardContent className="p-5 space-y-4">
-                  <div className="flex items-center justify-between text-xs text-brand-slate dark:text-slate-400">
-                    <span className="font-medium text-brand-navy dark:text-slate-200">{course.instructor}</span>
+                  <div className="flex items-center justify-between text-xs text-brand-slate dark:text-stone-400">
+                    <span className="font-medium text-brand-coffee dark:text-stone-200">{course.instructor}</span>
                     <span className="flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400">
                       <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
                       {course.rating}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs text-brand-slate dark:text-slate-400 pt-2 border-t border-brand-border dark:border-slate-800">
+                  <div className="grid grid-cols-2 gap-2 text-xs text-brand-slate dark:text-stone-400 pt-2 border-t border-brand-border dark:border-stone-800">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-brand-emerald" />
+                      <Clock className="h-3.5 w-3.5 text-brand-orange" />
                       <span>{course.duration}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Users className="h-3.5 w-3.5 text-brand-emerald" />
+                      <Users className="h-3.5 w-3.5 text-brand-orange" />
                       <span>{course.enrolledCount} enrolled</span>
                     </div>
                   </div>
                 </CardContent>
               </div>
 
-              <div className="p-5 pt-0 border-t border-brand-border dark:border-slate-800 flex items-center justify-between mt-2">
+              <div className="p-5 pt-0 border-t border-brand-border dark:border-stone-800 flex items-center justify-between mt-2">
                 <div>
-                  <span className="text-[11px] text-brand-slate dark:text-slate-400 block">Tuition</span>
-                  <span className="text-base font-bold text-brand-navy dark:text-slate-100">{course.price.toLocaleString()} ETB</span>
+                  <span className="text-[11px] text-brand-slate dark:text-stone-400 block">Tuition</span>
+                  <span className="text-base font-bold text-brand-coffee dark:text-stone-100">{course.price.toLocaleString()} ETB</span>
                 </div>
                 <Link href={`/courses/${course.slug}`}>
-                  <Button variant="emerald" size="sm">
+                  <Button variant="orange" size="sm">
                     View Course
                   </Button>
                 </Link>
@@ -258,26 +258,26 @@ export default function HomePage() {
       </section>
 
       {/* 4. INSTITUTIONAL TRUST & PARTNERSHIP */}
-      <section className="bg-white dark:bg-slate-900 border-y border-brand-border dark:border-slate-800 py-12 transition-colors">
+      <section className="bg-white dark:bg-stone-900 border-y border-brand-border dark:border-stone-800 py-12 transition-colors">
         <div className="container mx-auto px-4 sm:px-6 text-center space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-brand-slate dark:text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-slate dark:text-stone-400">
             Trusted by Departments & Faculty Across Ethiopia
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-80">
-            <span className="font-bold text-base text-brand-navy dark:text-slate-200 flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-brand-emerald" />
+            <span className="font-bold text-base text-brand-coffee dark:text-stone-200 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-brand-orange" />
               Addis Ababa University
             </span>
-            <span className="font-bold text-base text-brand-navy dark:text-slate-200 flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-brand-emerald" />
+            <span className="font-bold text-base text-brand-coffee dark:text-stone-200 flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-brand-orange" />
               ASTU (Adama)
             </span>
-            <span className="font-bold text-base text-brand-navy dark:text-slate-200 flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-brand-emerald" />
+            <span className="font-bold text-base text-brand-coffee dark:text-stone-200 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-brand-orange" />
               Hawassa University
             </span>
-            <span className="font-bold text-base text-brand-navy dark:text-slate-200 flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-brand-emerald" />
+            <span className="font-bold text-base text-brand-coffee dark:text-stone-200 flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-brand-orange" />
               Jimma University
             </span>
           </div>
@@ -286,26 +286,26 @@ export default function HomePage() {
 
       {/* 5. CALL TO ACTION BANNER */}
       <section className="container mx-auto px-4 sm:px-6">
-        <div className="rounded-2xl bg-brand-navy dark:bg-slate-900 border border-slate-800 text-white p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+        <div className="rounded-2xl bg-brand-coffee dark:bg-stone-900 border border-stone-800 text-white p-8 sm:p-12 lg:p-16 relative overflow-hidden">
           <div className="max-w-2xl space-y-5">
-            <Badge variant="secondary" className="bg-brand-emerald/20 text-brand-mint border-brand-emerald/30">
+            <Badge variant="secondary" className="bg-orange-500/20 text-orange-200 border-orange-400/30">
               Start Learning Now
             </Badge>
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
               Ready to Advance Your Skills with Verifiable Education?
             </h2>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+            <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
               Join thousands of Ethiopian students advancing their careers in Software Engineering, Data Science, Electrical Engineering, and Business Management.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
               <Link href="/register" className="w-full sm:w-auto">
-                <Button variant="emerald" size="lg" className="w-full sm:w-auto gap-2 font-semibold">
+                <Button variant="orange" size="lg" className="w-full sm:w-auto gap-2 font-semibold">
                   <span>Create Free Account</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/pricing" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/80 text-white hover:bg-white hover:text-brand-navy dark:border-slate-700">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/80 text-white hover:bg-white hover:text-brand-coffee dark:border-stone-700">
                   View Pricing Plans
                 </Button>
               </Link>

@@ -86,15 +86,15 @@ export default function InstructorsPage() {
       {/* Header */}
       <div className="space-y-3 max-w-2xl">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Faculty Directory
           </span>
           <PreviewBadge label="Faculty Preview" phase="Phase 7B Engine" />
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
           Learn From Ethiopia's Leading Educators
         </h1>
-        <p className="text-sm text-brand-slate">
+        <p className="text-sm text-brand-slate dark:text-stone-400">
           Every instructor on EduVerse is vetted for pedagogical excellence, real-world industry background, and academic qualification.
         </p>
       </div>
@@ -102,45 +102,45 @@ export default function InstructorsPage() {
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {INSTRUCTORS.map((instructor, idx) => (
-          <Card key={idx} className="border-brand-border flex flex-col justify-between hover:shadow-md transition-shadow">
+          <Card key={idx} className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between hover:shadow-md transition-shadow">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-start gap-4">
-                <div className="h-14 w-14 rounded-full bg-brand-navy text-white flex items-center justify-center text-lg font-bold shrink-0">
+                <div className="h-14 w-14 rounded-full bg-brand-coffee dark:bg-stone-800 text-brand-orange flex items-center justify-center text-lg font-bold shrink-0">
                   {instructor.avatarInitials}
                 </div>
                 <div>
-                  <h3 className="font-bold text-brand-navy text-base leading-snug">{instructor.name}</h3>
-                  <p className="text-xs text-brand-emerald font-medium mt-0.5">{instructor.title}</p>
-                  <p className="text-xs text-brand-slate">{instructor.institution}</p>
+                  <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base leading-snug">{instructor.name}</h3>
+                  <p className="text-xs text-brand-orange font-medium mt-0.5">{instructor.title}</p>
+                  <p className="text-xs text-brand-slate dark:text-stone-400">{instructor.institution}</p>
                 </div>
               </div>
 
-              <p className="text-xs text-brand-slate leading-relaxed line-clamp-3">
+              <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed line-clamp-3">
                 {instructor.bio}
               </p>
 
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {instructor.expertise.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-[10px] bg-slate-100 text-brand-navy border-none">
+                  <Badge key={tag} variant="secondary" className="text-[10px] bg-orange-50 text-brand-orange dark:bg-orange-950/40 dark:text-orange-300 border-none">
                     {tag}
                   </Badge>
                 ))}
               </div>
 
-              <div className="grid grid-cols-3 gap-2 text-center text-xs text-brand-slate pt-3 border-t border-brand-border">
+              <div className="grid grid-cols-3 gap-2 text-center text-xs text-brand-slate dark:text-stone-400 pt-3 border-t border-brand-border dark:border-stone-800">
                 <div>
-                  <div className="font-bold text-brand-navy flex items-center justify-center gap-1">
+                  <div className="font-bold text-brand-coffee dark:text-stone-100 flex items-center justify-center gap-1">
                     <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
                     <span>{instructor.rating}</span>
                   </div>
                   <span className="text-[10px]">Rating</span>
                 </div>
                 <div>
-                  <div className="font-bold text-brand-navy">{instructor.students.toLocaleString()}</div>
+                  <div className="font-bold text-brand-coffee dark:text-stone-100">{instructor.students.toLocaleString()}</div>
                   <span className="text-[10px]">Students</span>
                 </div>
                 <div>
-                  <div className="font-bold text-brand-navy">{instructor.coursesCount}</div>
+                  <div className="font-bold text-brand-coffee dark:text-stone-100">{instructor.coursesCount}</div>
                   <span className="text-[10px]">Courses</span>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function InstructorsPage() {
 
             <div className="p-6 pt-0">
               <Link href="/courses">
-                <Button variant="outline" size="sm" className="w-full text-xs">
+                <Button variant="outline" size="sm" className="w-full text-xs hover:border-brand-orange/40 hover:text-brand-orange">
                   View Courses
                 </Button>
               </Link>
@@ -158,13 +158,13 @@ export default function InstructorsPage() {
       </div>
 
       {/* Become an Instructor CTA */}
-      <div className="rounded-2xl border border-brand-border dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-8 sm:p-12 text-center space-y-4">
-        <h2 className="text-2xl font-bold text-brand-navy">Are You an Educator or University Lecturer?</h2>
-        <p className="text-sm text-brand-slate max-w-xl mx-auto">
+      <div className="rounded-2xl border border-brand-border dark:border-stone-800 bg-brand-creamy/50 dark:bg-stone-900 p-8 sm:p-12 text-center space-y-4">
+        <h2 className="text-2xl font-bold text-brand-coffee dark:text-stone-100">Are You an Educator or University Lecturer?</h2>
+        <p className="text-sm text-brand-slate dark:text-stone-400 max-w-xl mx-auto">
           Reach thousands of ambitious students across Ethiopia. Leverage our low-bandwidth delivery engine, automated grading tools, and transparent local payouts.
         </p>
         <Link href="/contact" className="inline-block">
-          <Button variant="emerald" className="gap-2">
+          <Button variant="orange" className="gap-2">
             <span>Apply as an Instructor</span>
             <ArrowRight className="h-4 w-4" />
           </Button>

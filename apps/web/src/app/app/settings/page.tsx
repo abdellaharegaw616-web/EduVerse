@@ -185,34 +185,34 @@ export default function StudentSettingsPage() {
   return (
     <div className="space-y-8 pb-16 max-w-4xl">
       {/* Header */}
-      <div className="border-b border-brand-border pb-6">
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+      <div className="border-b border-brand-border dark:border-stone-800 pb-6">
+        <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
           Configuration
         </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
           Account Settings
         </h1>
-        <p className="text-xs text-brand-slate mt-0.5">
+        <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
           Manage your personal details, learner bio, avatar, and authentication security.
         </p>
       </div>
 
       {/* Profile Form Card */}
-      <Card className="border border-brand-border bg-white shadow-xs">
+      <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
         <CardHeader>
-          <CardTitle className="text-lg font-bold text-brand-navy flex items-center gap-2">
-            <User className="h-5 w-5 text-brand-emerald" />
+          <CardTitle className="text-lg font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+            <User className="h-5 w-5 text-brand-orange" />
             <span>Profile Information</span>
           </CardTitle>
-          <CardDescription className="text-xs text-brand-slate">
+          <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
             Update your public learner profile and contact information across courses.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           {profileSuccess && (
-            <Alert variant="default" className="mb-6 bg-emerald-50 border-emerald-200 text-emerald-900">
-              <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+            <Alert variant="default" className="mb-6 bg-orange-50 border-orange-200 text-orange-950 dark:bg-orange-950/40 dark:border-orange-800/40 dark:text-orange-200">
+              <CheckCircle2 className="h-4 w-4 text-brand-orange" />
               <AlertTitle>Profile Updated</AlertTitle>
               <AlertDescription className="text-xs">{profileSuccess}</AlertDescription>
             </Alert>
@@ -227,7 +227,7 @@ export default function StudentSettingsPage() {
           ) : (
             <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="fullName" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="fullName" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   Legal Full Name
                 </Label>
                 <Input
@@ -239,7 +239,7 @@ export default function StudentSettingsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="bio" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="bio" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   Academic Statement & Bio
                 </Label>
                 <Textarea
@@ -249,12 +249,12 @@ export default function StudentSettingsPage() {
                   error={profileErrors.bio?.message}
                   {...registerProfile('bio')}
                 />
-                <span className="text-[10px] text-brand-slate">Maximum 500 characters</span>
+                <span className="text-[10px] text-brand-slate dark:text-stone-400">Maximum 500 characters</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="phoneNumber" className="text-xs font-semibold text-brand-navy">
+                  <Label htmlFor="phoneNumber" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                     Phone Number
                   </Label>
                   <Input
@@ -266,7 +266,7 @@ export default function StudentSettingsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="timezone" className="text-xs font-semibold text-brand-navy">
+                  <Label htmlFor="timezone" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                     Timezone
                   </Label>
                   <Input
@@ -278,12 +278,12 @@ export default function StudentSettingsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 p-3.5 rounded-xl border border-brand-border bg-slate-50">
-                <Label className="text-xs font-semibold text-brand-navy block">
+              <div className="space-y-2 p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40">
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200 block">
                   Profile Photo
                 </Label>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl border-2 border-white bg-brand-emerald text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+                  <div className="w-16 h-16 rounded-xl border-2 border-white dark:border-stone-700 bg-brand-coffee text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
                     {currentAvatarUrl ? (
                       <img src={currentAvatarUrl} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
@@ -297,9 +297,9 @@ export default function StudentSettingsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => fileInputRef.current?.click()}
-                        className="h-8 text-xs gap-1.5 bg-white shadow-2xs"
+                        className="h-8 text-xs gap-1.5 bg-white dark:bg-stone-800 shadow-2xs"
                       >
-                        <Upload className="h-3.5 w-3.5 text-brand-emerald" />
+                        <Upload className="h-3.5 w-3.5 text-brand-orange" />
                         <span>Upload Photo</span>
                       </Button>
                       {currentAvatarUrl && (
@@ -308,7 +308,7 @@ export default function StudentSettingsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => setValue('avatarUrl', '', { shouldDirty: true })}
-                          className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 gap-1"
+                          className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 gap-1"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                           <span>Remove</span>
@@ -322,7 +322,7 @@ export default function StudentSettingsPage() {
                       className="hidden"
                       onChange={handleFileUpload}
                     />
-                    <p className="text-[10px] text-brand-slate">
+                    <p className="text-[10px] text-brand-slate dark:text-stone-400">
                       Upload JPG, PNG, or WebP (max 5MB), or paste a direct image URL below.
                     </p>
                   </div>
@@ -333,7 +333,7 @@ export default function StudentSettingsPage() {
                     id="avatarUrl"
                     placeholder="Or paste an image URL: https://example.com/avatar.jpg"
                     error={profileErrors.avatarUrl?.message}
-                    className="bg-white text-xs"
+                    className="bg-white dark:bg-stone-800 text-xs"
                     {...registerProfile('avatarUrl')}
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function StudentSettingsPage() {
               <div className="pt-3 flex justify-end">
                 <Button
                   type="submit"
-                  variant="emerald"
+                  variant="orange"
                   disabled={isProfileSubmitting || updateProfileMutation.isPending}
                   className="gap-2 text-xs"
                 >
@@ -360,21 +360,21 @@ export default function StudentSettingsPage() {
       </Card>
 
       {/* Password Change Card */}
-      <Card className="border border-brand-border bg-white shadow-xs">
+      <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
         <CardHeader>
-          <CardTitle className="text-lg font-bold text-brand-navy flex items-center gap-2">
-            <Lock className="h-5 w-5 text-brand-emerald" />
+          <CardTitle className="text-lg font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+            <Lock className="h-5 w-5 text-brand-orange" />
             <span>Security & Authentication</span>
           </CardTitle>
-          <CardDescription className="text-xs text-brand-slate">
+          <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
             Change your account password to secure your credentials and session.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           {passwordSuccess && (
-            <Alert variant="default" className="mb-6 bg-emerald-50 border-emerald-200 text-emerald-900">
-              <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+            <Alert variant="default" className="mb-6 bg-orange-50 border-orange-200 text-orange-950 dark:bg-orange-950/40 dark:border-orange-800/40 dark:text-orange-200">
+              <CheckCircle2 className="h-4 w-4 text-brand-orange" />
               <AlertTitle>Password Updated</AlertTitle>
               <AlertDescription className="text-xs">{passwordSuccess}</AlertDescription>
             </Alert>
@@ -390,7 +390,7 @@ export default function StudentSettingsPage() {
 
           <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="currentPassword" className="text-xs font-semibold text-brand-navy">
+              <Label htmlFor="currentPassword" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                 Current Password
               </Label>
               <Input
@@ -404,7 +404,7 @@ export default function StudentSettingsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="newPassword" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="newPassword" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   New Password
                 </Label>
                 <Input
@@ -417,7 +417,7 @@ export default function StudentSettingsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="confirmPassword" className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   Confirm New Password
                 </Label>
                 <Input
@@ -430,8 +430,8 @@ export default function StudentSettingsPage() {
               </div>
             </div>
 
-            <div className="p-3 bg-slate-50 rounded-lg border border-brand-border text-xs text-brand-slate flex items-start gap-2.5">
-              <Shield className="h-4 w-4 text-brand-emerald shrink-0 mt-0.5" />
+            <div className="p-3 bg-brand-creamy/40 dark:bg-stone-800/40 rounded-lg border border-brand-border dark:border-stone-800 text-xs text-brand-slate dark:text-stone-400 flex items-start gap-2.5">
+              <Shield className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
               <span>
                 Passwords must be at least 8 characters long, and contain at least one uppercase letter,
                 one lowercase letter, and one number.
@@ -441,7 +441,7 @@ export default function StudentSettingsPage() {
             <div className="pt-3 flex justify-end">
               <Button
                 type="submit"
-                variant="default"
+                variant="orange"
                 disabled={isPasswordSubmitting}
                 className="gap-2 text-xs"
               >
@@ -458,13 +458,13 @@ export default function StudentSettingsPage() {
       </Card>
 
       {/* 3. Appearance & Theme Preferences */}
-      <Card className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+      <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
         <CardHeader className="pb-4">
-          <CardTitle className="text-base font-bold text-brand-navy dark:text-slate-100 flex items-center gap-2">
-            <Sun className="h-4 w-4 text-brand-emerald" />
+          <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+            <Sun className="h-4 w-4 text-brand-orange" />
             <span>Appearance & Theme Mode</span>
           </CardTitle>
-          <CardDescription className="text-xs text-brand-slate dark:text-slate-400">
+          <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
             Customize the platform color scheme and viewing experience for low-light or daytime environments.
           </CardDescription>
         </CardHeader>
@@ -475,17 +475,17 @@ export default function StudentSettingsPage() {
               onClick={() => setTheme('light')}
               className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
                 theme === 'light'
-                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
-                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'border-brand-orange bg-orange-50/50 dark:bg-orange-950/40 ring-2 ring-brand-orange'
+                  : 'border-brand-border dark:border-stone-800 bg-white dark:bg-stone-800/60 hover:bg-stone-50 dark:hover:bg-stone-800'
               }`}
             >
               <div className="flex items-center justify-between">
-                <Sun className={`h-5 w-5 ${theme === 'light' ? 'text-brand-emerald' : 'text-slate-500'}`} />
-                {theme === 'light' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+                <Sun className={`h-5 w-5 ${theme === 'light' ? 'text-brand-orange' : 'text-stone-500'}`} />
+                {theme === 'light' && <CheckCircle2 className="h-4 w-4 text-brand-orange" />}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">Light Mode</h4>
-                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">Academic slate with clean, crisp surfaces</p>
+                <h4 className="text-xs font-bold text-brand-coffee dark:text-stone-100">Light Mode</h4>
+                <p className="text-[11px] text-brand-slate dark:text-stone-400 mt-0.5">Warm ivory cream surfaces with rich espresso text</p>
               </div>
             </button>
 
@@ -494,17 +494,17 @@ export default function StudentSettingsPage() {
               onClick={() => setTheme('dark')}
               className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
                 theme === 'dark'
-                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
-                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'border-brand-orange bg-orange-50/50 dark:bg-orange-950/40 ring-2 ring-brand-orange'
+                  : 'border-brand-border dark:border-stone-800 bg-white dark:bg-stone-800/60 hover:bg-stone-50 dark:hover:bg-stone-800'
               }`}
             >
               <div className="flex items-center justify-between">
-                <Moon className={`h-5 w-5 ${theme === 'dark' ? 'text-amber-400' : 'text-slate-500'}`} />
-                {theme === 'dark' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+                <Moon className={`h-5 w-5 ${theme === 'dark' ? 'text-amber-400' : 'text-stone-500'}`} />
+                {theme === 'dark' && <CheckCircle2 className="h-4 w-4 text-brand-orange" />}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">Dark Mode</h4>
-                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">High contrast dark navy for night study</p>
+                <h4 className="text-xs font-bold text-brand-coffee dark:text-stone-100">Dark Mode</h4>
+                <p className="text-[11px] text-brand-slate dark:text-stone-400 mt-0.5">High contrast deep stone for focused night study</p>
               </div>
             </button>
 
@@ -513,17 +513,17 @@ export default function StudentSettingsPage() {
               onClick={() => setTheme('system')}
               className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 ${
                 theme === 'system'
-                  ? 'border-brand-emerald bg-brand-mint/40 dark:bg-emerald-950/40 ring-2 ring-brand-emerald'
-                  : 'border-brand-border dark:border-slate-800 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'border-brand-orange bg-orange-50/50 dark:bg-orange-950/40 ring-2 ring-brand-orange'
+                  : 'border-brand-border dark:border-stone-800 bg-white dark:bg-stone-800/60 hover:bg-stone-50 dark:hover:bg-stone-800'
               }`}
             >
               <div className="flex items-center justify-between">
-                <Monitor className={`h-5 w-5 ${theme === 'system' ? 'text-brand-emerald' : 'text-slate-500'}`} />
-                {theme === 'system' && <CheckCircle2 className="h-4 w-4 text-brand-emerald" />}
+                <Monitor className={`h-5 w-5 ${theme === 'system' ? 'text-brand-orange' : 'text-stone-500'}`} />
+                {theme === 'system' && <CheckCircle2 className="h-4 w-4 text-brand-orange" />}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-brand-navy dark:text-slate-100">System Preference</h4>
-                <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">Sync automatically with your device OS</p>
+                <h4 className="text-xs font-bold text-brand-coffee dark:text-stone-100">System Preference</h4>
+                <p className="text-[11px] text-brand-slate dark:text-stone-400 mt-0.5">Sync automatically with your device OS</p>
               </div>
             </button>
           </div>

@@ -205,8 +205,7 @@ export class AiService {
       } catch (contextErr) {
         if (
           contextErr instanceof ForbiddenException ||
-          contextErr instanceof NotFoundException ||
-          contextErr instanceof BadRequestException
+          contextErr instanceof NotFoundException
         ) {
           throw contextErr;
         }
@@ -349,7 +348,7 @@ export class AiService {
       if (
         err instanceof ForbiddenException ||
         err instanceof NotFoundException ||
-        err instanceof BadRequestException
+        (err instanceof BadRequestException && err.message.includes('limit'))
       ) {
         throw err;
       }

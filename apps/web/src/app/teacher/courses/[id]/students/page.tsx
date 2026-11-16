@@ -131,11 +131,11 @@ export default function CourseStudentsPage() {
               className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors"
             >
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-full bg-brand-navy text-brand-mint font-bold flex items-center justify-center shrink-0 text-xs">
+                <div className="w-10 h-10 rounded-full bg-brand-coffee text-white dark:bg-stone-800 font-bold flex items-center justify-center shrink-0 text-xs">
                   {item.studentName.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-brand-navy">{item.studentName}</h4>
+                  <h4 className="font-bold text-xs text-brand-coffee dark:text-stone-100">{item.studentName}</h4>
                   <p className="text-[11px] text-brand-slate">{item.studentEmail}</p>
                   <span className="text-[10px] text-brand-slate/80 block mt-0.5">
                     Enrolled: {new Date(item.enrolledAt).toLocaleDateString()}
@@ -148,11 +148,11 @@ export default function CourseStudentsPage() {
                 <div className="space-y-1 w-36">
                   <div className="flex justify-between text-[10px]">
                     <span className="text-brand-slate font-medium">Progress</span>
-                    <span className="font-bold text-brand-navy">{item.progressPercentage}%</span>
+                    <span className="font-bold text-brand-coffee dark:text-stone-100">{item.progressPercentage}%</span>
                   </div>
                   <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
                     <div
-                      className="h-full bg-brand-emerald rounded-full"
+                      className="h-full bg-brand-orange rounded-full"
                       style={{ width: `${item.progressPercentage}%` }}
                     />
                   </div>
@@ -175,7 +175,7 @@ export default function CourseStudentsPage() {
 
                 <div>
                   {item.completedAt ? (
-                    <Badge variant="emerald" className="gap-1 text-[10px]">
+                    <Badge variant="orange" className="gap-1 text-[10px]">
                       <CheckCircle2 className="h-3 w-3" />
                       Completed
                     </Badge>

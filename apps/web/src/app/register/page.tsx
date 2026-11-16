@@ -98,11 +98,11 @@ export default function RegisterPage() {
               alt="EduVerse Logo"
               className="h-10 w-10 object-contain rounded-xl shadow-xs"
             />
-            <span className="font-extrabold tracking-tight text-brand-navy text-2xl">
-              Edu<span className="text-brand-emerald">Verse</span>
+            <span className="font-extrabold tracking-tight text-brand-coffee dark:text-stone-100 text-2xl">
+              Edu<span className="text-brand-orange">Verse</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-brand-navy">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-coffee dark:text-stone-100">
             Create Your Student Account
           </h1>
           <p className="text-xs text-brand-slate">
@@ -179,7 +179,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="rounded-md bg-slate-50 border border-brand-border p-3 text-[11px] text-brand-slate space-y-1">
-              <span className="font-semibold text-brand-navy block">Security Requirements:</span>
+              <span className="font-semibold text-brand-coffee dark:text-stone-100 block">Security Requirements:</span>
               <p>Minimum 8 characters with at least one uppercase, one lowercase, one number, and one special symbol.</p>
             </div>
 
@@ -187,15 +187,15 @@ export default function RegisterPage() {
               <label className="flex items-start gap-2 text-xs text-brand-slate cursor-pointer">
                 <input
                   type="checkbox"
-                  className="mt-0.5 rounded border-brand-border text-brand-emerald focus:ring-brand-emerald"
+                  className="mt-0.5 rounded border-brand-border text-brand-orange focus:ring-brand-orange"
                   {...register('agreeTerms')}
                   disabled={isLoading}
                 />
                 <span>
                   I agree to the{' '}
-                  <Link href="/terms" className="text-brand-emerald underline">Terms of Service</Link>{' '}
+                  <Link href="/terms" className="text-brand-orange underline">Terms of Service</Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-brand-emerald underline">Privacy Policy</Link>.
+                  <Link href="/privacy" className="text-brand-orange underline">Privacy Policy</Link>.
                 </span>
               </label>
               {errors.agreeTerms?.message && (
@@ -205,7 +205,7 @@ export default function RegisterPage() {
 
             <Button
               type="submit"
-              variant="emerald"
+              variant="orange"
               size="lg"
               className="w-full gap-2 font-bold mt-2"
               isLoading={isLoading}
@@ -219,7 +219,7 @@ export default function RegisterPage() {
             Already registered on EduVerse?{' '}
             <Link
               href="/login"
-              className="text-brand-emerald font-semibold hover:underline"
+              className="text-brand-orange font-semibold hover:underline"
             >
               Sign In Instead
             </Link>

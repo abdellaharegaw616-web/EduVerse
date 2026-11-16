@@ -37,7 +37,7 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       type="button"
       onClick={toggleTheme}
       className={cn(
-        'relative inline-flex items-center justify-center h-9 px-2.5 rounded-lg border border-brand-border bg-white text-brand-coffee hover:bg-brand-mint transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800',
+        'relative inline-flex items-center justify-center h-9 px-2.5 rounded-lg border border-brand-border bg-white text-brand-coffee hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800',
         showLabel && 'px-3 gap-2 w-full justify-start',
         className,
       )}

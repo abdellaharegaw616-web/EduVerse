@@ -70,25 +70,25 @@ export default function StudentNotificationsPage() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'ANNOUNCEMENT':
-        return <Megaphone className="h-4 w-4 text-brand-emerald" />;
+        return <Megaphone className="h-4 w-4 text-brand-orange" />;
       case 'ASSIGNMENT_DUE':
         return <Calendar className="h-4 w-4 text-amber-500" />;
       case 'GRADE_POSTED':
         return <FileCheck className="h-4 w-4 text-blue-500" />;
       default:
-        return <BookOpen className="h-4 w-4 text-brand-navy" />;
+        return <BookOpen className="h-4 w-4 text-brand-coffee dark:text-stone-300" />;
     }
   };
 
   return (
     <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Communications
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Notifications & Broadcasts
           </h1>
           <p className="text-xs text-brand-slate mt-0.5">
@@ -131,8 +131,8 @@ export default function StudentNotificationsPage() {
           onClick={() => setFilter('all')}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
             filter === 'all'
-              ? 'bg-brand-navy text-white shadow-sm'
-              : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+              ? 'bg-brand-coffee text-white dark:bg-stone-800 shadow-sm'
+              : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-slate hover:text-brand-coffee dark:hover:text-stone-100'
           }`}
         >
           All ({notifications?.length || 0})
@@ -141,8 +141,8 @@ export default function StudentNotificationsPage() {
           onClick={() => setFilter('unread')}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
             filter === 'unread'
-              ? 'bg-brand-navy text-white shadow-sm'
-              : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+              ? 'bg-brand-orange text-white shadow-sm'
+              : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-slate hover:text-brand-coffee dark:hover:text-stone-100'
           }`}
         >
           Unread ({unreadCount})
@@ -163,14 +163,14 @@ export default function StudentNotificationsPage() {
               key={item.id}
               className={`p-4 sm:p-5 rounded-xl border transition-all ${
                 item.isRead
-                  ? 'bg-white border-brand-border/70 opacity-80'
-                  : 'bg-emerald-50/20 border-brand-emerald/30 shadow-xs'
+                  ? 'bg-white dark:bg-stone-900 border-brand-border/70 dark:border-stone-800 opacity-80'
+                  : 'bg-orange-50/40 dark:bg-orange-950/20 border-brand-orange/30 shadow-xs'
               } flex flex-col sm:flex-row sm:items-start justify-between gap-4`}
             >
               <div className="flex items-start gap-3.5">
                 <div
                   className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                    item.isRead ? 'bg-slate-100' : 'bg-brand-emerald/10'
+                    item.isRead ? 'bg-stone-100 dark:bg-stone-800' : 'bg-orange-100/80 text-brand-orange dark:bg-orange-950/60'
                   }`}
                 >
                   {getNotificationIcon(item.type)}
@@ -178,13 +178,13 @@ export default function StudentNotificationsPage() {
 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-bold text-brand-navy">{item.title}</h3>
+                    <h3 className="text-sm font-bold text-brand-coffee dark:text-stone-100">{item.title}</h3>
                     {!item.isRead && (
-                      <span className="w-2 h-2 rounded-full bg-brand-emerald shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-brand-orange shrink-0" />
                     )}
                   </div>
-                  <p className="text-xs text-brand-slate leading-relaxed">{item.message}</p>
-                  <span className="text-[10px] text-brand-slate/80 block pt-1">
+                  <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">{item.message}</p>
+                  <span className="text-[10px] text-brand-slate/80 dark:text-stone-500 block pt-1">
                     {new Date(item.createdAt).toLocaleString()}
                   </span>
                 </div>

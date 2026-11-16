@@ -250,8 +250,8 @@ export default function EditCoursePage() {
       </div>
 
       {successMessage && (
-        <Alert className="bg-emerald-50 border-emerald-200 text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+        <Alert className="bg-orange-50 border-orange-200 text-orange-950">
+          <CheckCircle2 className="h-4 w-4 text-brand-orange" />
           <AlertTitle className="text-xs font-bold">Success</AlertTitle>
           <AlertDescription className="text-xs">{successMessage}</AlertDescription>
         </Alert>
@@ -261,7 +261,7 @@ export default function EditCoursePage() {
       <Card className="border border-brand-border bg-white shadow-sm overflow-hidden">
         <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/50">
           <div className="space-y-1">
-            <h3 className="font-bold text-sm text-brand-navy">Publication Workflow</h3>
+            <h3 className="font-bold text-sm text-brand-coffee dark:text-stone-100">Publication Workflow</h3>
             <p className="text-xs text-brand-slate">
               Current lifecycle status: <strong>{course.status}</strong>. Courses require moderation before being listed publicly.
             </p>
@@ -285,7 +285,7 @@ export default function EditCoursePage() {
                 variant="default"
                 size="sm"
                 onClick={() => setActionModal('publish')}
-                className="text-xs gap-1.5 bg-brand-emerald hover:bg-brand-emerald/90 text-white"
+                className="text-xs gap-1.5 bg-brand-orange hover:bg-brand-orange/90 text-white"
               >
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>Publish Course</span>
@@ -366,7 +366,7 @@ export default function EditCoursePage() {
                 <select
                   id="categoryId"
                   {...register('categoryId')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="">Select Category...</option>
                   {categories?.map((cat) => (
@@ -378,13 +378,13 @@ export default function EditCoursePage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="language" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="language" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                   Instruction Language
                 </Label>
                 <select
                   id="language"
                   {...register('language')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="English">English</option>
                   <option value="Amharic">Amharic</option>
@@ -396,13 +396,13 @@ export default function EditCoursePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="difficulty" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="difficulty" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                   Difficulty Level
                 </Label>
                 <select
                   id="difficulty"
                   {...register('difficulty')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="BEGINNER">Beginner</option>
                   <option value="INTERMEDIATE">Intermediate</option>

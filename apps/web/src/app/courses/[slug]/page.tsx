@@ -243,24 +243,24 @@ export default function CourseDetailPage() {
         return <FileText className="h-4 w-4 text-brand-slate" />;
       case 'PDF_RESOURCE':
       case 'ATTACHMENT':
-        return <Download className="h-4 w-4 text-brand-emerald" />;
+        return <Download className="h-4 w-4 text-brand-orange" />;
       case 'EXTERNAL_RESOURCE':
         return <ExternalLink className="h-4 w-4 text-blue-500" />;
       default:
-        return <PlayCircle className="h-4 w-4 text-brand-emerald" />;
+        return <PlayCircle className="h-4 w-4 text-brand-orange" />;
     }
   };
 
   return (
     <div className="min-h-screen bg-brand-page pb-24">
       {/* Hero Header */}
-      <section className="bg-brand-navy text-white py-12 px-4 sm:px-6 relative">
+      <section className="bg-brand-coffee text-white py-12 px-4 sm:px-6 relative">
         <div className="container mx-auto max-w-6xl space-y-6">
           {/* Breadcrumb */}
           <nav className="flex items-center space-x-2 text-xs text-brand-slate">
-            <Link href="/" className="hover:text-brand-emerald transition-colors">Home</Link>
+            <Link href="/" className="hover:text-brand-orange transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/courses" className="hover:text-brand-emerald transition-colors">Courses</Link>
+            <Link href="/courses" className="hover:text-brand-orange transition-colors">Courses</Link>
             <span>/</span>
             <span className="text-white font-medium truncate max-w-xs">{course.title}</span>
           </nav>
@@ -268,7 +268,7 @@ export default function CourseDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-brand-emerald text-white text-xs">
+                <Badge className="bg-brand-orange text-white text-xs">
                   {course.category?.name || 'General'}
                 </Badge>
                 <Badge variant="outline" className="border-white/30 text-white text-xs">
@@ -284,20 +284,20 @@ export default function CourseDetailPage() {
                 {course.title}
               </h1>
 
-              <p className="text-sm sm:text-base text-brand-slate leading-relaxed">
+              <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
                 {course.description}
               </p>
 
               {/* Author and Stats Line */}
-              <div className="flex flex-wrap items-center gap-4 text-xs text-brand-slate pt-2">
+              <div className="flex flex-wrap items-center gap-4 text-xs text-stone-300 pt-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-7 w-7 rounded-full bg-brand-emerald text-white flex items-center justify-center font-bold text-xs">
+                  <div className="h-7 w-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xs">
                     {course.author.fullName.charAt(0)}
                   </div>
                   <span className="text-white font-semibold">{course.author.fullName}</span>
                 </div>
                 {course.institution && (
-                  <span className="text-brand-mint font-medium">
+                  <span className="text-orange-200 font-medium">
                     {course.institution.name}
                   </span>
                 )}
@@ -327,14 +327,14 @@ export default function CourseDetailPage() {
             {course.learningObjectives && course.learningObjectives.length > 0 && (
               <Card className="border border-brand-border bg-white shadow-sm">
                 <CardContent className="p-6 space-y-4">
-                  <h2 className="text-lg font-bold text-brand-navy flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-brand-emerald" />
+                  <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-brand-orange" />
                     <span>What You'll Learn</span>
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {course.learningObjectives.map((obj, i) => (
-                      <div key={i} className="flex items-start gap-2.5 text-xs text-brand-navy leading-relaxed">
-                        <CheckCircle2 className="h-4 w-4 text-brand-emerald shrink-0 mt-0.5" />
+                      <div key={i} className="flex items-start gap-2.5 text-xs text-brand-coffee dark:text-stone-300 leading-relaxed">
+                        <CheckCircle2 className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
                         <span>{obj}</span>
                       </div>
                     ))}
@@ -347,7 +347,7 @@ export default function CourseDetailPage() {
             {course.prerequisites && course.prerequisites.length > 0 && (
               <Card className="border border-brand-border bg-white shadow-sm">
                 <CardContent className="p-6 space-y-3">
-                  <h2 className="text-base font-bold text-brand-navy">Prerequisites & Requirements</h2>
+                  <h2 className="text-base font-bold text-brand-coffee dark:text-stone-100">Prerequisites & Requirements</h2>
                   <ul className="list-disc list-inside space-y-1.5 text-xs text-brand-slate">
                     {course.prerequisites.map((req, i) => (
                       <li key={i}>{req}</li>
@@ -361,7 +361,7 @@ export default function CourseDetailPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-brand-navy">Course Curriculum</h2>
+                  <h2 className="text-xl font-bold text-brand-coffee dark:text-stone-100">Course Curriculum</h2>
                   <p className="text-xs text-brand-slate mt-0.5">
                     {course.stats.sectionsCount} sections • {course.stats.lessonsCount} lessons • {course.estimatedHours} hours total
                   </p>
@@ -389,7 +389,7 @@ export default function CourseDetailPage() {
                             <span className="text-[11px] font-semibold text-brand-slate uppercase tracking-wider">
                               Section {idx + 1}
                             </span>
-                            <h3 className="font-bold text-sm text-brand-navy">{sec.title}</h3>
+                            <h3 className="font-bold text-sm text-brand-coffee dark:text-stone-100">{sec.title}</h3>
                           </div>
                           <div className="flex items-center gap-3 text-xs text-brand-slate">
                             <span>{sec.lessons.length} lessons</span>
@@ -410,9 +410,9 @@ export default function CourseDetailPage() {
                               >
                                 <div className="flex items-center gap-3">
                                   {getLessonIcon(lesson.type)}
-                                  <span className="font-medium text-brand-navy">{lesson.title}</span>
+                                  <span className="font-medium text-brand-coffee dark:text-stone-200">{lesson.title}</span>
                                   {lesson.isFreePreview && (
-                                    <Badge className="bg-brand-mint text-brand-emerald hover:bg-brand-mint border-brand-emerald/30 text-[10px] py-0 px-2">
+                                    <Badge className="bg-orange-50 text-brand-orange hover:bg-orange-100/60 border-orange-200 text-[10px] py-0 px-2">
                                       Free Preview
                                     </Badge>
                                   )}
@@ -439,14 +439,14 @@ export default function CourseDetailPage() {
             {/* Instructor Bio */}
             <Card className="border border-brand-border bg-white shadow-sm">
               <CardContent className="p-6 space-y-4">
-                <h2 className="text-lg font-bold text-brand-navy">Meet Your Instructor</h2>
+                <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">Meet Your Instructor</h2>
                 <div className="flex items-start gap-4">
-                  <div className="h-16 w-16 rounded-full bg-brand-navy/10 flex items-center justify-center font-bold text-brand-navy text-xl shrink-0">
+                  <div className="h-16 w-16 rounded-full bg-brand-coffee/10 flex items-center justify-center font-bold text-brand-coffee dark:text-stone-100 text-xl shrink-0">
                     {course.author.fullName.charAt(0)}
                   </div>
                   <div className="space-y-1.5">
-                    <h3 className="font-bold text-base text-brand-navy">{course.author.fullName}</h3>
-                    <p className="text-xs text-brand-emerald font-semibold">
+                    <h3 className="font-bold text-base text-brand-coffee dark:text-stone-100">{course.author.fullName}</h3>
+                    <p className="text-xs text-brand-orange font-semibold">
                       Author of {course.author.publishedCoursesCount} EduVerse Courses
                     </p>
                     <p className="text-xs text-brand-slate leading-relaxed">
@@ -462,7 +462,7 @@ export default function CourseDetailPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-brand-navy">Learner Reviews & Ratings</h2>
+                  <h2 className="text-xl font-bold text-brand-coffee dark:text-stone-100">Learner Reviews & Ratings</h2>
                   <p className="text-xs text-brand-slate">
                     Overall rating: <strong className="text-amber-500">{course.stats.averageRating} out of 5</strong> ({course.stats.reviewCount} verified reviews)
                   </p>
@@ -490,10 +490,10 @@ export default function CourseDetailPage() {
                       <CardContent className="p-4 space-y-2">
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
-                            <div className="h-6 w-6 rounded-full bg-brand-navy/10 flex items-center justify-center font-bold text-brand-navy text-[10px]">
+                            <div className="h-6 w-6 rounded-full bg-brand-coffee/10 flex items-center justify-center font-bold text-brand-coffee dark:text-stone-100 text-[10px]">
                               {rev.user.fullName.charAt(0)}
                             </div>
-                            <span className="font-semibold text-brand-navy">{rev.user.fullName}</span>
+                            <span className="font-semibold text-brand-coffee dark:text-stone-100">{rev.user.fullName}</span>
                           </div>
                           <div className="flex items-center gap-1 text-amber-400">
                             {Array.from({ length: 5 }).map((_, i) => (
@@ -532,14 +532,14 @@ export default function CourseDetailPage() {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-white/80">
-                    <BookOpen className="h-12 w-12 text-brand-emerald" />
+                    <BookOpen className="h-12 w-12 text-brand-orange" />
                   </div>
                 )}
               </div>
 
               <CardContent className="p-6 space-y-6">
                 <div className="space-y-1">
-                  <span className="text-2xl font-black text-brand-navy">Free & Open</span>
+                  <span className="text-2xl font-black text-brand-coffee dark:text-stone-100">Free & Open</span>
                   <p className="text-xs text-brand-slate">
                     Full curriculum access including assessments and digital certificates.
                   </p>
@@ -548,24 +548,24 @@ export default function CourseDetailPage() {
                 <div className="space-y-3 pt-2 border-t border-brand-border/60 text-xs">
                   <div className="flex items-center justify-between text-brand-slate">
                     <span className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-brand-emerald" />
+                      <Clock className="h-4 w-4 text-brand-orange" />
                       <span>Estimated Duration</span>
                     </span>
-                    <strong className="text-brand-navy">{course.estimatedHours} hours</strong>
+                    <strong className="text-brand-coffee dark:text-stone-100">{course.estimatedHours} hours</strong>
                   </div>
                   <div className="flex items-center justify-between text-brand-slate">
                     <span className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-brand-emerald" />
+                      <BookOpen className="h-4 w-4 text-brand-orange" />
                       <span>Total Lessons</span>
                     </span>
-                    <strong className="text-brand-navy">{course.stats.lessonsCount} lessons</strong>
+                    <strong className="text-brand-coffee dark:text-stone-100">{course.stats.lessonsCount} lessons</strong>
                   </div>
                   <div className="flex items-center justify-between text-brand-slate">
                     <span className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4 text-brand-emerald" />
+                      <ShieldCheck className="h-4 w-4 text-brand-orange" />
                       <span>Verified Certificate</span>
                     </span>
-                    <strong className="text-brand-navy">Included</strong>
+                    <strong className="text-brand-coffee dark:text-stone-100">Included</strong>
                   </div>
                 </div>
 
@@ -573,7 +573,7 @@ export default function CourseDetailPage() {
                   {!user ? (
                     <div className="space-y-2">
                       <Link href={`/login?redirect=/courses/${course.slug}`} className="block">
-                        <Button variant="default" className="w-full gap-2 text-sm font-semibold h-11">
+                        <Button variant="orange" className="w-full gap-2 text-sm font-semibold h-11">
                           <span>Sign In to Enroll</span>
                           <ArrowRight className="h-4 w-4" />
                         </Button>
@@ -584,8 +584,8 @@ export default function CourseDetailPage() {
                     </div>
                   ) : accessData?.hasAccess || enrollSuccess ? (
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 p-3 bg-brand-mint text-brand-navy rounded-lg text-xs font-semibold">
-                        <CheckCircle2 className="h-4 w-4 text-brand-emerald shrink-0" />
+                      <div className="flex items-center gap-2 p-3 bg-orange-50 dark:bg-orange-950/40 text-brand-coffee dark:text-stone-100 rounded-lg text-xs font-semibold">
+                        <CheckCircle2 className="h-4 w-4 text-brand-orange shrink-0" />
                         <span>
                           {accessData?.isAuthor
                             ? 'You are the author of this course.'
@@ -593,7 +593,7 @@ export default function CourseDetailPage() {
                         </span>
                       </div>
                       <Link href={`/courses/${course.slug}/learn`} className="block">
-                        <Button variant="emerald" className="w-full gap-2 text-sm font-semibold h-11">
+                        <Button variant="orange" className="w-full gap-2 text-sm font-semibold h-11">
                           <span>Open Learning Player</span>
                           <ArrowRight className="h-4 w-4" />
                         </Button>
@@ -613,7 +613,7 @@ export default function CourseDetailPage() {
                         </Alert>
                       )}
                       <Button
-                        variant="default"
+                        variant="orange"
                         onClick={() => enrollMutation.mutate()}
                         disabled={enrollMutation.isPending}
                         className="w-full gap-2 text-sm font-semibold h-11"

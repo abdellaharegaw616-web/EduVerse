@@ -217,14 +217,14 @@ export default function TeacherQuizzesPage() {
       {/* Lesson Selector */}
       <Card className="border border-brand-border bg-white shadow-xs">
         <CardContent className="p-4 flex flex-col sm:flex-row items-center gap-4">
-          <Label htmlFor="lessonSelect" className="text-xs font-semibold text-brand-navy whitespace-nowrap">
+          <Label htmlFor="lessonSelect" className="text-xs font-semibold text-brand-coffee dark:text-stone-100 whitespace-nowrap">
             Target Lesson:
           </Label>
           <select
             id="lessonSelect"
             value={activeLessonId || ''}
             onChange={(e) => setSelectedLessonId(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-navy shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald"
+            className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-coffee dark:text-stone-100 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             {allLessons.map((l: any) => (
               <option key={l.id} value={l.id}>
@@ -241,7 +241,7 @@ export default function TeacherQuizzesPage() {
       ) : (
         <Card className="border border-brand-border bg-white shadow-xs">
           <CardHeader>
-            <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
+            <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
               <HelpCircle className="h-4 w-4 text-purple-600" />
               <span>{quiz ? 'Quiz Configuration' : 'Create Quiz for This Lesson'}</span>
             </CardTitle>
@@ -249,7 +249,7 @@ export default function TeacherQuizzesPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-brand-navy">Quiz Title</Label>
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Quiz Title</Label>
                 <Input
                   value={quizTitle}
                   onChange={(e) => setQuizTitle(e.target.value)}
@@ -259,7 +259,7 @@ export default function TeacherQuizzesPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-brand-navy">Passing Threshold (%)</Label>
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Passing Threshold (%)</Label>
                 <Input
                   type="number"
                   min="1"
@@ -293,8 +293,8 @@ export default function TeacherQuizzesPage() {
             <CardHeader className="pb-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
-                    <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+                  <CardTitle className="text-sm font-bold text-brand-coffee dark:text-white flex items-center gap-2">
+                    <BookOpenCheck className="h-4 w-4 text-brand-orange" />
                     <span>AI Assessment Question Drafter</span>
                   </CardTitle>
                   <p className="text-[11px] text-brand-slate dark:text-slate-400 mt-0.5">
@@ -307,7 +307,7 @@ export default function TeacherQuizzesPage() {
                     value={aiQuestionCount}
                     onChange={(e) => setAiQuestionCount(Number(e.target.value))}
                     aria-label="Draft question count"
-                    className="h-8 rounded-md border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 text-xs text-brand-navy dark:text-slate-100"
+                    className="h-8 rounded-md border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 text-xs text-brand-coffee dark:text-slate-100"
                   >
                     <option value={2}>2 Questions</option>
                     <option value={3}>3 Questions</option>
@@ -326,7 +326,7 @@ export default function TeacherQuizzesPage() {
                     {generateAiQuestionsMutation.isPending ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <BookOpenCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                      <BookOpenCheck className="h-3.5 w-3.5 text-brand-orange" />
                     )}
                     <span>Generate Drafts</span>
                   </Button>
@@ -360,7 +360,7 @@ export default function TeacherQuizzesPage() {
                         <Button
                           type="button"
                           size="sm"
-                          variant={draft.saved ? 'outline' : 'emerald'}
+                          variant={draft.saved ? 'outline' : 'orange'}
                           disabled={draft.saved || saveDraftQuestionMutation.isPending}
                           onClick={() =>
                             saveDraftQuestionMutation.mutate({
@@ -373,7 +373,7 @@ export default function TeacherQuizzesPage() {
                         >
                           {draft.saved ? (
                             <>
-                              <Check className="h-3 w-3 text-brand-emerald" />
+                              <Check className="h-3 w-3 text-brand-orange" />
                               <span>Added</span>
                             </>
                           ) : (
@@ -391,7 +391,7 @@ export default function TeacherQuizzesPage() {
                             key={oIdx}
                             className={`px-2.5 py-1.5 rounded text-[11px] border ${
                               opt.isCorrect
-                                ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-semibold'
+                                ? 'bg-orange-50 dark:bg-orange-950/30 border-orange-300 dark:border-orange-700 text-orange-950 dark:text-orange-200 font-semibold'
                                 : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-brand-slate dark:text-slate-400'
                             }`}
                           >
@@ -408,7 +408,7 @@ export default function TeacherQuizzesPage() {
           </Card>
 
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-brand-navy flex items-center gap-2">
+            <h2 className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
               <span>Questions & Options</span>
               <Badge variant="outline" className="text-xs">
                 {quiz.questions?.length || 0} Questions
@@ -417,7 +417,7 @@ export default function TeacherQuizzesPage() {
 
             {!showQuestionForm && (
               <Button
-                variant="emerald"
+                variant="orange"
                 size="sm"
                 onClick={() => setShowQuestionForm(true)}
                 className="text-xs gap-1.5"
@@ -430,15 +430,15 @@ export default function TeacherQuizzesPage() {
 
           {/* New Question Form */}
           {showQuestionForm && (
-            <Card className="border-2 border-brand-emerald bg-emerald-50/20 shadow-xs">
+            <Card className="border-2 border-brand-orange bg-orange-50/20 shadow-xs">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold text-brand-navy">
+                <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100">
                   New Multiple Choice Question
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-brand-navy">Question Text</Label>
+                  <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Question Text</Label>
                   <Input
                     placeholder="e.g. Which keyword ensures immutability in TypeScript?"
                     value={questionText}
@@ -448,7 +448,7 @@ export default function TeacherQuizzesPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-brand-navy">
+                  <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                     Answer Options (Select the correct answer radio):
                   </Label>
                   {options.map((opt, i) => (
@@ -458,7 +458,7 @@ export default function TeacherQuizzesPage() {
                         name="correctAnswer"
                         checked={opt.isCorrect}
                         onChange={() => handleCorrectOptionSelect(i)}
-                        className="h-4 w-4 text-brand-emerald accent-brand-emerald cursor-pointer"
+                        className="h-4 w-4 text-brand-orange accent-brand-orange cursor-pointer"
                         title="Mark as correct option"
                       />
                       <Input
@@ -473,7 +473,7 @@ export default function TeacherQuizzesPage() {
 
                 <div className="pt-2 flex items-center gap-2">
                   <Button
-                    variant="emerald"
+                    variant="orange"
                     size="sm"
                     onClick={() => addQuestionMutation.mutate(quiz.id)}
                     disabled={
@@ -505,7 +505,7 @@ export default function TeacherQuizzesPage() {
                 <Card key={q.id} className="border border-brand-border bg-white shadow-xs">
                   <CardContent className="p-4 flex items-start justify-between gap-4">
                     <div className="space-y-2">
-                      <h4 className="font-bold text-xs text-brand-navy">
+                      <h4 className="font-bold text-xs text-brand-coffee dark:text-stone-100">
                         {idx + 1}. {q.text}
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
@@ -514,7 +514,7 @@ export default function TeacherQuizzesPage() {
                             key={opt.id}
                             className={`p-2 rounded-md text-xs border ${
                               opt.isCorrect
-                                ? 'bg-emerald-50 border-emerald-300 font-semibold text-emerald-900'
+                                ? 'bg-orange-50 border-orange-300 font-semibold text-orange-950'
                                 : 'bg-slate-50 border-slate-200 text-brand-slate'
                             }`}
                           >

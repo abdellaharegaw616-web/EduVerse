@@ -201,13 +201,13 @@ export default function TeacherGradingQueuePage() {
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-sm text-brand-navy">{sub.assignmentTitle}</h3>
+                  <h3 className="font-bold text-sm text-brand-coffee dark:text-stone-100">{sub.assignmentTitle}</h3>
                   {sub.status === 'PENDING' ? (
                     <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-[10px]">
                       Pending Review
                     </Badge>
                   ) : (
-                    <Badge variant="emerald" className="gap-1 text-[10px]">
+                    <Badge variant="orange" className="gap-1 text-[10px]">
                       <CheckCircle2 className="h-3 w-3" />
                       Graded ({sub.grade}/{sub.maxScore})
                     </Badge>
@@ -215,7 +215,7 @@ export default function TeacherGradingQueuePage() {
                 </div>
 
                 <p className="text-xs text-brand-slate">
-                  Student: <strong className="text-brand-navy">{sub.studentName}</strong> ({sub.studentEmail}) •{' '}
+                  Student: <strong className="text-brand-coffee dark:text-stone-100">{sub.studentName}</strong> ({sub.studentEmail}) •{' '}
                   {sub.courseTitle}
                 </p>
 
@@ -227,7 +227,7 @@ export default function TeacherGradingQueuePage() {
               <div className="flex items-center gap-3 self-end sm:self-center">
                 {sub.grade !== null && sub.grade !== undefined && (
                   <div className="text-right">
-                    <span className="text-base font-extrabold text-brand-navy block leading-none">
+                    <span className="text-base font-extrabold text-brand-coffee dark:text-stone-100 block leading-none">
                       {sub.grade} / {sub.maxScore}
                     </span>
                     <span className="text-[10px] text-brand-slate">Score</span>

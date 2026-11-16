@@ -301,7 +301,7 @@ export default function StudentDashboardPage() {
       timestamp: string;
       link?: string;
       badgeText?: string;
-      badgeVariant?: 'emerald' | 'amber' | 'destructive' | 'secondary' | 'outline';
+      badgeVariant?: 'orange' | 'amber' | 'destructive' | 'secondary' | 'outline';
     }> = [];
 
     // Lessons completed
@@ -332,7 +332,7 @@ export default function StudentDashboardPage() {
           ? `/courses/${q.quiz.lesson.section.course.slug}/learn`
           : undefined,
         badgeText: q.passed ? 'Quiz Passed' : 'Retry Needed',
-        badgeVariant: q.passed ? 'emerald' : 'destructive',
+        badgeVariant: q.passed ? 'orange' : 'destructive',
       });
     });
 
@@ -362,7 +362,7 @@ export default function StudentDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-slate-800 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 mb-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-orange bg-brand-mint dark:bg-orange-950/60 dark:text-orange-400 px-2 py-0.5 rounded border border-brand-orange/20">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-orange bg-orange-50 dark:bg-orange-950/60 dark:text-orange-400 px-2 py-0.5 rounded border border-brand-orange/20">
               Student Academic Workspace
             </span>
             <span className="text-[11px] text-brand-slate dark:text-slate-400">
@@ -420,7 +420,7 @@ export default function StudentDashboardPage() {
 
       {/* 2. Primary Hero Feature: "Continue Learning" Quick-Launch Card */}
       {continueLearningCourse && (
-        <Card className="border-brand-border dark:border-stone-800 bg-gradient-to-r from-orange-50/70 via-brand-mint/40 to-white dark:from-stone-900 dark:via-stone-900/90 dark:to-stone-950 overflow-hidden shadow-xs">
+        <Card className="border-brand-border dark:border-stone-800 bg-gradient-to-r from-orange-50/70 via-orange-50/30 to-white dark:from-stone-900 dark:via-stone-900/90 dark:to-stone-950 overflow-hidden shadow-xs">
           <CardContent className="p-5 sm:p-6">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="space-y-3 max-w-2xl">
@@ -755,7 +755,7 @@ export default function StudentDashboardPage() {
                         </p>
                       </div>
                       <Badge
-                        variant={isCompleted ? 'emerald' : 'orange'}
+                        variant={isCompleted ? 'default' : 'orange'}
                         className="text-xs font-bold shrink-0"
                       >
                         {Math.round(enr.progressPercentage)}%
@@ -767,7 +767,7 @@ export default function StudentDashboardPage() {
                       <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2 overflow-hidden">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${
-                            isCompleted ? 'bg-emerald-600' : 'bg-brand-orange'
+                            isCompleted ? 'bg-brand-coffee dark:bg-stone-600' : 'bg-brand-orange'
                           }`}
                           style={{ width: `${Math.min(100, Math.max(0, enr.progressPercentage))}%` }}
                         />
@@ -889,7 +889,7 @@ export default function StudentDashboardPage() {
 
                       <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
                         {hasGrade ? (
-                          <Badge variant="emerald" className="text-xs">
+                          <Badge variant="orange" className="text-xs">
                             Graded: {sub.grade} / {a.maxScore || 100}
                           </Badge>
                         ) : sub ? (
@@ -954,7 +954,7 @@ export default function StudentDashboardPage() {
 
                     <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
                       <Badge
-                        variant={q.passed ? 'emerald' : 'destructive'}
+                        variant={q.passed ? 'orange' : 'destructive'}
                         className="text-xs font-bold"
                       >
                         {q.passed ? 'Passed' : 'Retry Needed'}
@@ -1175,7 +1175,7 @@ export default function StudentDashboardPage() {
         ) : (
           <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900">
             <CardContent className="p-6 text-center space-y-3">
-              <div className="h-12 w-12 rounded-full bg-brand-mint text-brand-orange mx-auto flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-orange-100/80 text-brand-orange mx-auto flex items-center justify-center">
                 <Bookmark className="h-6 w-6" />
               </div>
               <div className="max-w-md mx-auto space-y-1">

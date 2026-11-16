@@ -50,13 +50,13 @@ export default function ContactPage() {
     <div className="container mx-auto px-4 sm:px-6 py-12 space-y-12 pb-24">
       {/* Header */}
       <div className="max-w-2xl mx-auto text-center space-y-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+        <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
           Get in Touch
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
           Contact Our Addis Ababa Support Team
         </h1>
-        <p className="text-sm text-brand-slate">
+        <p className="text-sm text-brand-slate dark:text-stone-400">
           Have questions about our course tracks, university partnerships, or Telebirr billing? We’re here to help.
         </p>
       </div>
@@ -64,40 +64,40 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-5xl mx-auto">
         {/* Contact Info Column */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-brand-border bg-white p-6 space-y-6">
-            <h3 className="font-bold text-brand-navy text-lg">Headquarters</h3>
+          <div className="rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 p-6 space-y-6">
+            <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-lg">Headquarters</h3>
 
-            <div className="space-y-4 text-xs text-brand-slate">
+            <div className="space-y-4 text-xs text-brand-slate dark:text-stone-400">
               <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <MapPin className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy block text-sm">Addis Ababa Office</strong>
+                  <strong className="text-brand-coffee dark:text-stone-100 block text-sm">Addis Ababa Office</strong>
                   <span>Cape Verde St., Bole Sub-City, Addis Ababa, Ethiopia</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Phone className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <Phone className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy dark:text-slate-200 block text-sm">Phone Line</strong>
+                  <strong className="text-brand-coffee dark:text-stone-100 block text-sm">Phone Line</strong>
                   <span>+251 97 956 7153 / 0979567153</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Mail className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <Mail className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy dark:text-slate-200 block text-sm">Email Inquiries</strong>
-                  <a href="mailto:abdellaj636@gmail.com" className="text-brand-emerald hover:underline">
+                  <strong className="text-brand-coffee dark:text-stone-100 block text-sm">Email Inquiries</strong>
+                  <a href="mailto:abdellaj636@gmail.com" className="text-brand-orange hover:underline">
                     abdellaj636@gmail.com
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <Clock className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-brand-navy block text-sm">Office Hours</strong>
+                  <strong className="text-brand-coffee dark:text-stone-100 block text-sm">Office Hours</strong>
                   <span>Monday – Friday: 8:30 AM – 5:30 PM EAT</span>
                   <br />
                   <span>Saturday: 9:00 AM – 1:00 PM EAT</span>
@@ -109,7 +109,7 @@ export default function ContactPage() {
 
         {/* Contact Form Column */}
         <div className="lg:col-span-2">
-          <div className="rounded-xl border border-brand-border bg-white p-6 sm:p-8 space-y-6 shadow-sm">
+          <div className="rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8 space-y-6 shadow-sm">
             {submitted && (
               <Alert variant="success" className="animate-in fade-in duration-200">
                 <CheckCircle2 className="h-4 w-4" />
@@ -148,7 +148,7 @@ export default function ContactPage() {
                   <Label htmlFor="inquiryType" required>Inquiry Category</Label>
                   <select
                     id="inquiryType"
-                    className="flex h-10 w-full rounded-md border border-brand-border bg-white px-3 py-2 text-sm text-brand-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald"
+                    className="flex h-10 w-full rounded-md border border-brand-border dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-2 text-sm text-brand-coffee dark:text-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
                     {...register('inquiryType')}
                   >
                     <option value="student">Student & Enrollment Question</option>
@@ -181,7 +181,7 @@ export default function ContactPage() {
 
               <Button
                 type="submit"
-                variant="emerald"
+                variant="orange"
                 size="lg"
                 isLoading={isSubmitting}
                 className="w-full sm:w-auto gap-2"

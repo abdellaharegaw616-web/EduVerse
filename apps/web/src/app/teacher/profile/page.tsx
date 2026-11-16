@@ -174,10 +174,10 @@ export default function TeacherProfilePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Faculty Directory
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Instructor Profile & Credentials
           </h1>
           <p className="text-xs text-brand-slate mt-0.5">
@@ -197,8 +197,8 @@ export default function TeacherProfilePage() {
       </div>
 
       {successMessage && (
-        <Alert variant="default" className="bg-emerald-50 border-emerald-200 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+        <Alert variant="default" className="bg-orange-50 border-orange-200 text-orange-950">
+          <CheckCircle2 className="h-4 w-4 text-brand-orange" />
           <AlertTitle>Profile Updated</AlertTitle>
           <AlertDescription className="text-xs">{successMessage}</AlertDescription>
         </Alert>
@@ -227,9 +227,9 @@ export default function TeacherProfilePage() {
           {/* Identity Card */}
           <Card className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
             <div className="h-28 bg-slate-900 dark:bg-slate-950 border-b border-slate-800 p-4 flex items-start justify-end relative">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-brand-emerald" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-brand-orange" />
               <Badge variant="outline" className="bg-slate-800/90 text-white border-slate-700 font-semibold text-xs gap-1.5 shadow-xs">
-                <ShieldCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                <ShieldCheck className="h-3.5 w-3.5 text-brand-orange" />
                 {user.role}
               </Badge>
             </div>
@@ -239,7 +239,7 @@ export default function TeacherProfilePage() {
                 <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 items-center sm:items-end text-center sm:text-left">
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="relative w-20 h-20 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-navy dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
+                    className="relative w-20 h-20 rounded-2xl border-4 border-white dark:border-slate-900 bg-brand-coffee dark:bg-slate-800 text-white font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0 overflow-hidden cursor-pointer group"
                     title="Click to upload profile photo"
                   >
                     {avatarUrl || user.profile?.avatarUrl ? (
@@ -253,14 +253,14 @@ export default function TeacherProfilePage() {
                     )}
 
                     {/* Camera Overlay */}
-                    <div className="absolute inset-0 bg-brand-navy/60 backdrop-blur-xs flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-medium">
-                      <Camera className="h-5 w-5 mb-0.5 text-brand-emerald" />
+                    <div className="absolute inset-0 bg-brand-coffee/60 backdrop-blur-xs flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px] font-medium">
+                      <Camera className="h-5 w-5 mb-0.5 text-brand-orange" />
                       <span>Upload</span>
                     </div>
 
                     {isUploadingAvatar && (
-                      <div className="absolute inset-0 bg-brand-navy/80 flex items-center justify-center">
-                        <Loader2 className="h-5 w-5 text-brand-emerald animate-spin" />
+                      <div className="absolute inset-0 bg-brand-coffee/80 flex items-center justify-center">
+                        <Loader2 className="h-5 w-5 text-brand-orange animate-spin" />
                       </div>
                     )}
                   </div>
@@ -310,8 +310,8 @@ export default function TeacherProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="border border-brand-border bg-white shadow-xs">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-                  <User className="h-4 w-4 text-brand-emerald" />
+                <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                  <User className="h-4 w-4 text-brand-orange" />
                   <span>Contact & Timezone</span>
                 </CardTitle>
               </CardHeader>
@@ -320,14 +320,14 @@ export default function TeacherProfilePage() {
                   <span className="text-brand-slate flex items-center gap-1.5">
                     <Mail className="h-3.5 w-3.5" /> Work Email
                   </span>
-                  <span className="font-semibold text-brand-navy">{user.email}</span>
+                  <span className="font-semibold text-brand-coffee dark:text-stone-100">{user.email}</span>
                 </div>
 
                 <div className="flex items-center justify-between py-2 border-b border-brand-border/60 text-xs">
                   <span className="text-brand-slate flex items-center gap-1.5">
                     <Phone className="h-3.5 w-3.5" /> Phone Number
                   </span>
-                  <span className="font-semibold text-brand-navy">
+                  <span className="font-semibold text-brand-coffee dark:text-stone-100">
                     {user.profile?.phoneNumber || 'Not provided'}
                   </span>
                 </div>
@@ -336,7 +336,7 @@ export default function TeacherProfilePage() {
                   <span className="text-brand-slate flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5" /> Timezone
                   </span>
-                  <span className="font-semibold text-brand-navy">
+                  <span className="font-semibold text-brand-coffee dark:text-stone-100">
                     {user.profile?.timezone || 'Africa/Addis_Ababa'}
                   </span>
                 </div>
@@ -345,7 +345,7 @@ export default function TeacherProfilePage() {
                   <span className="text-brand-slate flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5" /> Educator Since
                   </span>
-                  <span className="font-semibold text-brand-navy">
+                  <span className="font-semibold text-brand-coffee dark:text-stone-100">
                     {new Date(user.createdAt).toLocaleDateString(undefined, {
                       year: 'numeric',
                       month: 'long',
@@ -358,8 +358,8 @@ export default function TeacherProfilePage() {
 
             <Card className="border border-brand-border bg-white shadow-xs">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-                  <Building className="h-4 w-4 text-brand-emerald" />
+                <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                  <Building className="h-4 w-4 text-brand-orange" />
                   <span>University & Institutional Faculty</span>
                 </CardTitle>
               </CardHeader>
@@ -372,11 +372,11 @@ export default function TeacherProfilePage() {
                         className="p-3.5 rounded-xl border border-brand-border bg-slate-50 flex items-center justify-between"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-brand-emerald/10 text-brand-emerald flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange flex items-center justify-center">
                             <GraduationCap className="h-4 w-4" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-xs text-brand-navy">
+                            <h4 className="font-bold text-xs text-brand-coffee dark:text-stone-100">
                               {membership.institution.name}
                             </h4>
                             <span className="text-[10px] text-brand-slate">
@@ -384,7 +384,7 @@ export default function TeacherProfilePage() {
                             </span>
                           </div>
                         </div>
-                        <Badge variant="emerald" className="text-[10px]">
+                        <Badge variant="orange" className="text-[10px]">
                           Verified
                         </Badge>
                       </div>
@@ -392,7 +392,7 @@ export default function TeacherProfilePage() {
                   </div>
                 ) : (
                   <div className="py-6 text-center text-xs text-brand-slate space-y-1">
-                    <p className="font-bold text-brand-navy">Independent Course Author</p>
+                    <p className="font-bold text-brand-coffee dark:text-stone-100">Independent Course Author</p>
                     <p>Accredited for open public curricula delivery on EduVerse Academy.</p>
                   </div>
                 )}
@@ -414,9 +414,9 @@ export default function TeacherProfilePage() {
         <div className="space-y-4 my-2">
           {/* Avatar Photo Section */}
           <div className="space-y-2 p-3 rounded-lg border border-brand-border bg-slate-50">
-            <Label className="text-xs font-semibold text-brand-navy block">Profile Photo</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100 block">Profile Photo</Label>
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl border-2 border-white bg-brand-emerald text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+              <div className="w-16 h-16 rounded-xl border-2 border-white bg-brand-orange text-white font-extrabold text-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
                 ) : (
@@ -432,7 +432,7 @@ export default function TeacherProfilePage() {
                     onClick={() => modalFileInputRef.current?.click()}
                     className="h-8 text-xs gap-1.5 bg-white"
                   >
-                    <Upload className="h-3.5 w-3.5 text-brand-emerald" />
+                    <Upload className="h-3.5 w-3.5 text-brand-orange" />
                     <span>Upload New Photo</span>
                   </Button>
                   {avatarUrl && (
@@ -461,7 +461,7 @@ export default function TeacherProfilePage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-brand-navy">Full Name</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Full Name</Label>
             <Input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -471,7 +471,7 @@ export default function TeacherProfilePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">Phone Number</Label>
+              <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Phone Number</Label>
               <Input
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -481,7 +481,7 @@ export default function TeacherProfilePage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">Timezone</Label>
+              <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Timezone</Label>
               <Input
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
@@ -492,7 +492,7 @@ export default function TeacherProfilePage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-brand-navy">Academic Biography</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Academic Biography</Label>
             <Textarea
               rows={4}
               value={bio}
@@ -507,7 +507,7 @@ export default function TeacherProfilePage() {
               Cancel
             </Button>
             <Button
-              variant="emerald"
+              variant="orange"
               size="sm"
               onClick={() => updateProfileMutation.mutate()}
               disabled={updateProfileMutation.isPending || !fullName.trim()}

@@ -15,13 +15,13 @@ export default function PricingPage() {
     <div className="container mx-auto px-4 sm:px-6 py-12 space-y-16 pb-24">
       {/* Header */}
       <div className="max-w-3xl mx-auto text-center space-y-4">
-        <Badge variant="secondary" className="bg-brand-mint text-brand-emerald">
+        <Badge variant="secondary" className="bg-orange-50 text-brand-orange border border-orange-200">
           Simple, Local Currency Pricing
         </Badge>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-brand-navy">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
           Invest in Your Future with Predictable Rates
         </h1>
-        <p className="text-sm sm:text-base text-brand-slate leading-relaxed">
+        <p className="text-sm sm:text-base text-brand-slate dark:text-stone-400 leading-relaxed">
           No foreign exchange credit cards required. Pay directly using Telebirr, CBE Birr, or local bank transfer.
         </p>
       </div>
@@ -29,37 +29,37 @@ export default function PricingPage() {
       {/* Pricing Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
         {/* Tier 1: Free */}
-        <Card className="border-brand-border flex flex-col justify-between">
+        <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between">
           <CardHeader className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-slate">Community</span>
-            <CardTitle className="text-2xl font-bold text-brand-navy">Free Audit</CardTitle>
-            <CardDescription className="text-xs text-brand-slate">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-slate dark:text-stone-400">Community</span>
+            <CardTitle className="text-2xl font-bold text-brand-coffee dark:text-stone-100">Free Audit</CardTitle>
+            <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
               Essential learning access for independent learners exploring new subjects.
             </CardDescription>
             <div className="pt-4">
-              <span className="text-4xl font-extrabold text-brand-navy">0 ETB</span>
-              <span className="text-xs text-brand-slate"> / forever</span>
+              <span className="text-4xl font-extrabold text-brand-coffee dark:text-stone-100">0 ETB</span>
+              <span className="text-xs text-brand-slate dark:text-stone-400"> / forever</span>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-3 text-xs text-brand-slate pt-2">
+          <CardContent className="space-y-3 text-xs text-brand-slate dark:text-stone-400 pt-2">
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Access to all public lecture videos & transcripts</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Interactive multiple-choice practice quizzes</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Community peer-to-peer discussion forums</span>
             </div>
-            <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-stone-400">
               <span className="h-4 w-4 text-center">—</span>
               <span>No verified digital completion certificates</span>
             </div>
-            <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-stone-400">
               <span className="h-4 w-4 text-center">—</span>
               <span>No instructor code reviews or graded projects</span>
             </div>
@@ -75,56 +75,56 @@ export default function PricingPage() {
         </Card>
 
         {/* Tier 2: Student Pro (Highlighted) */}
-        <Card className="border-2 border-brand-emerald bg-white shadow-xl flex flex-col justify-between relative">
+        <Card className="border-2 border-brand-orange bg-white dark:bg-stone-900 shadow-xl flex flex-col justify-between relative">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <Badge variant="emerald" className="bg-brand-emerald text-white px-3 py-1 shadow-sm font-semibold">
+            <Badge variant="orange" className="bg-brand-orange text-white px-3 py-1 shadow-sm font-semibold">
               Most Popular in Ethiopia
             </Badge>
           </div>
 
           <CardHeader className="space-y-2 pt-8">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">Student Pro</span>
-            <CardTitle className="text-2xl font-bold text-brand-navy">All-Access Pass</CardTitle>
-            <CardDescription className="text-xs text-brand-slate">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">Student Pro</span>
+            <CardTitle className="text-2xl font-bold text-brand-coffee dark:text-stone-100">All-Access Pass</CardTitle>
+            <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
               Comprehensive career preparation with verified credentials and tutor feedback.
             </CardDescription>
             <div className="pt-4">
               <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold text-brand-navy">450 ETB</span>
-                <span className="text-xs text-brand-slate"> / month</span>
+                <span className="text-4xl font-extrabold text-brand-coffee dark:text-stone-100">450 ETB</span>
+                <span className="text-xs text-brand-slate dark:text-stone-400"> / month</span>
               </div>
-              <span className="text-[11px] text-brand-emerald font-semibold block mt-0.5">
+              <span className="text-[11px] text-brand-orange font-semibold block mt-0.5">
                 or 4,200 ETB / year (Save 22%)
               </span>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-3 text-xs text-brand-slate pt-2">
+          <CardContent className="space-y-3 text-xs text-brand-slate dark:text-stone-400 pt-2">
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Full access to all courses, modules & assignments</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span><strong>Tamper-proof verifiable digital certificate</strong></span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Downloadable offline PDFs and audio study notes</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Instructor code grading and assessment feedback</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Priority access to faculty Q&A office hours</span>
             </div>
           </CardContent>
 
           <CardFooter className="pt-4">
             <Link href="/register" className="w-full">
-              <Button variant="emerald" size="lg" className="w-full font-bold shadow-sm">
+              <Button variant="orange" size="lg" className="w-full font-bold shadow-sm">
                 Start Pro Membership
               </Button>
             </Link>
@@ -132,38 +132,38 @@ export default function PricingPage() {
         </Card>
 
         {/* Tier 3: Institution Enterprise */}
-        <Card className="border-brand-border flex flex-col justify-between">
+        <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between">
           <CardHeader className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-slate">Institutions</span>
-            <CardTitle className="text-2xl font-bold text-brand-navy">University & School</CardTitle>
-            <CardDescription className="text-xs text-brand-slate">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-slate dark:text-stone-400">Institutions</span>
+            <CardTitle className="text-2xl font-bold text-brand-coffee dark:text-stone-100">University & School</CardTitle>
+            <CardDescription className="text-xs text-brand-slate dark:text-stone-400">
               Turnkey SaaS infrastructure for universities, colleges, and training institutes.
             </CardDescription>
             <div className="pt-4">
-              <span className="text-4xl font-extrabold text-brand-navy">Custom</span>
-              <span className="text-xs text-brand-slate"> / institutional billing</span>
+              <span className="text-4xl font-extrabold text-brand-coffee dark:text-stone-100">Custom</span>
+              <span className="text-xs text-brand-slate dark:text-stone-400"> / institutional billing</span>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-3 text-xs text-brand-slate pt-2">
+          <CardContent className="space-y-3 text-xs text-brand-slate dark:text-stone-400 pt-2">
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Dedicated multi-tenant university portal</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Faculty role management & departmental hierarchies</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Automated exam proctoring & gradebook exports</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Institutional certificates co-signed by University Dean</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-brand-emerald shrink-0" />
+              <Check className="h-4 w-4 text-brand-orange shrink-0" />
               <span>Dedicated account manager and technical SLA</span>
             </div>
           </CardContent>
@@ -179,19 +179,19 @@ export default function PricingPage() {
       </div>
 
       {/* Payment Methods Banner */}
-      <div className="rounded-xl border border-brand-border bg-slate-50 p-6 max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div className="rounded-xl border border-brand-border dark:border-stone-800 bg-brand-creamy/50 dark:bg-stone-900/60 p-6 max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-brand-emerald shrink-0">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-brand-orange dark:bg-orange-950/60 dark:text-orange-400 shrink-0">
             <CreditCard className="h-5 w-5" />
           </div>
           <div>
-            <h4 className="font-bold text-brand-navy text-sm">Domestic Ethiopian Payment Options</h4>
-            <p className="text-xs text-brand-slate">Supported via Telebirr, CBE Birr, Awash Bank, and Telebirr SuperApp.</p>
+            <h4 className="font-bold text-brand-coffee dark:text-stone-100 text-sm">Domestic Ethiopian Payment Options</h4>
+            <p className="text-xs text-brand-slate dark:text-stone-400">Supported via Telebirr, CBE Birr, Awash Bank, and Telebirr SuperApp.</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-brand-navy">
-          <span className="bg-white px-3 py-1.5 rounded border border-brand-border shadow-2xs">telebirr</span>
-          <span className="bg-white px-3 py-1.5 rounded border border-brand-border shadow-2xs">CBE Birr</span>
+        <div className="flex items-center gap-2 text-xs font-semibold text-brand-coffee dark:text-stone-100">
+          <span className="bg-white dark:bg-stone-800 px-3 py-1.5 rounded border border-brand-border dark:border-stone-700 shadow-2xs">telebirr</span>
+          <span className="bg-white dark:bg-stone-800 px-3 py-1.5 rounded border border-brand-border dark:border-stone-700 shadow-2xs">CBE Birr</span>
         </div>
       </div>
     </div>

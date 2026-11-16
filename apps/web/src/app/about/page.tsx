@@ -17,13 +17,13 @@ export default function AboutPage() {
       {/* 1. HERO */}
       <section className="container mx-auto px-4 sm:px-6">
         <div className="max-w-3xl mx-auto text-center space-y-4">
-          <Badge variant="secondary" className="bg-brand-mint text-brand-emerald">
+          <Badge variant="secondary" className="bg-orange-50 text-brand-orange border border-orange-200">
             Our Purpose & Vision
           </Badge>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-brand-navy">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
             Building Ethiopia’s Premier Learning Infrastructure
           </h1>
-          <p className="text-base sm:text-lg text-brand-slate leading-relaxed">
+          <p className="text-base sm:text-lg text-brand-slate dark:text-stone-400 leading-relaxed">
             EduVerse was founded to remove systemic barriers to structured higher and vocational education — bridging geographic isolation, unstable connectivity, and foreign exchange hurdles.
           </p>
         </div>
@@ -33,46 +33,46 @@ export default function AboutPage() {
       <section className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-5">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
               The Ethiopian Reality
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
               Why Traditional E-Learning Failed in Ethiopia
             </h2>
-            <p className="text-sm text-brand-slate leading-relaxed">
+            <p className="text-sm text-brand-slate dark:text-stone-400 leading-relaxed">
               Western online education platforms assume ubiquitous fiber broadband, USD credit cards, and continuous high-speed video streaming. In Ethiopia, students frequently contend with 3G mobile data packages, periodic connectivity interruptions, and lack of international payment options.
             </p>
-            <p className="text-sm text-brand-slate leading-relaxed">
+            <p className="text-sm text-brand-slate dark:text-stone-400 leading-relaxed">
               EduVerse replaces heavy 4K video dependency with structured hybrid coursework: lightweight audio summaries, offline-cacheable reading modules, synchronized markdown lessons, and low-bitrate adaptive streams.
             </p>
             <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="rounded-lg border border-brand-border p-4 bg-white">
-                <div className="text-2xl font-bold text-brand-emerald">&lt; 5 MB</div>
-                <div className="text-xs text-brand-slate mt-1">Average lesson bandwidth cost</div>
+              <div className="rounded-lg border border-brand-border dark:border-stone-800 p-4 bg-white dark:bg-stone-900">
+                <div className="text-2xl font-bold text-brand-orange">&lt; 5 MB</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 mt-1">Average lesson bandwidth cost</div>
               </div>
-              <div className="rounded-lg border border-brand-border p-4 bg-white">
-                <div className="text-2xl font-bold text-brand-navy">0 USD</div>
-                <div className="text-xs text-brand-slate mt-1">100% domestic Birr checkout</div>
+              <div className="rounded-lg border border-brand-border dark:border-stone-800 p-4 bg-white dark:bg-stone-900">
+                <div className="text-2xl font-bold text-brand-coffee dark:text-stone-100">0 USD</div>
+                <div className="text-xs text-brand-slate dark:text-stone-400 mt-1">100% domestic Birr checkout</div>
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 dark:bg-slate-900 p-8 text-white space-y-6 shadow-md">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-emerald text-white">
+          <div className="rounded-2xl border border-stone-800 bg-brand-coffee dark:bg-stone-900 p-8 text-white space-y-6 shadow-md">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-orange text-white">
               <Target className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold text-white">Our Triad Mission</h3>
-            <ul className="space-y-4 text-sm text-slate-300">
+            <ul className="space-y-4 text-sm text-stone-300">
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <span><strong>Access:</strong> Deliver university-grade knowledge to every region of Ethiopia, from Addis Ababa to rural vocational centers.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <span><strong>Academic Integrity:</strong> Partner with tenured faculty and accredited institutions to safeguard educational rigor.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-brand-emerald shrink-0 mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-brand-orange shrink-0 mt-0.5" />
                 <span><strong>Verifiable Outcomes:</strong> Provide graduates with cryptographically tamper-proof certificates that employers can audit in seconds.</span>
               </li>
             </ul>
@@ -81,49 +81,49 @@ export default function AboutPage() {
       </section>
 
       {/* 3. CORE VALUES */}
-      <section className="bg-white border-y border-brand-border py-16">
+      <section className="bg-white dark:bg-stone-900 border-y border-brand-border dark:border-stone-800 py-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
               Core Principles
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
               What Drives Our Engineering
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="border-brand-border">
+            <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900">
               <CardContent className="p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-brand-emerald">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-brand-orange dark:bg-orange-950/60 dark:text-orange-400">
                   <Zap className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-brand-navy text-base">Pragmatic Engineering</h3>
-                <p className="text-xs text-brand-slate leading-relaxed">
+                <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Pragmatic Engineering</h3>
+                <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                   We don’t build for ideal conditions; we build for real networks. Every screen, payload, and query is profiled for maximum speed and minimal payload weight.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-brand-border">
+            <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900">
               <CardContent className="p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-brand-navy text-base">Trust & Cryptography</h3>
-                <p className="text-xs text-brand-slate leading-relaxed">
+                <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Trust & Cryptography</h3>
+                <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                   Certificate fraud harms genuine graduates. Every credential issued by EduVerse carries an immutable SHA-256 hash and verifiable public landing record.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-brand-border">
+            <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900">
               <CardContent className="p-6 space-y-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
                   <Users className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-brand-navy text-base">Teacher Empowerment</h3>
-                <p className="text-xs text-brand-slate leading-relaxed">
+                <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-base">Teacher Empowerment</h3>
+                <p className="text-xs text-brand-slate dark:text-stone-400 leading-relaxed">
                   Educators deserve intuitive curriculum builders, automated quiz evaluations, and transparent revenue share without administrative friction.
                 </p>
               </CardContent>
@@ -135,15 +135,15 @@ export default function AboutPage() {
       {/* 4. CALL TO ACTION */}
       <section className="container mx-auto px-4 sm:px-6 text-center">
         <div className="max-w-xl mx-auto space-y-5">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Be Part of Ethiopia's Educational Revolution
           </h2>
-          <p className="text-sm text-brand-slate">
+          <p className="text-sm text-brand-slate dark:text-stone-400">
             Whether you are a student seeking practical engineering skills, an instructor wanting to reach thousands, or an institution seeking digital transformation.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/courses">
-              <Button variant="emerald">Browse Courses</Button>
+              <Button variant="orange">Browse Courses</Button>
             </Link>
             <Link href="/contact">
               <Button variant="outline">Contact Our Team</Button>

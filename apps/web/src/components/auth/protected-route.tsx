@@ -19,7 +19,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
         <div className="relative flex h-10 w-10 items-center justify-center">
-          <div className="absolute h-10 w-10 rounded-full border-4 border-brand-mint border-t-brand-emerald animate-spin" />
+          <div className="absolute h-10 w-10 rounded-full border-4 border-orange-100 border-t-brand-orange animate-spin" />
         </div>
         <p className="text-xs font-semibold text-brand-slate uppercase tracking-wider animate-pulse">
           Verifying security session...

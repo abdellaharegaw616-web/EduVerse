@@ -12,11 +12,11 @@ export default function TermsPage() {
     <div className="container mx-auto px-4 sm:px-6 py-12 max-w-4xl space-y-10 pb-24">
       {/* Header */}
       <div className="space-y-3 border-b border-brand-border pb-6">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-emerald mb-2">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-orange mb-2">
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>Return Home</span>
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
           Terms of Service & Academic Honor Code
         </h1>
         <p className="text-xs text-brand-slate">
@@ -27,7 +27,7 @@ export default function TermsPage() {
       {/* Content */}
       <div className="space-y-8 text-sm text-brand-slate leading-relaxed">
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             1. Acceptance of Terms
           </h2>
           <p>
@@ -36,7 +36,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy flex items-center gap-2">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-amber-600" />
             2. Academic Honor Code & Integrity
           </h2>
@@ -52,7 +52,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             3. Account Governance & Security
           </h2>
           <p>
@@ -61,7 +61,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             4. Tuition, Domestic Billing & Refunds
           </h2>
           <p>
@@ -70,7 +70,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             5. Intellectual Property
           </h2>
           <p>
@@ -79,7 +79,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             6. Governing Law & Dispute Resolution
           </h2>
           <p>

@@ -118,8 +118,8 @@ export default function TeacherAssignmentsPage() {
       </div>
 
       {savedSuccess && (
-        <Alert variant="default" className="bg-emerald-50 border-emerald-200 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+        <Alert variant="default" className="bg-orange-50 border-orange-200 text-orange-950">
+          <CheckCircle2 className="h-4 w-4 text-brand-orange" />
           <AlertTitle>Saved</AlertTitle>
           <AlertDescription className="text-xs">{savedSuccess}</AlertDescription>
         </Alert>
@@ -128,14 +128,14 @@ export default function TeacherAssignmentsPage() {
       {/* Target Lesson Selector */}
       <Card className="border border-brand-border bg-white shadow-xs">
         <CardContent className="p-4 flex flex-col sm:flex-row items-center gap-4">
-          <Label htmlFor="lessonSelect" className="text-xs font-semibold text-brand-navy whitespace-nowrap">
+          <Label htmlFor="lessonSelect" className="text-xs font-semibold text-brand-coffee dark:text-stone-100 whitespace-nowrap">
             Target Lesson:
           </Label>
           <select
             id="lessonSelect"
             value={activeLessonId || ''}
             onChange={(e) => setSelectedLessonId(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-navy shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald"
+            className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-coffee dark:text-stone-100 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             {allLessons.map((l: any) => (
               <option key={l.id} value={l.id}>
@@ -152,7 +152,7 @@ export default function TeacherAssignmentsPage() {
       ) : (
         <Card className="border border-brand-border bg-white shadow-xs">
           <CardHeader>
-            <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
+            <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
               <FileCheck2 className="h-4 w-4 text-amber-600" />
               <span>
                 {lessonData?.assignment ? 'Edit Assignment Prompt' : 'Create Assignment for Lesson'}
@@ -165,7 +165,7 @@ export default function TeacherAssignmentsPage() {
 
           <CardContent className="space-y-5">
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">Assignment Title</Label>
+              <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Assignment Title</Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -176,8 +176,8 @@ export default function TeacherAssignmentsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-brand-navy flex items-center gap-1.5">
-                  <Award className="h-3.5 w-3.5 text-brand-emerald" />
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100 flex items-center gap-1.5">
+                  <Award className="h-3.5 w-3.5 text-brand-orange" />
                   <span>Maximum Score (Points)</span>
                 </Label>
                 <Input
@@ -191,7 +191,7 @@ export default function TeacherAssignmentsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-brand-navy flex items-center gap-1.5">
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100 flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5 text-brand-slate" />
                   <span>Submission Deadline (Optional)</span>
                 </Label>
@@ -205,7 +205,7 @@ export default function TeacherAssignmentsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">
+              <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                 Instructions & Rubric (Markdown Supported)
               </Label>
               <Textarea
@@ -219,7 +219,7 @@ export default function TeacherAssignmentsPage() {
 
             <div className="pt-2 flex justify-end">
               <Button
-                variant="emerald"
+                variant="orange"
                 size="sm"
                 onClick={() => upsertMutation.mutate()}
                 disabled={!title.trim() || !instructions.trim() || upsertMutation.isPending}

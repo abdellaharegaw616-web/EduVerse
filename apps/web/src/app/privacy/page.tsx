@@ -11,24 +11,24 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 py-12 max-w-4xl space-y-10 pb-24">
       {/* Header */}
-      <div className="space-y-3 border-b border-brand-border pb-6">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-emerald mb-2">
+      <div className="space-y-3 border-b border-brand-border dark:border-stone-800 pb-6">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-orange mb-2">
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>Return Home</span>
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-coffee dark:text-stone-100">
           EduVerse Privacy Policy
         </h1>
-        <p className="text-xs text-brand-slate">
+        <p className="text-xs text-brand-slate dark:text-stone-400">
           Last Updated: November 2, 2026 • Effective Date: January 1, 2026
         </p>
       </div>
 
       {/* Content */}
-      <div className="space-y-8 text-sm text-brand-slate leading-relaxed">
+      <div className="space-y-8 text-sm text-brand-slate dark:text-stone-400 leading-relaxed">
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-brand-emerald" />
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-brand-orange" />
             1. Commitment to Student Privacy & Educational Integrity
           </h2>
           <p>
@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             2. Information We Collect
           </h2>
           <p>
@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             3. How We Utilize Your Data
           </h2>
           <p>Your information is utilized solely to:</p>
@@ -64,7 +64,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             4. Domestic Payments & Financial Privacy
           </h2>
           <p>
@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             5. Data Protection & Security Controls
           </h2>
           <p>
@@ -88,14 +88,14 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-brand-navy">
+          <h2 className="text-lg font-bold text-brand-coffee dark:text-stone-100">
             6. Inquiries & Data Privacy Officer
           </h2>
           <p>
             If you have questions regarding your educational data, wish to request a data export, or request account deletion, contact our Data Protection Officer at:
           </p>
-          <div className="rounded-lg border border-brand-border bg-slate-50 p-4 text-xs">
-            <strong className="text-brand-navy block">EduVerse Legal & Compliance Team</strong>
+          <div className="rounded-lg border border-brand-border dark:border-stone-800 bg-brand-creamy/40 dark:bg-stone-800/40 p-4 text-xs">
+            <strong className="text-brand-coffee dark:text-stone-100 block">EduVerse Legal & Compliance Team</strong>
             <span>Bole Sub-City, Addis Ababa, Ethiopia</span>
             <br />
             <span>Email: privacy@eduverse.et</span>

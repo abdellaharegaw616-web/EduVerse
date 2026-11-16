@@ -217,8 +217,8 @@ export default function LessonEditorPage() {
       </div>
 
       {savedSuccess && (
-        <Alert variant="default" className="bg-emerald-50 border-emerald-200 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4 text-brand-emerald" />
+        <Alert variant="default" className="bg-orange-50 border-orange-200 text-orange-950">
+          <CheckCircle2 className="h-4 w-4 text-brand-orange" />
           <AlertTitle>Lesson Saved</AlertTitle>
           <AlertDescription className="text-xs">{savedSuccess}</AlertDescription>
         </Alert>
@@ -233,8 +233,8 @@ export default function LessonEditorPage() {
         <div className="space-y-6">
           <Card className="border border-brand-border bg-white shadow-xs">
             <CardHeader className="border-b border-brand-border/60 pb-4">
-              <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-                <FileText className="h-4 w-4 text-brand-emerald" />
+              <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-brand-orange" />
                 <span>Lesson Details & Media</span>
               </CardTitle>
               <CardDescription className="text-xs text-brand-slate">
@@ -245,7 +245,7 @@ export default function LessonEditorPage() {
             <CardContent className="p-6">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="space-y-1.5">
-                  <Label htmlFor="title" className="text-xs font-semibold text-brand-navy">
+                  <Label htmlFor="title" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                     Lesson Title <span className="text-red-500">*</span>
                   </Label>
                   <Input id="title" {...register('title')} className="text-xs h-10" />
@@ -257,13 +257,13 @@ export default function LessonEditorPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Lesson Type */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="type" className="text-xs font-semibold text-brand-navy">
+                    <Label htmlFor="type" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                       Lesson Format / Type
                     </Label>
                     <select
                       id="type"
                       {...register('type')}
-                      className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                      className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                     >
                       <option value="VIDEO">Video Lecture</option>
                       <option value="TEXT">Text & Reading Notes</option>
@@ -275,8 +275,8 @@ export default function LessonEditorPage() {
 
                   {/* Estimated Duration */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="durationMinutes" className="text-xs font-semibold text-brand-navy flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-brand-emerald" />
+                    <Label htmlFor="durationMinutes" className="text-xs font-semibold text-brand-coffee dark:text-stone-100 flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 text-brand-orange" />
                       <span>Duration (Minutes)</span>
                     </Label>
                     <Input
@@ -295,9 +295,9 @@ export default function LessonEditorPage() {
                       <input
                         type="checkbox"
                         {...register('isFreePreview')}
-                        className="h-4 w-4 rounded border-brand-border text-brand-emerald focus:ring-brand-emerald"
+                        className="h-4 w-4 rounded border-brand-border text-brand-orange focus:ring-brand-orange"
                       />
-                      <span className="text-xs font-semibold text-brand-navy">
+                      <span className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                         Free Public Preview
                       </span>
                     </label>
@@ -365,8 +365,8 @@ export default function LessonEditorPage() {
           <Card className="border border-brand-border bg-white shadow-xs">
             <CardHeader className="border-b border-brand-border/60 pb-4 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-                  <Download className="h-4 w-4 text-brand-emerald" />
+                <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                  <Download className="h-4 w-4 text-brand-orange" />
                   <span>Lesson Resources & Supplementary Files</span>
                 </CardTitle>
                 <CardDescription className="text-xs text-brand-slate">
@@ -398,9 +398,9 @@ export default function LessonEditorPage() {
                       className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Download className="h-4 w-4 text-brand-emerald" />
+                        <Download className="h-4 w-4 text-brand-orange" />
                         <div>
-                          <h4 className="text-xs font-bold text-brand-navy">{res.title}</h4>
+                          <h4 className="text-xs font-bold text-brand-coffee dark:text-stone-100">{res.title}</h4>
                           <div className="flex items-center gap-2 text-[10px] text-brand-slate">
                             <Badge variant="secondary" className="text-[9px] py-0 px-1.5">
                               {res.fileType}
@@ -409,7 +409,7 @@ export default function LessonEditorPage() {
                               href={res.fileUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-brand-emerald hover:underline flex items-center gap-0.5 truncate max-w-xs"
+                              className="text-brand-orange hover:underline flex items-center gap-0.5 truncate max-w-xs"
                             >
                               <span>{res.fileUrl}</span>
                               <ExternalLink className="h-2.5 w-2.5" />
@@ -454,7 +454,7 @@ export default function LessonEditorPage() {
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-brand-navy">Resource Title</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Resource Title</Label>
             <Input
               value={resourceTitle}
               onChange={(e) => setResourceTitle(e.target.value)}
@@ -464,7 +464,7 @@ export default function LessonEditorPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-brand-navy">Resource URL</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Resource URL</Label>
             <Input
               type="url"
               value={resourceFileUrl}
@@ -475,11 +475,11 @@ export default function LessonEditorPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-brand-navy">Resource Type</Label>
+            <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-100">Resource Type</Label>
             <select
               value={resourceFileType}
               onChange={(e) => setResourceFileType(e.target.value)}
-              className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+              className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
             >
               <option value="PDF">PDF Document</option>
               <option value="EXTERNAL_LINK">External Documentation / Lab</option>

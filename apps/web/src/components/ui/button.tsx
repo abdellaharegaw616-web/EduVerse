@@ -18,11 +18,11 @@ const buttonVariants = cva(
         destructive:
           'bg-red-600 text-white hover:bg-red-700 active:scale-[0.98] dark:bg-red-700 dark:hover:bg-red-600 shadow-xs',
         outline:
-          'border border-brand-border bg-white text-brand-coffee hover:bg-brand-mint hover:text-brand-coffee active:scale-[0.98] dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800 dark:hover:text-white',
+          'border border-brand-border bg-white text-brand-coffee hover:bg-orange-50 hover:text-brand-coffee active:scale-[0.98] dark:bg-stone-900 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-800 dark:hover:text-white',
         secondary:
-          'bg-brand-mint text-brand-orange hover:bg-brand-mint/80 active:scale-[0.98] dark:bg-orange-950/60 dark:text-orange-400 dark:hover:bg-orange-900/60',
+          'bg-orange-50 text-brand-orange hover:bg-orange-100/80 active:scale-[0.98] dark:bg-orange-950/60 dark:text-orange-400 dark:hover:bg-orange-900/60',
         ghost:
-          'text-brand-slate hover:bg-brand-mint/60 hover:text-brand-coffee dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100',
+          'text-brand-slate hover:bg-orange-50/60 hover:text-brand-coffee dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100',
         link:
           'text-brand-orange underline-offset-4 hover:underline p-0 h-auto dark:text-orange-400',
       },

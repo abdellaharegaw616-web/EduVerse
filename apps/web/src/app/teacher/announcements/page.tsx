@@ -111,11 +111,11 @@ export default function TeacherAnnouncementsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-slate-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Cohort Communication
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-white flex items-center gap-2.5">
-            <Megaphone className="h-7 w-7 text-brand-emerald" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-white flex items-center gap-2.5">
+            <Megaphone className="h-7 w-7 text-brand-orange" />
             <span>Course Announcements</span>
           </h1>
           <p className="text-xs text-brand-slate dark:text-slate-400 mt-0.5">
@@ -147,7 +147,7 @@ export default function TeacherAnnouncementsPage() {
       {/* Composer Card */}
       <Card className="border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
         <CardHeader className="pb-3 border-b border-brand-border/60 dark:border-slate-800">
-          <CardTitle className="text-base font-bold text-brand-navy dark:text-white">
+          <CardTitle className="text-base font-bold text-brand-coffee dark:text-white">
             Publish New Course Notice
           </CardTitle>
         </CardHeader>
@@ -159,14 +159,14 @@ export default function TeacherAnnouncementsPage() {
           ) : (
             <form onSubmit={handlePublish} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="annCourse" className="text-xs font-semibold text-brand-navy dark:text-slate-200">
+                <Label htmlFor="annCourse" className="text-xs font-semibold text-brand-coffee dark:text-slate-200">
                   Target Course
                 </Label>
                 <select
                   id="annCourse"
                   value={activeCourseId}
                   onChange={(e) => setCourseId(e.target.value)}
-                  className="flex h-9 w-full rounded-md border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-3 text-xs text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+                  className="flex h-9 w-full rounded-md border border-brand-border dark:border-slate-700 bg-white dark:bg-slate-800 px-3 text-xs text-brand-coffee dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-orange"
                 >
                   {courses.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -177,7 +177,7 @@ export default function TeacherAnnouncementsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="annTitle" className="text-xs font-semibold text-brand-navy dark:text-slate-200">
+                <Label htmlFor="annTitle" className="text-xs font-semibold text-brand-coffee dark:text-slate-200">
                   Announcement Headline
                 </Label>
                 <Input
@@ -191,7 +191,7 @@ export default function TeacherAnnouncementsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="annContent" className="text-xs font-semibold text-brand-navy dark:text-slate-200">
+                <Label htmlFor="annContent" className="text-xs font-semibold text-brand-coffee dark:text-slate-200">
                   Message Content
                 </Label>
                 <Textarea
@@ -208,7 +208,7 @@ export default function TeacherAnnouncementsPage() {
               <div className="flex justify-end">
                 <Button
                   type="submit"
-                  variant="emerald"
+                  variant="orange"
                   size="sm"
                   disabled={publishMutation.isPending || title.trim().length < 3 || content.trim().length < 5}
                   className="text-xs gap-1.5"
@@ -228,7 +228,7 @@ export default function TeacherAnnouncementsPage() {
 
       {/* Published History */}
       <div className="space-y-3">
-        <h2 className="text-base font-bold text-brand-navy dark:text-white">
+        <h2 className="text-base font-bold text-brand-coffee dark:text-white">
           Published Notices ({announcements.length})
         </h2>
 
@@ -247,7 +247,7 @@ export default function TeacherAnnouncementsPage() {
                 <CardContent className="p-4 sm:p-5 flex items-start justify-between gap-4">
                   <div className="space-y-1.5 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-sm font-bold text-brand-navy dark:text-white">
+                      <h3 className="text-sm font-bold text-brand-coffee dark:text-white">
                         {ann.title}
                       </h3>
                       {ann.course && (

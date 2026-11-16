@@ -154,7 +154,7 @@ export default function MarketplaceCoursesPage() {
       {/* Hero Header */}
       <section className="bg-slate-900 dark:bg-slate-950 border-b border-slate-800 text-white py-14 px-4 sm:px-6 relative overflow-hidden">
         <div className="container mx-auto max-w-6xl relative z-10 space-y-6 text-center">
-          <Badge className="bg-brand-emerald text-white hover:bg-brand-emerald/90 px-3 py-1 text-xs gap-1.5 inline-flex items-center">
+          <Badge className="bg-brand-orange text-white hover:bg-orange-700 px-3 py-1 text-xs gap-1.5 inline-flex items-center">
             <GraduationCap className="h-3.5 w-3.5" />
             <span>EduVerse Course Marketplace</span>
           </Badge>
@@ -205,8 +205,8 @@ export default function MarketplaceCoursesPage() {
               }}
               className={`px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors ${
                 category === 'all'
-                  ? 'bg-brand-navy text-white shadow-sm'
-                  : 'bg-slate-100 text-brand-slate hover:bg-slate-200'
+                  ? 'bg-brand-coffee text-white shadow-sm'
+                  : 'bg-stone-100 text-brand-slate hover:bg-stone-200'
               }`}
             >
               All Categories
@@ -220,8 +220,8 @@ export default function MarketplaceCoursesPage() {
                 }}
                 className={`px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors ${
                   category === cat.slug
-                    ? 'bg-brand-navy text-white shadow-sm'
-                    : 'bg-slate-100 text-brand-slate hover:bg-slate-200'
+                    ? 'bg-brand-coffee text-white shadow-sm'
+                    : 'bg-stone-100 text-brand-slate hover:bg-stone-200'
                 }`}
               >
                 {cat.name}
@@ -242,7 +242,7 @@ export default function MarketplaceCoursesPage() {
                   setDifficulty(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-coffee dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-9"
               >
                 {DIFFICULTIES.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -263,7 +263,7 @@ export default function MarketplaceCoursesPage() {
                   setLanguage(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-coffee dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-9"
               >
                 {LANGUAGES.map((l) => (
                   <option key={l.value} value={l.value}>
@@ -284,7 +284,7 @@ export default function MarketplaceCoursesPage() {
                   setSortBy(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-navy dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-emerald h-9"
+                className="w-full text-xs rounded-lg border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-brand-coffee dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-9"
               >
                 {SORT_OPTIONS.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -350,10 +350,10 @@ export default function MarketplaceCoursesPage() {
                 href={`/courses/${course.slug}`}
                 className="group block"
               >
-                <Card className="h-full overflow-hidden border border-brand-border bg-white hover:shadow-lg transition-all duration-300 hover:border-brand-emerald/50 flex flex-col justify-between">
+                <Card className="h-full overflow-hidden border border-brand-border bg-white hover:shadow-lg transition-all duration-300 hover:border-brand-orange/50 flex flex-col justify-between">
                   <div>
                     {/* Thumbnail Image Container */}
-                    <div className="relative h-44 w-full bg-slate-800 dark:bg-slate-900 overflow-hidden">
+                    <div className="relative h-44 w-full bg-stone-800 dark:bg-stone-900 overflow-hidden">
                       {course.thumbnailUrl ? (
                         <Image
                           src={course.thumbnailUrl}
@@ -363,25 +363,25 @@ export default function MarketplaceCoursesPage() {
                         />
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white/90">
-                          <GraduationCap className="h-10 w-10 text-brand-emerald mb-2" />
-                          <span className="text-xs font-semibold tracking-wide uppercase text-brand-mint">
+                          <GraduationCap className="h-10 w-10 text-brand-orange mb-2" />
+                          <span className="text-xs font-semibold tracking-wide uppercase text-brand-orange/80">
                             {course.category}
                           </span>
                         </div>
                       )}
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                        <Badge className="bg-brand-navy/90 text-white backdrop-blur-sm text-[10px] px-2 py-0.5">
+                        <Badge className="bg-brand-coffee/90 text-white backdrop-blur-sm text-[10px] px-2 py-0.5">
                           {course.category}
                         </Badge>
                         <Badge
                           variant="secondary"
-                          className="bg-white/90 text-brand-navy font-semibold text-[10px] px-2 py-0.5"
+                          className="bg-white/90 text-brand-coffee font-semibold text-[10px] px-2 py-0.5"
                         >
                           {course.difficulty}
                         </Badge>
                       </div>
                       <div className="absolute bottom-3 right-3">
-                        <Badge className="bg-brand-emerald/90 text-white text-[10px] px-2 py-0.5 flex items-center gap-1">
+                        <Badge className="bg-brand-orange text-white text-[10px] px-2 py-0.5 flex items-center gap-1">
                           <Globe2 className="h-3 w-3" />
                           <span>{course.language}</span>
                         </Badge>
@@ -391,14 +391,14 @@ export default function MarketplaceCoursesPage() {
                     <CardContent className="p-5 space-y-3">
                       {/* Author Line */}
                       <div className="flex items-center gap-2 text-xs text-brand-slate">
-                        <div className="h-6 w-6 rounded-full bg-brand-navy/10 flex items-center justify-center font-bold text-brand-navy text-[10px] shrink-0">
+                        <div className="h-6 w-6 rounded-full bg-orange-100 text-brand-orange flex items-center justify-center font-bold text-[10px] shrink-0">
                           {course.author.fullName.charAt(0)}
                         </div>
                         <span className="truncate">{course.author.fullName}</span>
                         {course.institutionName && (
                           <>
                             <span>•</span>
-                            <span className="truncate text-brand-emerald font-medium">
+                            <span className="truncate text-brand-orange font-medium">
                               {course.institutionName}
                             </span>
                           </>
@@ -406,7 +406,7 @@ export default function MarketplaceCoursesPage() {
                       </div>
 
                       {/* Course Title */}
-                      <h3 className="font-bold text-base text-brand-navy line-clamp-2 group-hover:text-brand-emerald transition-colors leading-snug">
+                      <h3 className="font-bold text-base text-brand-coffee line-clamp-2 group-hover:text-brand-orange transition-colors leading-snug">
                         {course.title}
                       </h3>
 
@@ -418,7 +418,7 @@ export default function MarketplaceCoursesPage() {
                   </div>
 
                   {/* Card Footer Telemetry */}
-                  <div className="px-5 py-3 border-t border-brand-border/60 bg-slate-50/50 flex items-center justify-between text-xs text-brand-slate">
+                  <div className="px-5 py-3 border-t border-brand-border/60 bg-stone-50/50 flex items-center justify-between text-xs text-brand-slate">
                     <div className="flex items-center gap-3">
                       <span className="flex items-center gap-1 font-semibold text-amber-500">
                         <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
@@ -434,7 +434,7 @@ export default function MarketplaceCoursesPage() {
                       </span>
                     </div>
 
-                    <span className="text-brand-emerald font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    <span className="text-brand-orange font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                       <span>View</span>
                       <ArrowRight className="h-3.5 w-3.5" />
                     </span>

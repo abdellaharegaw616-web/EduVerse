@@ -123,7 +123,7 @@ function LoginForm() {
             <Label htmlFor="password" required className="mb-0">Password</Label>
             <Link
               href="/forgot-password"
-              className="text-[11px] text-brand-emerald hover:underline"
+              className="text-[11px] text-brand-orange hover:underline"
             >
               Forgot Password?
             </Link>
@@ -140,7 +140,7 @@ function LoginForm() {
 
         <Button
           type="submit"
-          variant="emerald"
+          variant="orange"
           size="lg"
           className="w-full gap-2 font-bold mt-2"
           isLoading={isLoading}
@@ -154,7 +154,7 @@ function LoginForm() {
         Don’t have an EduVerse account yet?{' '}
         <Link
           href="/register"
-          className="text-brand-emerald font-semibold hover:underline"
+          className="text-brand-orange font-semibold hover:underline"
         >
           Create Account Free
         </Link>
@@ -174,11 +174,11 @@ export default function LoginPage() {
               alt="EduVerse Logo"
               className="h-10 w-10 object-contain rounded-xl shadow-xs"
             />
-            <span className="font-extrabold tracking-tight text-brand-navy text-2xl">
-              Edu<span className="text-brand-emerald">Verse</span>
+            <span className="font-extrabold tracking-tight text-brand-coffee dark:text-stone-100 text-2xl">
+              Edu<span className="text-brand-orange">Verse</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-brand-navy">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-coffee dark:text-stone-100">
             Sign In to Your Account
           </h1>
           <p className="text-xs text-brand-slate">

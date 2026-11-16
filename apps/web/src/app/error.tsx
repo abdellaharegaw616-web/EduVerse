@@ -22,15 +22,15 @@ export default function ErrorBoundary({
         <AlertCircle className="h-8 w-8" />
       </div>
       <div className="space-y-2 max-w-md">
-        <h2 className="text-2xl font-bold tracking-tight text-brand-navy">
+        <h2 className="text-2xl font-bold tracking-tight text-brand-coffee dark:text-stone-100">
           Something went wrong
         </h2>
-        <p className="text-sm text-brand-slate">
+        <p className="text-sm text-brand-slate dark:text-stone-400">
           {error.message || 'An unexpected error occurred while rendering this page.'}
         </p>
       </div>
       <div className="flex items-center gap-3">
-        <Button onClick={() => reset()} variant="emerald" className="gap-2">
+        <Button onClick={() => reset()} variant="orange" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           <span>Try Again</span>
         </Button>

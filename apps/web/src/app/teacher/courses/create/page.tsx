@@ -184,8 +184,8 @@ export default function CreateCoursePage() {
       {/* Optional AI Course Outline Assistant */}
       <Card className="border border-brand-border dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900 shadow-xs">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
-            <BookOpenCheck className="h-4 w-4 text-brand-emerald" />
+          <CardTitle className="text-sm font-bold text-brand-coffee dark:text-white flex items-center gap-2">
+            <BookOpenCheck className="h-4 w-4 text-brand-orange" />
             <span>AI Curriculum Outline Assistant (Optional)</span>
           </CardTitle>
           <CardDescription className="text-xs">
@@ -211,7 +211,7 @@ export default function CreateCoursePage() {
               {outlineMutation.isPending ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <BookOpenCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                <BookOpenCheck className="h-3.5 w-3.5 text-brand-orange" />
               )}
               <span>Draft Blueprint</span>
             </Button>
@@ -305,7 +305,7 @@ export default function CreateCoursePage() {
                 <select
                   id="categoryId"
                   {...register('categoryId')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="">Select Category...</option>
                   {categories?.map((cat) => (
@@ -317,13 +317,13 @@ export default function CreateCoursePage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="language" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="language" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                   Instruction Language
                 </Label>
                 <select
                   id="language"
                   {...register('language')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="English">English</option>
                   <option value="Amharic">Amharic</option>
@@ -336,13 +336,13 @@ export default function CreateCoursePage() {
             {/* Difficulty & Estimated Duration Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="difficulty" className="text-xs font-semibold text-brand-navy">
+                <Label htmlFor="difficulty" className="text-xs font-semibold text-brand-coffee dark:text-stone-100">
                   Difficulty Level
                 </Label>
                 <select
                   id="difficulty"
                   {...register('difficulty')}
-                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-emerald h-10"
+                  className="w-full text-xs rounded-md border border-brand-border bg-white px-3 py-2 text-brand-coffee dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-orange h-10"
                 >
                   <option value="BEGINNER">Beginner</option>
                   <option value="INTERMEDIATE">Intermediate</option>

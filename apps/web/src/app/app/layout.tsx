@@ -42,7 +42,7 @@ export default function StudentAppLayout({
         <div className="md:hidden fixed bottom-6 right-6 z-50">
           <button
             onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-navy dark:bg-slate-800 text-white shadow-xl hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-brand-emerald"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-coffee dark:bg-stone-800 text-white shadow-xl hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-brand-orange"
             aria-label="Toggle Navigation Drawer"
           >
             {mobileSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -53,7 +53,7 @@ export default function StudentAppLayout({
         {mobileSidebarOpen && (
           <div className="fixed inset-0 z-40 md:hidden flex animate-in fade-in duration-200">
             <div
-              className="fixed inset-0 bg-brand-navy/60 dark:bg-black/70 backdrop-blur-xs"
+              className="fixed inset-0 bg-brand-coffee/60 dark:bg-black/70 backdrop-blur-xs"
               onClick={() => setMobileSidebarOpen(false)}
               aria-hidden="true"
             />

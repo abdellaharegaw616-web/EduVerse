@@ -236,7 +236,7 @@ export default function CourseSectionsPage() {
               <CardContent className="p-4 space-y-2">
                 {/* Add Lesson Inline input for this section */}
                 {activeSectionForLesson === section.id && (
-                  <div className="p-3 bg-brand-mint/40 dark:bg-stone-800/80 rounded-lg border border-brand-orange/30 flex items-center gap-2 mb-3">
+                  <div className="p-3 bg-orange-50/50 dark:bg-stone-800/80 rounded-lg border border-brand-orange/30 flex items-center gap-2 mb-3">
                     <Input
                       placeholder="e.g. Lesson 1: Monorepo Architecture"
                       value={newLessonTitle}

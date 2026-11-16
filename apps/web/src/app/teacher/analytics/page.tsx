@@ -73,10 +73,10 @@ export default function CourseAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Cohort Analytics
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Course Performance & Funnels
           </h1>
           <p className="text-xs text-brand-slate mt-0.5">
@@ -95,14 +95,14 @@ export default function CourseAnalyticsPage() {
       {courses.length > 0 && (
         <Card className="border border-brand-border bg-white shadow-xs">
           <CardContent className="p-4 flex flex-col sm:flex-row items-center gap-3">
-            <Label htmlFor="courseSelect" className="text-xs font-semibold text-brand-navy whitespace-nowrap">
+            <Label htmlFor="courseSelect" className="text-xs font-semibold text-brand-coffee dark:text-stone-100 whitespace-nowrap">
               Select Course to Analyze:
             </Label>
             <select
               id="courseSelect"
               value={activeCourseId || ''}
               onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-navy shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald"
+              className="flex h-9 w-full rounded-md border border-brand-border bg-white px-3 py-1.5 text-xs text-brand-coffee dark:text-stone-100 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -148,7 +148,7 @@ export default function CourseAnalyticsPage() {
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold text-brand-slate block">Total Cohort</span>
-                  <span className="text-2xl font-extrabold text-brand-navy leading-none">
+                  <span className="text-2xl font-extrabold text-brand-coffee dark:text-stone-100 leading-none">
                     {analytics.totalStudents}
                   </span>
                   <span className="text-[10px] text-brand-slate mt-1 block">
@@ -160,15 +160,15 @@ export default function CourseAnalyticsPage() {
 
             <Card className="border border-brand-border bg-white shadow-xs">
               <CardContent className="p-5 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-brand-emerald flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-orange-50 text-brand-orange flex items-center justify-center shrink-0">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold text-brand-slate block">Completion Rate</span>
-                  <span className="text-2xl font-extrabold text-brand-navy leading-none">
+                  <span className="text-2xl font-extrabold text-brand-coffee dark:text-stone-100 leading-none">
                     {analytics.completionRate}%
                   </span>
-                  <span className="text-[10px] text-brand-emerald font-semibold mt-1 block">
+                  <span className="text-[10px] text-brand-orange font-semibold mt-1 block">
                     Verified certs awarded
                   </span>
                 </div>
@@ -182,7 +182,7 @@ export default function CourseAnalyticsPage() {
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold text-brand-slate block">Quiz Pass Rate</span>
-                  <span className="text-2xl font-extrabold text-brand-navy leading-none">
+                  <span className="text-2xl font-extrabold text-brand-coffee dark:text-stone-100 leading-none">
                     {analytics.quizPassRate}%
                   </span>
                   <span className="text-[10px] text-brand-slate mt-1 block">
@@ -199,7 +199,7 @@ export default function CourseAnalyticsPage() {
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold text-brand-slate block">Grading Backlog</span>
-                  <span className="text-2xl font-extrabold text-brand-navy leading-none">
+                  <span className="text-2xl font-extrabold text-brand-coffee dark:text-stone-100 leading-none">
                     {analytics.pendingSubmissions}
                   </span>
                   <span className="text-[10px] text-amber-700 font-medium mt-1 block">
@@ -213,8 +213,8 @@ export default function CourseAnalyticsPage() {
           {/* Deep-dive Breakdown Card */}
           <Card className="border border-brand-border bg-white shadow-xs">
             <CardHeader>
-              <CardTitle className="text-base font-bold text-brand-navy flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-brand-emerald" />
+              <CardTitle className="text-base font-bold text-brand-coffee dark:text-stone-100 flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-brand-orange" />
                 <span>Progression & Assessment Insights for {analytics.courseTitle}</span>
               </CardTitle>
             </CardHeader>
@@ -222,12 +222,12 @@ export default function CourseAnalyticsPage() {
               {/* Average Progress Metric */}
               <div className="space-y-2">
                 <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-brand-navy">Cohort Average Course Progress</span>
-                  <span className="text-brand-emerald font-bold">{analytics.averageProgress}%</span>
+                  <span className="text-brand-coffee dark:text-stone-100">Cohort Average Course Progress</span>
+                  <span className="text-brand-orange font-bold">{analytics.averageProgress}%</span>
                 </div>
                 <div className="h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
                   <div
-                    className="h-full bg-brand-emerald rounded-full transition-all duration-500"
+                    className="h-full bg-brand-orange rounded-full transition-all duration-500"
                     style={{ width: `${analytics.averageProgress}%` }}
                   />
                 </div>
@@ -239,7 +239,7 @@ export default function CourseAnalyticsPage() {
               {/* Assessment Health Summary */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-brand-border">
                 <div className="p-4 rounded-xl bg-slate-50 border border-brand-border space-y-1">
-                  <h4 className="font-bold text-xs text-brand-navy">Quiz Health & Diagnostics</h4>
+                  <h4 className="font-bold text-xs text-brand-coffee dark:text-stone-100">Quiz Health & Diagnostics</h4>
                   <p className="text-xs text-brand-slate">
                     Total Attempts: <strong>{analytics.totalQuizAttempts}</strong>
                   </p>
@@ -249,11 +249,11 @@ export default function CourseAnalyticsPage() {
                 </div>
 
                 <div className="p-4 rounded-xl bg-slate-50 border border-brand-border space-y-1">
-                  <h4 className="font-bold text-xs text-brand-navy">Deliverables & Coursework</h4>
+                  <h4 className="font-bold text-xs text-brand-coffee dark:text-stone-100">Deliverables & Coursework</h4>
                   <p className="text-xs text-brand-slate">
                     Pending Grading Queue: <strong>{analytics.pendingSubmissions}</strong>
                   </p>
-                  <Link href="/teacher/grading" className="inline-flex items-center gap-1 text-xs text-brand-emerald font-bold hover:underline pt-1">
+                  <Link href="/teacher/grading" className="inline-flex items-center gap-1 text-xs text-brand-orange font-bold hover:underline pt-1">
                     <span>Open Grading Queue</span>
                     <ArrowRight className="h-3 w-3" />
                   </Link>

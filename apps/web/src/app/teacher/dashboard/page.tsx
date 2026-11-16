@@ -262,7 +262,7 @@ export default function TeacherDashboardPage() {
           {/* Total Authored Courses */}
           <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-mint text-brand-orange dark:bg-orange-950/40 dark:text-orange-400 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-orange-100/80 text-brand-orange dark:bg-orange-950/40 dark:text-orange-400 flex items-center justify-center shrink-0">
                 <BookOpen className="h-6 w-6" />
               </div>
               <div>
@@ -280,7 +280,7 @@ export default function TeacherDashboardPage() {
           {/* Enrolled Students */}
           <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-mint text-brand-coffee dark:bg-stone-800 dark:text-stone-200 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-stone-100 text-brand-coffee dark:bg-stone-800 dark:text-stone-200 flex items-center justify-center shrink-0">
                 <Users className="h-6 w-6" />
               </div>
               <div>
@@ -316,7 +316,7 @@ export default function TeacherDashboardPage() {
           {/* Institutional Quality Review */}
           <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-mint text-brand-orange dark:bg-stone-800 dark:text-orange-400 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-orange-100/80 text-brand-orange dark:bg-stone-800 dark:text-orange-400 flex items-center justify-center shrink-0">
                 <TrendingUp className="h-6 w-6" />
               </div>
               <div>
@@ -335,40 +335,40 @@ export default function TeacherDashboardPage() {
 
       {/* 5-Pillar Instructor Tool Navigator */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <Link href="/teacher/courses/create" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-brand-mint/40 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-mint text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Link href="/teacher/courses/create" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-orange-50/50 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
+          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
             <PlusCircle className="h-4 w-4" />
           </div>
           <p className="text-xs font-bold text-brand-coffee dark:text-stone-100">Create Course</p>
           <p className="text-[10px] text-brand-slate dark:text-stone-400">Draft syllabus & metadata</p>
         </Link>
 
-        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-brand-mint/40 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-mint text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-orange-50/50 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
+          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
             <Layers className="h-4 w-4" />
           </div>
           <p className="text-xs font-bold text-brand-coffee dark:text-stone-100">Organize Modules</p>
           <p className="text-[10px] text-brand-slate dark:text-stone-400">Structure sections & lessons</p>
         </Link>
 
-        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-brand-mint/40 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-mint text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-orange-50/50 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
+          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
             <Video className="h-4 w-4" />
           </div>
           <p className="text-xs font-bold text-brand-coffee dark:text-stone-100">Upload Resources</p>
           <p className="text-[10px] text-brand-slate dark:text-stone-400">Video, PDF & lecture slides</p>
         </Link>
 
-        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-brand-mint/40 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-mint text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Link href="/teacher/courses" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-orange-50/50 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group">
+          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
             <HelpCircle className="h-4 w-4" />
           </div>
           <p className="text-xs font-bold text-brand-coffee dark:text-stone-100">Quizzes & Tasks</p>
           <p className="text-[10px] text-brand-slate dark:text-stone-400">Author tests & assignments</p>
         </Link>
 
-        <Link href="/teacher/grading" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-brand-mint/40 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group col-span-2 sm:col-span-1">
-          <div className="w-8 h-8 rounded-lg bg-brand-mint text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Link href="/teacher/grading" className="p-3.5 rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-brand-orange/40 hover:bg-orange-50/50 dark:hover:bg-stone-800/60 transition-all text-center space-y-1.5 group col-span-2 sm:col-span-1">
+          <div className="w-8 h-8 rounded-lg bg-orange-100/80 text-brand-orange dark:bg-stone-800 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
             <Award className="h-4 w-4" />
           </div>
           <p className="text-xs font-bold text-brand-coffee dark:text-stone-100">Review Submissions</p>
@@ -412,7 +412,7 @@ export default function TeacherDashboardPage() {
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-lg bg-brand-mint/60 dark:bg-stone-800/60 border border-brand-border dark:border-stone-800 w-fit">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-lg bg-orange-50/60 dark:bg-stone-800/60 border border-brand-border dark:border-stone-800 w-fit">
             {(['ALL', 'PUBLISHED', 'DRAFT', 'PENDING_REVIEW'] as const).map((status) => (
               <button
                 key={status}

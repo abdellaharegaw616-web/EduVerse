@@ -65,11 +65,11 @@ export default function ForgotPasswordPage() {
               alt="EduVerse Logo"
               className="h-10 w-10 object-contain rounded-xl shadow-xs"
             />
-            <span className="font-extrabold tracking-tight text-brand-navy text-2xl">
-              Edu<span className="text-brand-emerald">Verse</span>
+            <span className="font-extrabold tracking-tight text-brand-coffee dark:text-stone-100 text-2xl">
+              Edu<span className="text-brand-orange">Verse</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-brand-navy">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-coffee dark:text-stone-100">
             Forgot Your Password?
           </h1>
           <p className="text-xs text-brand-slate">
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
 
             <Button
               type="submit"
-              variant="emerald"
+              variant="orange"
               size="lg"
               className="w-full gap-2 font-bold mt-2"
               isLoading={isLoading}
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
           <div className="pt-4 border-t border-brand-border text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-emerald font-medium"
+              className="inline-flex items-center gap-1.5 text-xs text-brand-slate hover:text-brand-orange font-medium"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Return to Sign In</span>

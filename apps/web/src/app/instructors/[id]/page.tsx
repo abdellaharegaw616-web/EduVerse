@@ -94,7 +94,7 @@ export default function InstructorProfilePage() {
   return (
     <div className="min-h-screen bg-brand-page pb-24">
       {/* Header Profile Section */}
-      <section className="bg-brand-navy text-white py-12 px-4 sm:px-6">
+      <section className="bg-brand-coffee dark:bg-stone-900 text-white py-12 px-4 sm:px-6">
         <div className="container mx-auto max-w-5xl space-y-6">
           <Link
             href="/instructors"
@@ -105,14 +105,14 @@ export default function InstructorProfilePage() {
           </Link>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="h-20 w-20 rounded-full bg-brand-emerald text-white font-black text-2xl flex items-center justify-center shrink-0 shadow-lg">
+            <div className="h-20 w-20 rounded-full bg-brand-orange text-white font-black text-2xl flex items-center justify-center shrink-0 shadow-lg">
               {instructor.fullName.charAt(0)}
             </div>
             <div className="space-y-2">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
                 {instructor.fullName}
               </h1>
-              <p className="text-xs sm:text-sm text-brand-slate max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-stone-300 max-w-2xl leading-relaxed">
                 {instructor.bio ||
                   'Dedicated faculty member and curriculum author instructing verified courses on the EduVerse platform.'}
               </p>
@@ -122,11 +122,11 @@ export default function InstructorProfilePage() {
                   <span>{instructor.stats.averageRating} Rating</span>
                 </span>
                 <span className="flex items-center gap-1 text-white">
-                  <Users className="h-4 w-4 text-brand-emerald" />
+                  <Users className="h-4 w-4 text-brand-orange" />
                   <span>{instructor.stats.totalStudents} Students</span>
                 </span>
                 <span className="flex items-center gap-1 text-white">
-                  <BookOpen className="h-4 w-4 text-brand-emerald" />
+                  <BookOpen className="h-4 w-4 text-brand-orange" />
                   <span>{instructor.stats.totalCourses} Published Courses</span>
                 </span>
               </div>
@@ -138,24 +138,24 @@ export default function InstructorProfilePage() {
       {/* Published Courses Section */}
       <div className="container mx-auto max-w-5xl px-4 sm:px-6 pt-10 space-y-6">
         <div>
-          <h2 className="text-xl font-bold text-brand-navy">Published Courses</h2>
-          <p className="text-xs text-brand-slate">
+          <h2 className="text-xl font-bold text-brand-coffee dark:text-stone-100">Published Courses</h2>
+          <p className="text-xs text-brand-slate dark:text-stone-400">
             Explore curriculum designed and instructed by {instructor.fullName}.
           </p>
         </div>
 
         {instructor.courses.length === 0 ? (
-          <div className="p-12 text-center bg-white border border-brand-border rounded-2xl text-xs text-brand-slate">
+          <div className="p-12 text-center bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 rounded-2xl text-xs text-brand-slate">
             This instructor currently has no courses listed in the marketplace.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {instructor.courses.map((course) => (
               <Link key={course.id} href={`/courses/${course.slug}`} className="group block">
-                <Card className="h-full overflow-hidden border border-brand-border bg-white hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                <Card className="h-full overflow-hidden border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:border-brand-orange/50">
                   <CardContent className="p-5 space-y-3">
                     <div className="flex items-center justify-between text-xs">
-                      <Badge className="bg-brand-navy text-white text-[10px]">
+                      <Badge className="bg-brand-coffee dark:bg-stone-800 text-white text-[10px]">
                         {course.category}
                       </Badge>
                       <Badge variant="outline" className="text-[10px]">
@@ -163,15 +163,15 @@ export default function InstructorProfilePage() {
                       </Badge>
                     </div>
 
-                    <h3 className="font-bold text-sm text-brand-navy group-hover:text-brand-emerald transition-colors line-clamp-2">
+                    <h3 className="font-bold text-sm text-brand-coffee dark:text-stone-100 group-hover:text-brand-orange transition-colors line-clamp-2">
                       {course.title}
                     </h3>
 
-                    <p className="text-xs text-brand-slate line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-brand-slate dark:text-stone-400 line-clamp-2 leading-relaxed">
                       {course.description}
                     </p>
 
-                    <div className="pt-2 flex items-center justify-between text-xs text-brand-slate border-t border-brand-border/60">
+                    <div className="pt-2 flex items-center justify-between text-xs text-brand-slate dark:text-stone-400 border-t border-brand-border/60 dark:border-stone-800">
                       <span className="flex items-center gap-1 text-amber-500 font-semibold">
                         <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                         <span>{course.averageRating}</span>
