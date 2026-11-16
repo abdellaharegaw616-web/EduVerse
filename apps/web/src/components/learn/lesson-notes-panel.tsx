@@ -73,14 +73,14 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
   });
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+    <div className="bg-[#19100C] border border-[#2A1B14] rounded-xl p-5 sm:p-6 space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2A1B14] pb-3">
         <div>
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <StickyNote className="h-4 w-4 text-brand-emerald" />
+            <StickyNote className="h-4 w-4 text-brand-orange" />
             <span>Personal Study Notebook</span>
           </h3>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-stone-400">
             Save personal notes and bookmark key lessons for offline/exam revision.
           </p>
         </div>
@@ -94,8 +94,8 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
             onClick={() => bookmarkMutation.mutate(!isBookmarked)}
             className={`h-8 text-xs gap-1.5 ${
               isBookmarked
-                ? 'border-amber-500/50 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
-                : 'border-slate-700 bg-slate-950/60 text-slate-300 hover:bg-slate-800'
+                ? 'border-orange-500/50 bg-orange-500/15 text-orange-400 hover:bg-orange-500/25'
+                : 'border-[#38241B] bg-[#120B08] text-stone-300 hover:bg-[#231712]'
             }`}
           >
             <Bookmark className={`h-3.5 w-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -107,7 +107,7 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
               type="button"
               size="sm"
               variant="ghost"
-              className="h-8 text-xs text-brand-mint hover:text-white gap-1"
+              className="h-8 text-xs text-brand-orange hover:text-white gap-1"
             >
               <span>All Notes</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -117,11 +117,11 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
       </div>
 
       {isLoading ? (
-        <p className="text-xs text-slate-400">Loading your study notes...</p>
+        <p className="text-xs text-stone-400">Loading your study notes...</p>
       ) : (
         <div className="space-y-3">
           <div className="space-y-1">
-            <Label htmlFor="noteTitle" className="text-[11px] font-semibold text-slate-300">
+            <Label htmlFor="noteTitle" className="text-[11px] font-semibold text-stone-300">
               Note Heading
             </Label>
             <Input
@@ -129,12 +129,12 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Lesson note heading..."
-              className="text-xs bg-slate-950 border-slate-800 text-slate-100 h-9"
+              className="text-xs bg-[#120B08] border-[#2A1B14] text-stone-100 h-9 focus-visible:ring-brand-orange"
             />
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="noteBody" className="text-[11px] font-semibold text-slate-300">
+            <Label htmlFor="noteBody" className="text-[11px] font-semibold text-stone-300">
               Study Notes & Takeaways
             </Label>
             <Textarea
@@ -143,14 +143,14 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Write key formulas, exam reminders, code snippets, or summary points..."
-              className="text-xs bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-500"
+              className="text-xs bg-[#120B08] border-[#2A1B14] text-stone-100 placeholder:text-stone-500 focus-visible:ring-brand-orange"
             />
           </div>
 
           <div className="flex items-center justify-between gap-2 pt-1">
-            <div className="text-[11px] text-slate-400">
+            <div className="text-[11px] text-stone-400">
               {savedNotice ? (
-                <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                <span className="text-brand-orange flex items-center gap-1 font-medium">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Saved to your Study Notebook
                 </span>
@@ -164,10 +164,10 @@ export function LessonNotesPanel({ lessonId, lessonTitle }: LessonNotesPanelProp
             <Button
               type="button"
               size="sm"
-              variant="emerald"
+              variant="orange"
               disabled={saveMutation.isPending}
               onClick={() => saveMutation.mutate()}
-              className="text-xs gap-1.5"
+              className="text-xs gap-1.5 shadow-sm"
             >
               {saveMutation.isPending ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />

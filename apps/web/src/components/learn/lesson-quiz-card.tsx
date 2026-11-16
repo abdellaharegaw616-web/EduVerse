@@ -197,12 +197,12 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
   }
 
   return (
-    <Card className="bg-slate-900 border-slate-800 text-white shadow-xl overflow-hidden">
+    <Card className="bg-[#19100C] border border-[#2A1B14] text-white shadow-xl overflow-hidden">
       <CardContent className="p-6 sm:p-8 space-y-6">
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#2A1B14] pb-4">
           <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-mint flex items-center gap-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
               <HelpCircle className="h-3.5 w-3.5" />
               <span>Lesson Knowledge Check</span>
             </span>
@@ -210,16 +210,16 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <Badge variant="outline" className="border-slate-700 text-slate-300">
+            <Badge variant="outline" className="border-[#38241B] text-stone-300">
               Pass Threshold: {quiz.passingScore}%
             </Badge>
             {quiz.timeLimitMinutes && (
-              <Badge variant="outline" className="border-slate-700 text-slate-300 flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+              <Badge variant="outline" className="border-[#38241B] text-stone-300 flex items-center gap-1">
+                <Clock className="h-3 w-3 text-brand-orange" />
                 <span>{quiz.timeLimitMinutes} min limit</span>
               </Badge>
             )}
-            <Badge variant="outline" className="border-slate-700 text-slate-300">
+            <Badge variant="outline" className="border-[#38241B] text-stone-300">
               Attempts: {quiz.previousAttemptsCount}/{quiz.attemptLimit}
             </Badge>
           </div>
@@ -227,11 +227,11 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
 
         {/* State A: Graded Submission Results View */}
         {submissionResult && !isTakingQuiz && (
-          <div className="space-y-6 p-6 rounded-xl bg-slate-950/80 border border-slate-800">
+          <div className="space-y-6 p-6 rounded-xl bg-[#120B08] border border-[#2A1B14]">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 {submissionResult.passed ? (
-                  <div className="h-12 w-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                  <div className="h-12 w-12 rounded-full bg-orange-500/20 text-brand-orange flex items-center justify-center border border-orange-500/30">
                     <CheckCircle2 className="h-6 w-6" />
                   </div>
                 ) : (
@@ -243,7 +243,7 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                   <h4 className="font-bold text-base text-white">
                     {submissionResult.passed ? 'Assessment Passed! 🎉' : 'Assessment Not Passed'}
                   </h4>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-stone-400">
                     You scored <strong className="text-white font-mono">{submissionResult.score}%</strong> (Threshold: {submissionResult.passingScore}%)
                   </p>
                 </div>
@@ -252,10 +252,10 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
               <div className="flex items-center gap-3">
                 {submissionResult.remainingAttempts > 0 && !submissionResult.passed && (
                   <Button
-                    variant="emerald"
+                    variant="orange"
                     size="sm"
                     onClick={handleStartQuiz}
-                    className="gap-1.5 text-xs h-9"
+                    className="gap-1.5 text-xs h-9 shadow-sm"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     <span>Retake Quiz ({submissionResult.remainingAttempts} left)</span>
@@ -265,15 +265,15 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
             </div>
 
             {/* Questions Breakdown */}
-            <div className="space-y-3 pt-4 border-t border-slate-800">
-              <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Evaluation Breakdown</h5>
+            <div className="space-y-3 pt-4 border-t border-[#2A1B14]">
+              <h5 className="text-xs font-bold text-stone-300 uppercase tracking-wider">Evaluation Breakdown</h5>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {submissionResult.breakdown.map((item, idx) => (
                   <div
                     key={item.questionId}
                     className={`p-3 rounded-lg border flex items-center justify-between ${
                       item.isCorrect
-                        ? 'bg-emerald-950/20 border-emerald-800/40 text-emerald-300'
+                        ? 'bg-orange-950/30 border-orange-800/40 text-orange-300'
                         : 'bg-rose-950/20 border-rose-800/40 text-rose-300'
                     }`}
                   >
@@ -293,7 +293,7 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
           <div className="space-y-8">
             {/* Timer Banner */}
             {secondsRemaining !== null && (
-              <div className="flex items-center justify-between p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-mono font-semibold">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   <span>Time Remaining:</span>
@@ -314,14 +314,14 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
               {quiz.questions.map((q, idx) => (
                 <div
                   key={q.id}
-                  className="p-5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3"
+                  className="p-5 rounded-xl bg-[#120B08] border border-[#2A1B14] space-y-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="font-semibold text-sm text-white leading-relaxed">
-                      <span className="text-brand-mint font-bold mr-2">Q{idx + 1}.</span>
+                      <span className="text-brand-orange font-bold mr-2">Q{idx + 1}.</span>
                       {q.text}
                     </h4>
-                    <span className="text-[10px] text-slate-400 font-mono bg-slate-800 px-2 py-0.5 rounded shrink-0">
+                    <span className="text-[10px] text-stone-400 font-mono bg-[#231712] px-2 py-0.5 rounded shrink-0">
                       {q.points} pts
                     </span>
                   </div>
@@ -338,17 +338,17 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                             onClick={() => handleSelectOption(q.id, opt.id)}
                             className={`w-full p-3 rounded-lg text-left text-xs transition-all flex items-center justify-between border ${
                               isSelected
-                                ? 'bg-brand-emerald/20 border-brand-emerald text-white'
-                                : 'bg-slate-900 border-slate-800 hover:bg-slate-800 text-slate-300'
+                                ? 'bg-orange-950/40 border-brand-orange text-white ring-1 ring-brand-orange'
+                                : 'bg-[#19100C] border-[#2A1B14] hover:bg-[#231712] text-stone-300'
                             }`}
                           >
                             <span>{opt.text}</span>
                             <div
                               className={`h-4 w-4 rounded-full border flex items-center justify-center ${
-                                isSelected ? 'border-brand-mint bg-brand-mint' : 'border-slate-600'
+                                isSelected ? 'border-brand-orange bg-brand-orange' : 'border-stone-600'
                               }`}
                             >
-                              {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-slate-950" />}
+                              {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
                             </div>
                           </button>
                         );
@@ -361,7 +361,7 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                         placeholder="Type your answer here..."
                         value={answers[q.id]?.textAnswer || ''}
                         onChange={(e) => handleTextAnswerChange(q.id, e.target.value)}
-                        className="bg-slate-900 border-slate-700 text-xs text-white"
+                        className="bg-[#19100C] border-[#2A1B14] text-xs text-white focus-visible:ring-brand-orange"
                       />
                     </div>
                   )}
@@ -370,21 +370,21 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
             </div>
 
             {/* Submit Action */}
-            <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+            <div className="flex items-center justify-between pt-4 border-t border-[#2A1B14]">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsTakingQuiz(false)}
-                className="border-slate-700 text-slate-300 text-xs"
+                className="border-[#38241B] text-stone-300 hover:bg-[#231712] text-xs"
               >
                 Cancel Attempt
               </Button>
 
               <Button
-                variant="emerald"
+                variant="orange"
                 onClick={() => submitMutation.mutate()}
                 disabled={submitMutation.isPending}
-                className="gap-2 text-xs"
+                className="gap-2 text-xs shadow-sm"
               >
                 <Send className="h-3.5 w-3.5" />
                 <span>{submitMutation.isPending ? 'Grading Answers...' : 'Submit Answers for Grading'}</span>
@@ -393,13 +393,13 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
           </div>
         ) : !submissionResult && (
           /* State C: Quiz Overview / Start Prompt */
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 rounded-xl bg-[#120B08] border border-[#2A1B14]">
             <div className="space-y-1 text-center sm:text-left">
               <div className="flex items-center gap-2 justify-center sm:justify-start">
-                <HelpCircle className="h-5 w-5 text-brand-mint" />
+                <HelpCircle className="h-5 w-5 text-brand-orange" />
                 <h4 className="font-bold text-sm text-white">Test Your Understanding</h4>
               </div>
-              <p className="text-xs text-slate-400 max-w-md">
+              <p className="text-xs text-stone-400 max-w-md">
                 {quiz.questions.length} questions assessing core concepts from this lesson. Complete to verify your comprehension and earn lesson credit.
               </p>
             </div>
@@ -407,9 +407,9 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
             <div className="flex flex-col items-center sm:items-end gap-2 shrink-0">
               {quiz.remainingAttempts > 0 ? (
                 <Button
-                  variant="emerald"
+                  variant="orange"
                   onClick={handleStartQuiz}
-                  className="gap-2 text-xs font-semibold h-10 px-5"
+                  className="gap-2 text-xs font-semibold h-10 px-5 shadow-sm"
                 >
                   <Award className="h-4 w-4" />
                   <span>{quiz.previousAttemptsCount > 0 ? 'Retake Quiz' : 'Start Knowledge Check'}</span>
@@ -419,7 +419,7 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                   Attempt Limit Reached
                 </Badge>
               )}
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-[11px] text-stone-500 font-mono">
                 {quiz.remainingAttempts} of {quiz.attemptLimit} attempts remaining
               </span>
             </div>

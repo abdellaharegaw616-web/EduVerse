@@ -67,21 +67,21 @@ export default function MyCoursesPage() {
   return (
     <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Academic Portfolio
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             My Enrolled Courses
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
             Manage your enrolled degree tracks, vocational programs, and completion standings.
           </p>
         </div>
 
         <Link href="/courses">
-          <Button variant="emerald" size="sm" className="gap-2">
+          <Button variant="orange" size="sm" className="gap-2 shadow-sm">
             <BookOpen className="h-4 w-4" />
             <span>Enroll in New Course</span>
           </Button>
@@ -89,14 +89,14 @@ export default function MyCoursesPage() {
       </div>
 
       {/* Controls: Search and Status Filters */}
-      <div className="rounded-xl border border-brand-border bg-white p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-brand-slate" />
           <Input
             placeholder="Search enrolled courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-slate-50 border-brand-border text-xs"
+            className="pl-9 bg-slate-50 dark:bg-stone-800 border-brand-border dark:border-stone-700 text-xs focus-visible:ring-brand-orange"
           />
         </div>
 
@@ -110,8 +110,8 @@ export default function MyCoursesPage() {
               }}
               className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
                 statusFilter === status
-                  ? 'bg-brand-navy text-white'
-                  : 'bg-slate-100 text-brand-slate hover:bg-slate-200'
+                  ? 'bg-brand-orange text-white'
+                  : 'bg-slate-100 dark:bg-stone-800 text-brand-coffee/80 dark:text-stone-300 hover:bg-slate-200 dark:hover:bg-stone-700'
               }`}
             >
               {status.replace('-', ' ')}
@@ -146,50 +146,50 @@ export default function MyCoursesPage() {
             {filteredItems.map((enrollment) => (
               <Card
                 key={enrollment.id}
-                className="border-brand-border flex flex-col justify-between hover:shadow-md transition-shadow"
+                className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between hover:shadow-md hover:border-brand-orange/40 transition-all"
               >
                 <CardContent className="p-5 space-y-4">
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       {enrollment.course.category && (
-                        <Badge variant="secondary" className="text-[10px]">
+                        <Badge variant="orange" className="text-[10px]">
                           {enrollment.course.category.name}
                         </Badge>
                       )}
-                      <span className="font-extrabold text-brand-emerald">
+                      <span className="font-extrabold text-brand-orange font-mono">
                         {Math.round(enrollment.progressPercentage)}%
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-brand-navy text-sm line-clamp-2">
+                    <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-sm line-clamp-2">
                       {enrollment.course.title}
                     </h3>
-                    <p className="text-xs text-brand-slate">{enrollment.course.author.fullName}</p>
+                    <p className="text-xs text-brand-slate dark:text-stone-400">{enrollment.course.author.fullName}</p>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-stone-800 rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-brand-emerald h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-orange-600 to-amber-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${Math.min(100, Math.max(0, enrollment.progressPercentage))}%` }}
                     />
                   </div>
 
-                  <div className="text-[11px] text-brand-slate pt-2 border-t border-brand-border flex items-center justify-between">
+                  <div className="text-[11px] text-brand-slate dark:text-stone-400 pt-2 border-t border-brand-border dark:border-stone-800 flex items-center justify-between">
                     <span>
                       Enrolled: {new Date(enrollment.enrolledAt).toLocaleDateString()}
                     </span>
                     {enrollment.completedAt ? (
-                      <span className="text-emerald-700 font-bold">Completed</span>
+                      <span className="text-brand-orange font-bold">Completed</span>
                     ) : (
-                      <span className="text-amber-700 font-semibold">In Progress</span>
+                      <span className="text-amber-600 dark:text-amber-400 font-semibold">In Progress</span>
                     )}
                   </div>
                 </CardContent>
 
                 <div className="p-5 pt-0">
                   <Link href={`/courses/${enrollment.course.slug}/learn`} className="w-full block">
-                    <Button variant="emerald" size="sm" className="w-full gap-1.5 text-xs">
+                    <Button variant="orange" size="sm" className="w-full gap-1.5 text-xs shadow-sm">
                       <span>Resume Study</span>
                       <ArrowRight className="h-3 w-3" />
                     </Button>

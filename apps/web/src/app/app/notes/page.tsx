@@ -75,22 +75,22 @@ export default function StudentNotebookPage() {
   return (
     <div className="space-y-6 pb-16 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Personal Revision Workspace
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Study Notebook & Bookmarks
           </h1>
-          <p className="text-xs text-brand-slate dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
             Search your personal lesson notes, review bookmarked topics, and jump directly back to any module.
           </p>
         </div>
 
         <Link href="/app/courses">
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-            <BookOpen className="h-3.5 w-3.5" />
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs border-brand-border dark:border-stone-700">
+            <BookOpen className="h-3.5 w-3.5 text-brand-orange" />
             <span>My Courses</span>
           </Button>
         </Link>
@@ -104,7 +104,7 @@ export default function StudentNotebookPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search notes by keyword, lesson, or course..."
-            className="pl-9 text-xs h-9"
+            className="pl-9 text-xs h-9 border-brand-border dark:border-stone-700 focus-visible:ring-brand-orange"
           />
         </div>
 
@@ -114,8 +114,8 @@ export default function StudentNotebookPage() {
             onClick={() => setBookmarkedOnly(false)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
               !bookmarkedOnly
-                ? 'bg-brand-navy text-white'
-                : 'bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 text-brand-slate dark:text-slate-300'
+                ? 'bg-brand-orange text-white'
+                : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee/80 dark:text-stone-300'
             }`}
           >
             All Notes
@@ -125,8 +125,8 @@ export default function StudentNotebookPage() {
             onClick={() => setBookmarkedOnly(true)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
               bookmarkedOnly
-                ? 'bg-brand-navy text-white'
-                : 'bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 text-brand-slate dark:text-slate-300'
+                ? 'bg-brand-orange text-white'
+                : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee/80 dark:text-stone-300'
             }`}
           >
             <Bookmark className="h-3.5 w-3.5" />
@@ -154,18 +154,18 @@ export default function StudentNotebookPage() {
           {notes.map((note) => (
             <Card
               key={note.id}
-              className="border border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between"
+              className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between shadow-xs hover:border-brand-orange/40 transition-colors"
             >
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-1 min-w-0">
-                    <Badge variant="secondary" className="text-[10px]">
+                    <Badge variant="orange" className="text-[10px]">
                       {note.course.title}
                     </Badge>
-                    <h3 className="font-bold text-sm text-brand-navy dark:text-white line-clamp-1">
+                    <h3 className="font-bold text-sm text-brand-coffee dark:text-stone-100 line-clamp-1">
                       {note.title || note.lesson.title}
                     </h3>
-                    <p className="text-[11px] text-brand-slate dark:text-slate-400">
+                    <p className="text-[11px] text-brand-slate dark:text-stone-400">
                       {note.lesson.section.title} → {note.lesson.title}
                     </p>
                   </div>
@@ -181,8 +181,8 @@ export default function StudentNotebookPage() {
                     title={note.isBookmarked ? 'Remove Bookmark' : 'Bookmark Lesson'}
                     className={`p-1.5 rounded-md border transition-colors ${
                       note.isBookmarked
-                        ? 'border-amber-300 bg-amber-50 text-amber-600 dark:border-amber-600/40 dark:bg-amber-950/30 dark:text-amber-400'
-                        : 'border-brand-border dark:border-slate-700 text-slate-400 hover:text-brand-navy'
+                        ? 'border-orange-300 bg-orange-50 text-brand-orange dark:border-orange-600/40 dark:bg-orange-950/40 dark:text-orange-400'
+                        : 'border-brand-border dark:border-stone-700 text-stone-400 hover:text-brand-orange'
                     }`}
                   >
                     <Bookmark
@@ -191,14 +191,14 @@ export default function StudentNotebookPage() {
                   </button>
                 </div>
 
-                <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-brand-border/60 dark:border-slate-800 text-xs text-brand-navy dark:text-slate-300 whitespace-pre-line max-h-36 overflow-y-auto">
+                <div className="p-3 rounded-lg bg-brand-creamy/50 dark:bg-stone-950/60 border border-brand-border/60 dark:border-stone-800 text-xs text-brand-coffee dark:text-stone-300 whitespace-pre-line max-h-36 overflow-y-auto">
                   {note.content.trim()
                     ? note.content
                     : 'Bookmarked lesson for quick revision (no text notes recorded yet).'}
                 </div>
 
-                <div className="flex items-center justify-between pt-1 border-t border-brand-border/60 dark:border-slate-800">
-                  <span className="text-[10px] text-brand-slate dark:text-slate-400">
+                <div className="flex items-center justify-between pt-1 border-t border-brand-border/60 dark:border-stone-800">
+                  <span className="text-[10px] text-brand-slate dark:text-stone-400">
                     Updated {new Date(note.updatedAt).toLocaleDateString()}
                   </span>
 
@@ -215,7 +215,7 @@ export default function StudentNotebookPage() {
                     </Button>
 
                     <Link href={`/courses/${note.course.slug}/learn?lesson=${note.lessonId}`}>
-                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 border-brand-border dark:border-stone-700 hover:border-brand-orange/40">
                         <span>Open Lesson</span>
                         <ExternalLink className="h-3 w-3" />
                       </Button>

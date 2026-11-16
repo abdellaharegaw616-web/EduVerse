@@ -126,12 +126,12 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
   const isDeadlinePassed = assignment.isLate;
 
   return (
-    <Card className="bg-slate-900 border-slate-800 text-white shadow-xl overflow-hidden">
+    <Card className="bg-[#19100C] border border-[#2A1B14] text-white shadow-xl overflow-hidden">
       <CardContent className="p-6 sm:p-8 space-y-6">
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#2A1B14] pb-4">
           <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-mint flex items-center gap-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5" />
               <span>Module Assignment Deliverable</span>
             </span>
@@ -139,17 +139,17 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <Badge variant="outline" className="border-slate-700 text-slate-300">
+            <Badge variant="outline" className="border-[#38241B] text-stone-300">
               Max Score: {assignment.maxScore} pts
             </Badge>
             {assignment.dueDate && (
               <Badge
                 variant="outline"
-                className={`border-slate-700 flex items-center gap-1 ${
-                  isDeadlinePassed ? 'text-rose-400 border-rose-900' : 'text-slate-300'
+                className={`border-[#38241B] flex items-center gap-1 ${
+                  isDeadlinePassed ? 'text-rose-400 border-rose-900' : 'text-stone-300'
                 }`}
               >
-                <Calendar className="h-3 w-3" />
+                <Calendar className="h-3 w-3 text-brand-orange" />
                 <span>
                   Due: {new Date(assignment.dueDate).toLocaleDateString()}
                   {isDeadlinePassed ? ' (Expired)' : ''}
@@ -161,31 +161,31 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
 
         {/* Instructions */}
         <div className="space-y-2">
-          <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-            <FileText className="h-3.5 w-3.5 text-brand-mint" />
+          <h4 className="text-xs font-bold text-stone-300 uppercase tracking-wider flex items-center gap-1.5">
+            <FileText className="h-3.5 w-3.5 text-brand-orange" />
             <span>Instructions & Requirements</span>
           </h4>
-          <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+          <p className="text-xs text-stone-300 leading-relaxed whitespace-pre-line bg-[#120B08] p-4 rounded-xl border border-[#2A1B14]">
             {assignment.instructions}
           </p>
         </div>
 
         {/* State A: Graded Feedback Card */}
         {existingSub && existingSub.status === 'GRADED' && (
-          <div className="p-5 rounded-xl bg-emerald-950/30 border border-emerald-800/50 space-y-3">
+          <div className="p-5 rounded-xl bg-orange-950/20 border border-orange-800/40 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <div className="flex items-center gap-2 text-brand-orange font-bold text-sm">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Evaluation Complete</span>
               </div>
-              <span className="text-sm font-mono font-extrabold text-emerald-300">
+              <span className="text-sm font-mono font-extrabold text-orange-300">
                 Grade: {existingSub.grade} / {assignment.maxScore}
               </span>
             </div>
 
             {existingSub.feedback && (
-              <div className="pt-2 border-t border-emerald-900/50 text-xs text-emerald-200">
-                <strong className="block text-emerald-400 font-semibold mb-1">
+              <div className="pt-2 border-t border-orange-900/50 text-xs text-stone-200">
+                <strong className="block text-brand-orange font-semibold mb-1">
                   Instructor Feedback:
                 </strong>
                 <p className="leading-relaxed whitespace-pre-line">{existingSub.feedback}</p>
@@ -196,15 +196,15 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
 
         {/* State B: Pending Submission Banner */}
         {existingSub && existingSub.status === 'PENDING' && (
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs text-amber-300">
+          <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-between text-xs text-orange-300">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 shrink-0" />
+              <Clock className="h-4 w-4 shrink-0 text-brand-orange" />
               <span>
                 Your work was submitted on{' '}
                 {existingSub.submittedAt ? new Date(existingSub.submittedAt).toLocaleDateString() : 'recent'}. It is currently under review by your course instructor.
               </span>
             </div>
-            <Badge variant="outline" className="border-amber-500/40 text-amber-300 shrink-0">
+            <Badge variant="outline" className="border-orange-500/40 text-orange-300 shrink-0">
               Pending Review
             </Badge>
           </div>
@@ -213,8 +213,8 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
         {/* State C: Submission Form (Visible if not graded) */}
         {(!existingSub || existingSub.status === 'PENDING') && (
           <div className="space-y-4 pt-2">
-            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Upload className="h-3.5 w-3.5 text-brand-mint" />
+            <h4 className="text-xs font-bold text-stone-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Upload className="h-3.5 w-3.5 text-brand-orange" />
               <span>{existingSub ? 'Update Your Submission' : 'Submit Your Solution'}</span>
             </h4>
 
@@ -226,8 +226,8 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
             )}
 
             {submitSuccess && (
-              <Alert className="bg-emerald-950/60 border-emerald-800 text-emerald-200">
-                <Check className="h-4 w-4" />
+              <Alert className="bg-orange-950/40 border-orange-800/60 text-orange-200">
+                <Check className="h-4 w-4 text-brand-orange" />
                 <AlertDescription className="text-xs">
                   Your assignment was successfully submitted and saved.
                 </AlertDescription>
@@ -236,7 +236,7 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
 
             <div className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                <label className="text-xs font-semibold text-stone-300 block mb-1.5">
                   Written Response / Code Implementation / Explanation
                 </label>
                 <Textarea
@@ -245,14 +245,14 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
                   onChange={(e) => setContent(e.target.value)}
                   disabled={isDeadlinePassed}
                   rows={4}
-                  className="bg-slate-950 border-slate-800 text-xs text-white"
+                  className="bg-[#120B08] border-[#2A1B14] text-xs text-white focus-visible:ring-brand-orange"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1.5 flex items-center gap-1">
-                    <Paperclip className="h-3 w-3" />
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5 flex items-center gap-1">
+                    <Paperclip className="h-3 w-3 text-brand-orange" />
                     <span>Attached Document URL (PDF, ZIP, DOCX, IPYNB)</span>
                   </label>
                   <Input
@@ -260,12 +260,12 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
                     value={fileUrl}
                     onChange={(e) => setFileUrl(e.target.value)}
                     disabled={isDeadlinePassed}
-                    className="bg-slate-950 border-slate-800 text-xs text-white"
+                    className="bg-[#120B08] border-[#2A1B14] text-xs text-white focus-visible:ring-brand-orange"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                  <label className="text-xs font-semibold text-stone-300 block mb-1.5">
                     File Name (e.g. cloud_spec.pdf)
                   </label>
                   <Input
@@ -273,22 +273,22 @@ export function LessonAssignmentCard({ assignmentId, onSubmitted }: LessonAssign
                     value={fileName}
                     onChange={(e) => setFileName(e.target.value)}
                     disabled={isDeadlinePassed}
-                    className="bg-slate-950 border-slate-800 text-xs text-white"
+                    className="bg-[#120B08] border-[#2A1B14] text-xs text-white focus-visible:ring-brand-orange"
                   />
                 </div>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <span className="text-[11px] text-slate-500">
+              <span className="text-[11px] text-stone-500">
                 Allowed formats: PDF, ZIP, DOCX, TXT, PY, IPYNB (Max 25MB).
               </span>
 
               <Button
-                variant="emerald"
+                variant="orange"
                 onClick={() => submitMutation.mutate()}
                 disabled={submitMutation.isPending || isDeadlinePassed}
-                className="gap-2 text-xs"
+                className="gap-2 text-xs shadow-sm"
               >
                 <Send className="h-3.5 w-3.5" />
                 <span>

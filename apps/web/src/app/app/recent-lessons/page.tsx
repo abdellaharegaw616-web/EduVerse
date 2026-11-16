@@ -61,22 +61,22 @@ export default function RecentLessonsPage() {
   return (
     <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Study History
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Recently Accessed Lessons
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
             Chronological audit of lessons, lectures, and interactive modules you have engaged with.
           </p>
         </div>
 
         <Link href="/app/courses">
-          <Button variant="outline" size="sm" className="gap-2">
-            <BookOpen className="h-4 w-4" />
+          <Button variant="outline" size="sm" className="gap-2 border-brand-border dark:border-stone-700">
+            <BookOpen className="h-4 w-4 text-brand-orange" />
             <span>My Courses</span>
           </Button>
         </Link>
@@ -104,23 +104,23 @@ export default function RecentLessonsPage() {
         </div>
       ) : data?.items && data.items.length > 0 ? (
         <div className="space-y-4">
-          <div className="rounded-xl border border-brand-border bg-white divide-y divide-brand-border">
+          <div className="rounded-xl border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 divide-y divide-brand-border dark:divide-stone-800">
             {data.items.map((item) => (
-              <div key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+              <div key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-orange-50/30 dark:hover:bg-stone-800/50 transition-colors">
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-mint text-brand-emerald shrink-0 mt-0.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100/70 text-brand-orange dark:bg-orange-950/40 dark:text-orange-400 shrink-0 mt-0.5">
                     <PlayCircle className="h-5 w-5" />
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[11px] font-semibold text-brand-emerald block">
+                    <span className="text-[11px] font-semibold text-brand-orange block">
                       {item.lesson.section.course.title} • {item.lesson.section.title}
                     </span>
-                    <h3 className="font-bold text-brand-navy text-sm leading-snug">
+                    <h3 className="font-bold text-brand-coffee dark:text-stone-100 text-sm leading-snug">
                       {item.lesson.title}
                     </h3>
-                    <div className="flex items-center gap-3 text-xs text-brand-slate">
+                    <div className="flex items-center gap-3 text-xs text-brand-slate dark:text-stone-400">
                       <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
+                        <Clock className="h-3 w-3 text-brand-orange" />
                         {item.lesson.durationMinutes} min
                       </span>
                       <span>•</span>
@@ -130,9 +130,9 @@ export default function RecentLessonsPage() {
                 </div>
 
                 <div className="flex items-center gap-3 self-end sm:self-center">
-                  <Badge variant="emerald" className="text-[10px]">Completed</Badge>
+                  <Badge variant="orange" className="text-[10px]">Completed</Badge>
                   <Link href={`/courses/${item.lesson.section.course.slug}/learn?lesson=${item.lesson.id}`}>
-                    <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
+                    <Button variant="outline" size="sm" className="h-8 text-xs gap-1 border-brand-border dark:border-stone-700 hover:border-brand-orange/40">
                       <span>Review</span>
                       <ArrowRight className="h-3 w-3" />
                     </Button>
