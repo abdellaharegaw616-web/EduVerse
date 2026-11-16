@@ -12,6 +12,8 @@ import {
   Calendar,
   AlertCircle,
   ShieldCheck,
+  BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 import { apiClient, getBaseUrl } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -26,7 +28,10 @@ interface CertificateItem {
   verificationCode: string;
   courseTitle: string;
   courseSlug: string;
+  studentName: string;
+  instructorName: string;
   institutionName: string;
+  completionDate: string;
   issuedAt: string;
 }
 
@@ -51,38 +56,50 @@ export default function StudentCertificatesPage() {
   };
 
   const handleDownload = (code: string) => {
-    const downloadUrl = `${getBaseUrl()}/certificates/download/${code}`;
+    const downloadUrl = `${getBaseUrl()}/certificates/download/${encodeURIComponent(code)}`;
     window.open(downloadUrl, '_blank');
   };
 
   return (
-    <div className="space-y-6 pb-16">
+    <div className="space-y-6 pb-16 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
-            Accreditation
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
+            Accreditation & Credentials
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
-            Earned Certificates & Awards
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100 flex items-center gap-2.5">
+            <Award className="h-7 w-7 text-brand-orange" />
+            <span>Earned Certificates & Awards</span>
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
-            Cryptographically verifiable proof of mastery for every completed curriculum.
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-1">
+            Cryptographically verifiable completion certificates with unique codes for every completed curriculum.
           </p>
         </div>
 
-        <Link href="/app/courses">
-          <Button variant="outline" size="sm">Browse Courses</Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/verify">
+            <Button variant="outline" size="sm" className="border-brand-border dark:border-stone-700 hover:border-brand-orange/40 text-xs">
+              <ShieldCheck className="h-3.5 w-3.5 mr-1.5 text-brand-orange" />
+              <span>Public Verification</span>
+            </Button>
+          </Link>
+          <Link href="/app/courses">
+            <Button variant="orange" size="sm" className="text-xs">
+              <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+              <span>My Courses</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {isError && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="bg-red-950/40 border-red-900 text-red-200">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Unable to Load Certificates</AlertTitle>
-          <AlertDescription className="flex items-center justify-between">
+          <AlertTitle className="text-xs font-bold">Unable to Load Certificates</AlertTitle>
+          <AlertDescription className="flex items-center justify-between text-xs mt-1">
             <span>{(error as any)?.message || 'Failed to fetch certificate records.'}</span>
-            <Button variant="outline" size="sm" onClick={() => refetch()} className="h-7 text-xs">
+            <Button variant="outline" size="sm" onClick={() => refetch()} className="h-7 text-xs border-red-800">
               Retry
             </Button>
           </AlertDescription>
@@ -100,38 +117,39 @@ export default function StudentCertificatesPage() {
           {certificates.map((cert) => (
             <Card
               key={cert.id}
-              className="relative overflow-hidden border border-amber-300 dark:border-amber-900/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all duration-200"
+              className="relative overflow-hidden border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm hover:border-brand-orange/50 hover:shadow-md transition-all duration-200"
             >
+              <div className="h-1.5 w-full bg-gradient-to-r from-brand-orange via-amber-500 to-brand-orange" />
 
               <CardContent className="p-6 flex flex-col justify-between h-full space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-orange-100/80 text-brand-orange dark:bg-orange-950/50 flex items-center justify-center shrink-0">
                       <Award className="h-6 w-6" />
                     </div>
-                    <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-200 gap-1 text-[11px]">
-                      <ShieldCheck className="h-3 w-3" />
+                    <Badge variant="outline" className="bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800 gap-1 text-[11px]">
+                      <ShieldCheck className="h-3 w-3 text-brand-orange" />
                       Verified Credential
                     </Badge>
                   </div>
 
                   <div>
-                    <span className="text-[11px] font-semibold tracking-wide text-brand-slate uppercase flex items-center gap-1">
-                      <Building className="h-3 w-3 text-brand-emerald" />
+                    <span className="text-[11px] font-semibold tracking-wide text-brand-orange uppercase flex items-center gap-1">
+                      <Building className="h-3 w-3" />
                       {cert.institutionName}
                     </span>
-                    <h3 className="text-lg font-bold text-brand-navy mt-1 line-clamp-2">
+                    <h3 className="text-base sm:text-lg font-bold text-brand-coffee dark:text-stone-100 mt-1 line-clamp-2">
                       {cert.courseTitle}
                     </h3>
                   </div>
 
-                  <div className="space-y-2 pt-2 border-t border-brand-border/60">
-                    <div className="flex items-center justify-between text-xs text-brand-slate">
+                  <div className="space-y-2 pt-2 border-t border-brand-border dark:border-stone-800">
+                    <div className="flex items-center justify-between text-xs text-brand-slate dark:text-stone-400">
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-brand-slate/70" />
-                        Date Issued:
+                        <Calendar className="h-3.5 w-3.5 text-brand-orange" />
+                        <span>Date Issued:</span>
                       </span>
-                      <span className="font-semibold text-brand-navy">
+                      <span className="font-semibold text-brand-coffee dark:text-stone-200">
                         {new Date(cert.issuedAt).toLocaleDateString(undefined, {
                           year: 'numeric',
                           month: 'long',
@@ -140,19 +158,20 @@ export default function StudentCertificatesPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-brand-slate">
-                      <span>Verification ID:</span>
+                    <div className="flex items-center justify-between text-xs text-brand-slate dark:text-stone-400">
+                      <span>Unique Verification ID:</span>
                       <div className="flex items-center gap-1">
-                        <code className="bg-slate-100 px-2 py-0.5 rounded text-[11px] font-mono font-medium text-brand-navy">
+                        <code className="bg-brand-creamy dark:bg-stone-800 border border-brand-border dark:border-stone-700 px-2 py-0.5 rounded text-[11px] font-mono font-bold text-brand-coffee dark:text-stone-200">
                           {cert.verificationCode}
                         </code>
                         <button
+                          type="button"
                           onClick={() => handleCopy(cert.verificationCode)}
-                          className="p-1 text-brand-slate hover:text-brand-navy transition-colors"
+                          className="p-1 text-brand-slate dark:text-stone-400 hover:text-brand-orange transition-colors"
                           title="Copy Verification ID"
                         >
                           {copiedCode === cert.verificationCode ? (
-                            <Check className="h-3.5 w-3.5 text-brand-emerald" />
+                            <Check className="h-3.5 w-3.5 text-brand-orange" />
                           ) : (
                             <Copy className="h-3.5 w-3.5" />
                           )}
@@ -166,20 +185,20 @@ export default function StudentCertificatesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-xs gap-1.5"
+                    className="flex-1 text-xs gap-1.5 border-brand-border dark:border-stone-700 hover:border-brand-orange/40"
                     onClick={() => handleDownload(cert.verificationCode)}
                   >
-                    <Download className="h-3.5 w-3.5 text-brand-emerald" />
+                    <Download className="h-3.5 w-3.5 text-brand-orange" />
                     <span>Download PDF</span>
                   </Button>
 
                   <Link
-                    href={`/verify/${cert.verificationCode}`}
+                    href={`/verify/${encodeURIComponent(cert.verificationCode)}`}
                     target="_blank"
                     className="flex-1"
                   >
-                    <Button variant="default" size="sm" className="w-full text-xs gap-1.5 bg-brand-navy hover:bg-brand-navy/90 text-white">
-                      <ShieldCheck className="h-3.5 w-3.5 text-brand-emerald" />
+                    <Button variant="orange" size="sm" className="w-full text-xs gap-1.5 shadow-sm">
+                      <ExternalLink className="h-3.5 w-3.5" />
                       <span>Verify Online</span>
                     </Button>
                   </Link>
@@ -191,8 +210,8 @@ export default function StudentCertificatesPage() {
       ) : (
         <EmptyState
           icon={Award}
-          title="No Certificates Yet"
-          description="Complete 100% of video lessons, reading materials, quizzes, and assignments in any enrolled course to be awarded your certified certificate."
+          title="No Certificates Earned Yet"
+          description="Complete 100% of video lessons, reading materials, quizzes, and assignments in any enrolled course to be awarded your official verified credential."
           actionHref="/app/courses"
           actionLabel="Continue Learning"
         />
@@ -200,4 +219,3 @@ export default function StudentCertificatesPage() {
     </div>
   );
 }
-

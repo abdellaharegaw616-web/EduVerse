@@ -54,9 +54,14 @@ interface GradedSubmissionResponse {
   remainingAttempts: number;
   breakdown: Array<{
     questionId: string;
+    questionText?: string;
+    type?: string;
     isCorrect: boolean;
     pointsEarned: number;
     pointsPossible: number;
+    selectedAnswer?: string;
+    correctAnswer?: string;
+    explanation?: string;
   }>;
 }
 
@@ -244,13 +249,13 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                     {submissionResult.passed ? 'Assessment Passed! 🎉' : 'Assessment Not Passed'}
                   </h4>
                   <p className="text-xs text-stone-400">
-                    You scored <strong className="text-white font-mono">{submissionResult.score}%</strong> (Threshold: {submissionResult.passingScore}%)
+                    You scored <strong className="text-white font-mono">{submissionResult.score}%</strong> (Passing threshold: {submissionResult.passingScore}%) • {submissionResult.earnedPoints}/{submissionResult.totalPoints} points
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                {submissionResult.remainingAttempts > 0 && !submissionResult.passed && (
+                {submissionResult.remainingAttempts > 0 && !submissionResult.passed ? (
                   <Button
                     variant="orange"
                     size="sm"
@@ -258,29 +263,80 @@ export function LessonQuizCard({ quizId, onPassed }: LessonQuizCardProps) {
                     className="gap-1.5 text-xs h-9 shadow-sm"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
-                    <span>Retake Quiz ({submissionResult.remainingAttempts} left)</span>
+                    <span>Retake Quiz ({submissionResult.remainingAttempts} attempts remaining)</span>
                   </Button>
-                )}
+                ) : submissionResult.remainingAttempts === 0 && !submissionResult.passed ? (
+                  <Badge variant="outline" className="border-rose-900 bg-rose-950/40 text-rose-300 text-xs">
+                    Maximum Attempts Reached
+                  </Badge>
+                ) : null}
               </div>
             </div>
 
-            {/* Questions Breakdown */}
-            <div className="space-y-3 pt-4 border-t border-[#2A1B14]">
-              <h5 className="text-xs font-bold text-stone-300 uppercase tracking-wider">Evaluation Breakdown</h5>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            {/* Questions Breakdown with Explanations */}
+            <div className="space-y-4 pt-4 border-t border-[#2A1B14]">
+              <div className="flex items-center justify-between">
+                <h5 className="text-xs font-bold text-stone-300 uppercase tracking-wider">
+                  Detailed Results & Explanations
+                </h5>
+                <span className="text-[11px] text-stone-400 font-mono">
+                  {submissionResult.breakdown.filter((b) => b.isCorrect).length} / {submissionResult.breakdown.length} Correct
+                </span>
+              </div>
+
+              <div className="space-y-3">
                 {submissionResult.breakdown.map((item, idx) => (
                   <div
                     key={item.questionId}
-                    className={`p-3 rounded-lg border flex items-center justify-between ${
+                    className={`p-4 rounded-xl border text-xs space-y-2.5 transition-colors ${
                       item.isCorrect
-                        ? 'bg-orange-950/30 border-orange-800/40 text-orange-300'
-                        : 'bg-rose-950/20 border-rose-800/40 text-rose-300'
+                        ? 'bg-orange-950/20 border-orange-800/40'
+                        : 'bg-rose-950/20 border-rose-800/40'
                     }`}
                   >
-                    <span>Question {idx + 1}</span>
-                    <span className="font-mono font-bold">
-                      {item.isCorrect ? `+${item.pointsEarned} pts` : `0/${item.pointsPossible} pts`}
-                    </span>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-2">
+                        {item.isCorrect ? (
+                          <CheckCircle2 className="h-4 w-4 text-brand-orange shrink-0 mt-0.5" />
+                        ) : (
+                          <XCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
+                        )}
+                        <span className="font-semibold text-white">
+                          <span className="text-brand-orange font-bold mr-1.5">Question {idx + 1}:</span>
+                          {item.questionText || `Question ${idx + 1}`}
+                        </span>
+                      </div>
+                      <span className="font-mono font-bold text-[11px] shrink-0 px-2 py-0.5 rounded bg-[#19100C] border border-[#2A1B14] text-stone-300">
+                        {item.isCorrect ? `+${item.pointsEarned}` : '0'} / {item.pointsPossible} pts
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
+                      <div className="p-2 rounded bg-[#19100C]/80 border border-[#2A1B14] text-stone-300">
+                        <span className="text-stone-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">
+                          Your Answer:
+                        </span>
+                        <span className={item.isCorrect ? 'text-orange-300 font-medium' : 'text-rose-300 font-medium'}>
+                          {item.selectedAnswer || 'No response selected'}
+                        </span>
+                      </div>
+
+                      {!item.isCorrect && item.correctAnswer && (
+                        <div className="p-2 rounded bg-orange-950/30 border border-orange-800/50 text-orange-200">
+                          <span className="text-orange-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">
+                            Expected Answer:
+                          </span>
+                          <span className="font-medium text-white">{item.correctAnswer}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {item.explanation && (
+                      <div className="p-2.5 rounded bg-[#160E0A] border border-[#2A1B14] text-stone-300 text-[11px] leading-relaxed flex items-start gap-2">
+                        <span className="text-brand-orange font-bold shrink-0">Rationale:</span>
+                        <span>{item.explanation}</span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

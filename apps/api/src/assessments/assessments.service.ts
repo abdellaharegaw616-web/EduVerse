@@ -213,43 +213,73 @@ export class AssessmentsService {
     let earnedPoints = 0;
     const breakdown: Array<{
       questionId: string;
+      questionText: string;
+      type: string;
       isCorrect: boolean;
       pointsEarned: number;
       pointsPossible: number;
+      selectedAnswer: string;
+      correctAnswer: string;
+      explanation: string;
     }> = [];
 
     for (const question of quiz.questions) {
       totalPointsPossible += question.points;
       const studentAnswer = dto.answers.find((a) => a.questionId === question.id);
       let isCorrect = false;
+      let selectedText = '';
+      let correctText = '';
 
-      if (studentAnswer) {
-        if (question.type === 'MULTIPLE_CHOICE' || question.type === 'TRUE_FALSE') {
-          const selected = question.options.find(
-            (o) => o.id === studentAnswer.selectedOptionId,
-          );
-          if (selected && selected.isCorrect) {
+      if (question.type === 'MULTIPLE_CHOICE' || question.type === 'TRUE_FALSE') {
+        const correctOpt = question.options.find((o) => o.isCorrect);
+        if (correctOpt) {
+          correctText = correctOpt.text;
+        }
+
+        const selected = question.options.find(
+          (o) => o.id === studentAnswer?.selectedOptionId,
+        );
+        if (selected) {
+          selectedText = selected.text;
+          if (selected.isCorrect) {
             isCorrect = true;
           }
-        } else if (question.type === 'SHORT_ANSWER') {
-          const studentText = (studentAnswer.textAnswer || '').trim().toLowerCase();
-          const matched = question.options.some(
-            (opt) => opt.isCorrect && opt.text.trim().toLowerCase() === studentText,
-          );
-          if (matched && studentText.length > 0) {
-            isCorrect = true;
-          }
+        }
+      } else if (question.type === 'SHORT_ANSWER') {
+        const correctOpt = question.options.find((o) => o.isCorrect);
+        if (correctOpt) {
+          correctText = correctOpt.text;
+        }
+
+        const studentText = (studentAnswer?.textAnswer || '').trim();
+        selectedText = studentText;
+        const matched = question.options.some(
+          (opt) => opt.isCorrect && opt.text.trim().toLowerCase() === studentText.toLowerCase(),
+        );
+        if (matched && studentText.length > 0) {
+          isCorrect = true;
         }
       }
 
       const pointsEarned = isCorrect ? question.points : 0;
       earnedPoints += pointsEarned;
 
+      const explanation = isCorrect
+        ? `Correct! Full credit awarded (${pointsEarned}/${question.points} pts).`
+        : correctText
+          ? `Review: The expected answer was "${correctText}". Review your course notes for this topic.`
+          : `Review: Review course notes and reference documentation for this question.`;
+
       breakdown.push({
         questionId: question.id,
+        questionText: question.text,
+        type: question.type,
         isCorrect,
         pointsEarned,
         pointsPossible: question.points,
+        selectedAnswer: selectedText || 'No answer submitted',
+        correctAnswer: correctText || 'See course notes',
+        explanation,
       });
     }
 

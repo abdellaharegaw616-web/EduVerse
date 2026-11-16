@@ -108,11 +108,10 @@ export default function MyCoursesPage() {
                 setStatusFilter(status);
                 setPage(1);
               }}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
-                statusFilter === status
+              className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${statusFilter === status
                   ? 'bg-brand-orange text-white'
                   : 'bg-slate-100 dark:bg-stone-800 text-brand-coffee/80 dark:text-stone-300 hover:bg-slate-200 dark:hover:bg-stone-700'
-              }`}
+                }`}
             >
               {status.replace('-', ' ')}
             </button>
