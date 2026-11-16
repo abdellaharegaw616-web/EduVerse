@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
-  HttpException,
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -131,7 +130,22 @@ export class AiService {
       const cleanCourseId = dto.courseId && dto.courseId.trim() ? dto.courseId.trim() : undefined;
       const cleanLessonId = dto.lessonId && dto.lessonId.trim() ? dto.lessonId.trim() : undefined;
 
-      const context = await this.resolveAcademicContext(user, cleanCourseId, cleanLessonId);
+      let context: AcademicContext = { learningObjectives: [] };
+      try {
+        context = await this.resolveAcademicContext(user, cleanCourseId, cleanLessonId);
+      } catch (contextErr) {
+        if (contextErr instanceof ForbiddenException || contextErr instanceof NotFoundException) {
+          throw contextErr;
+        }
+        this.logger.warn(
+          `Context resolution bypassed for AI study tutor: ${(contextErr as Error).message}`,
+        );
+        context = {
+          learningObjectives: [],
+          courseId: cleanCourseId,
+          lessonId: cleanLessonId,
+        };
+      }
       const mode = dto.mode || AiTutorMode.TUTOR;
       const language = dto.language || AiTutorLanguage.EN;
 
@@ -253,12 +267,12 @@ export class AiService {
         },
       };
     } catch (err) {
-      if (err instanceof HttpException) {
+      if (err instanceof ForbiddenException || err instanceof NotFoundException) {
         throw err;
       }
 
       this.logger.error(
-        `Unexpected error in askTutor: ${(err as Error).message}`,
+        `Graceful fallback activated in askTutor: ${(err as Error).message}`,
         (err as Error).stack,
       );
 

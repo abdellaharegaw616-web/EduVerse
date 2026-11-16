@@ -125,6 +125,11 @@ export class CoursesService {
     const coursePerformance = courses.map((c) => {
       const studentCount = c.enrollments.length;
       const completedCount = c.enrollments.filter((e) => e.completedAt !== null).length;
+      const sectionCount = c.sections.length;
+      let lessonCount = 0;
+      c.sections.forEach((sec) => {
+        lessonCount += sec.lessons.length;
+      });
       const avgProgress =
         studentCount > 0
           ? Math.round(
@@ -140,6 +145,8 @@ export class CoursesService {
         status: c.status,
         studentCount,
         completedCount,
+        sectionCount,
+        lessonCount,
         averageProgress: avgProgress,
         updatedAt: c.updatedAt,
       };

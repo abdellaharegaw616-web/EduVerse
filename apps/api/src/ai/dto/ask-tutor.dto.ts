@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -34,13 +33,13 @@ export class AskTutorDto {
   @ApiPropertyOptional({ description: 'Optional course ID for syllabus context' })
   @IsOptional()
   @Transform(({ value }) => (typeof value === 'string' && value.trim() ? value.trim() : undefined))
-  @IsUUID()
+  @IsString()
   courseId?: string;
 
   @ApiPropertyOptional({ description: 'Optional lesson ID for granular lesson context' })
   @IsOptional()
   @Transform(({ value }) => (typeof value === 'string' && value.trim() ? value.trim() : undefined))
-  @IsUUID()
+  @IsString()
   lessonId?: string;
 
   @ApiPropertyOptional({ enum: AiTutorMode, default: AiTutorMode.TUTOR })

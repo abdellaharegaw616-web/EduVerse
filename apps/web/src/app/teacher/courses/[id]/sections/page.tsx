@@ -142,41 +142,41 @@ export default function CourseSectionsPage() {
   return (
     <div className="space-y-6 pb-16 max-w-4xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
           <Link
             href={`/teacher/courses/${courseId}/edit`}
-            className="text-xs font-semibold text-brand-slate hover:text-brand-navy flex items-center gap-1.5 mb-2 transition-colors"
+            className="text-xs font-semibold text-brand-slate dark:text-stone-400 hover:text-brand-orange flex items-center gap-1.5 mb-2 transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Course Settings</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Curriculum Structure & Modules
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
             {course?.title || 'Course Modules'} — Organize sequential learning units, lectures, and evaluations.
           </p>
         </div>
 
         <Link href={`/teacher/courses/${courseId}/edit`}>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="border-brand-border dark:border-stone-700">
             Course Settings
           </Button>
         </Link>
       </div>
 
       {/* Add New Section Inline Form */}
-      <Card className="border border-brand-emerald/30 bg-emerald-50/20 shadow-xs">
+      <Card className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs">
         <CardContent className="p-4 flex flex-col sm:flex-row items-center gap-3">
           <Input
             placeholder="e.g. Module 1: Architectural Foundations"
             value={newSectionTitle}
             onChange={(e) => setNewSectionTitle(e.target.value)}
-            className="text-xs bg-white"
+            className="text-xs bg-white dark:bg-stone-800 border-brand-border dark:border-stone-700"
           />
           <Button
-            variant="emerald"
+            variant="orange"
             size="sm"
             onClick={() => newSectionTitle.trim() && createSectionMutation.mutate(newSectionTitle)}
             disabled={!newSectionTitle.trim() || createSectionMutation.isPending}
@@ -197,16 +197,16 @@ export default function CourseSectionsPage() {
       ) : course?.sections && course.sections.length > 0 ? (
         <div className="space-y-4">
           {course.sections.map((section, sIdx) => (
-            <Card key={section.id} className="border border-brand-border bg-white shadow-xs overflow-hidden">
-              <CardHeader className="p-4 bg-slate-50/60 border-b border-brand-border/60 flex flex-row items-center justify-between">
+            <Card key={section.id} className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs overflow-hidden">
+              <CardHeader className="p-4 bg-stone-50 dark:bg-stone-800/60 border-b border-brand-border/60 dark:border-stone-800 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-md bg-brand-navy text-white text-xs font-bold flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-md bg-brand-coffee text-white dark:bg-stone-700 dark:text-stone-100 text-xs font-bold flex items-center justify-center">
                     {sIdx + 1}
                   </span>
-                  <CardTitle className="text-sm font-bold text-brand-navy">
+                  <CardTitle className="text-sm font-bold text-brand-coffee dark:text-stone-100">
                     {section.title}
                   </CardTitle>
-                  <span className="text-[11px] text-brand-slate">
+                  <span className="text-[11px] text-brand-slate dark:text-stone-400">
                     ({section.lessons.length} lessons)
                   </span>
                 </div>
@@ -216,7 +216,7 @@ export default function CourseSectionsPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setActiveSectionForLesson(section.id)}
-                    className="h-7 text-xs gap-1 text-brand-emerald hover:text-brand-emerald"
+                    className="h-7 text-xs gap-1 text-brand-orange hover:text-orange-700"
                   >
                     <PlusCircle className="h-3.5 w-3.5" />
                     <span>Add Lesson</span>
@@ -225,7 +225,7 @@ export default function CourseSectionsPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setSectionToDelete(section)}
-                    className="h-7 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 p-1.5"
+                    className="h-7 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40 p-1.5"
                     title="Delete Module"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -236,16 +236,16 @@ export default function CourseSectionsPage() {
               <CardContent className="p-4 space-y-2">
                 {/* Add Lesson Inline input for this section */}
                 {activeSectionForLesson === section.id && (
-                  <div className="p-3 bg-brand-mint/30 rounded-lg border border-brand-emerald/30 flex items-center gap-2 mb-3">
+                  <div className="p-3 bg-brand-mint/40 dark:bg-stone-800/80 rounded-lg border border-brand-orange/30 flex items-center gap-2 mb-3">
                     <Input
                       placeholder="e.g. Lesson 1: Monorepo Architecture"
                       value={newLessonTitle}
                       onChange={(e) => setNewLessonTitle(e.target.value)}
-                      className="text-xs bg-white h-8"
+                      className="text-xs bg-white dark:bg-stone-900 h-8"
                       autoFocus
                     />
                     <Button
-                      variant="emerald"
+                      variant="orange"
                       size="sm"
                       onClick={() =>
                         newLessonTitle.trim() &&

@@ -63,16 +63,16 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
   };
 
   return (
-    <aside className="w-64 border-r border-brand-border dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] transition-colors">
+    <aside className="w-64 border-r border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] transition-colors">
       {/* Top: Nav Links */}
       <div className="p-4 space-y-6">
         {/* User Identity Chip */}
         <Link
           href="/app/profile"
           onClick={handleLinkClick}
-          className="rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-brand-border dark:border-slate-800 p-3 flex items-center gap-3 hover:border-brand-orange/40 transition-colors block"
+          className="rounded-lg bg-brand-creamy/60 dark:bg-stone-800/70 border border-brand-border dark:border-stone-800 p-3 flex items-center gap-3 hover:border-brand-orange/40 transition-colors block"
         >
-          <div className="h-9 w-9 rounded-full bg-brand-navy dark:bg-slate-700 text-white flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
+          <div className="h-9 w-9 rounded-full bg-brand-coffee text-white dark:bg-stone-700 flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
             {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
               <img
                 src={user?.profile?.avatarUrl || authUser?.profile?.avatarUrl!}
@@ -86,10 +86,10 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
             )}
           </div>
           <div className="overflow-hidden">
-            <span className="font-bold text-brand-navy dark:text-slate-100 text-xs truncate block">
+            <span className="font-bold text-brand-coffee dark:text-stone-100 text-xs truncate block">
               {user?.fullName || 'Student'}
             </span>
-            <span className="text-[10px] text-brand-slate dark:text-slate-400 truncate block">
+            <span className="text-[10px] text-brand-slate dark:text-stone-400 truncate block">
               {user?.email}
             </span>
           </div>
@@ -108,16 +108,16 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
                 className={cn(
                   'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors',
                   isActive
-                    ? 'bg-brand-mint text-brand-emerald dark:bg-orange-950/60 dark:text-orange-400 font-semibold'
-                    : 'text-brand-slate dark:text-slate-400 hover:text-brand-navy dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800',
+                    ? 'bg-orange-50 text-brand-orange dark:bg-orange-950/50 dark:text-orange-400 font-bold border-l-2 border-brand-orange'
+                    : 'text-brand-coffee/80 dark:text-stone-400 hover:text-brand-orange dark:hover:text-stone-100 hover:bg-orange-50/40 dark:hover:bg-stone-800',
                 )}
               >
                 <Icon
                   className={cn(
                     'h-4 w-4 shrink-0',
                     isActive
-                      ? 'text-brand-emerald dark:text-orange-400'
-                      : 'text-brand-slate dark:text-slate-400',
+                      ? 'text-brand-orange dark:text-orange-400'
+                      : 'text-stone-400 dark:text-stone-500',
                   )}
                 />
                 <span>{item.label}</span>
@@ -128,7 +128,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
       </div>
 
       {/* Bottom: Sign out button */}
-      <div className="p-4 border-t border-brand-border dark:border-slate-800">
+      <div className="p-4 border-t border-brand-border dark:border-stone-800">
         <Button
           variant="ghost"
           size="sm"
@@ -136,7 +136,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
             handleLinkClick();
             logout();
           }}
-          className="w-full justify-start text-xs text-brand-slate dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2 h-9"
+          className="w-full justify-start text-xs text-brand-slate dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2 h-9"
         >
           <LogOut className="h-4 w-4 shrink-0" />
           <span>Sign Out</span>

@@ -119,21 +119,21 @@ export default function TeacherGradingQueuePage() {
   return (
     <div className="space-y-6 pb-16 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Evaluation Hub
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100">
             Submission Review & Grading Queue
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
             Audit student project deliverables, assign scores, and deliver qualitative mentorship feedback.
           </p>
         </div>
 
         <Link href="/teacher/dashboard">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="border-brand-border dark:border-stone-700">
             Studio Dashboard
           </Button>
         </Link>
@@ -158,8 +158,8 @@ export default function TeacherGradingQueuePage() {
           onClick={() => setStatusFilter('PENDING')}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
             statusFilter === 'PENDING'
-              ? 'bg-brand-navy text-white shadow-xs'
-              : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+              ? 'bg-brand-orange text-white shadow-xs'
+              : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee dark:text-stone-300 hover:text-brand-orange'
           }`}
         >
           Pending Review
@@ -168,8 +168,8 @@ export default function TeacherGradingQueuePage() {
           onClick={() => setStatusFilter('GRADED')}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
             statusFilter === 'GRADED'
-              ? 'bg-brand-navy text-white shadow-xs'
-              : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+              ? 'bg-brand-orange text-white shadow-xs'
+              : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee dark:text-stone-300 hover:text-brand-orange'
           }`}
         >
           Graded
@@ -178,8 +178,8 @@ export default function TeacherGradingQueuePage() {
           onClick={() => setStatusFilter('ALL')}
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
             statusFilter === 'ALL'
-              ? 'bg-brand-navy text-white shadow-xs'
-              : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+              ? 'bg-brand-orange text-white shadow-xs'
+              : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee dark:text-stone-300 hover:text-brand-orange'
           }`}
         >
           All Submissions
@@ -267,11 +267,11 @@ export default function TeacherGradingQueuePage() {
         onOpenChange={(open) => !open && setActiveSubmission(null)}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5 text-brand-emerald" />
+          <DialogTitle className="flex items-center gap-2 text-brand-coffee dark:text-stone-100">
+            <Award className="h-5 w-5 text-brand-orange" />
             <span>Grade Deliverable: {activeSubmission?.assignmentTitle}</span>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs text-brand-slate dark:text-stone-400">
             Student: <strong>{activeSubmission?.studentName}</strong> ({activeSubmission?.studentEmail})
           </DialogDescription>
         </DialogHeader>
@@ -280,8 +280,8 @@ export default function TeacherGradingQueuePage() {
           <div className="space-y-4 my-2">
             {/* Student Deliverable Content */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-brand-navy">Student Submission Content</Label>
-              <div className="p-3 bg-slate-50 rounded-lg border border-brand-border text-xs text-brand-navy font-mono max-h-48 overflow-y-auto whitespace-pre-wrap">
+              <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">Student Submission Content</Label>
+              <div className="p-3 bg-stone-50 dark:bg-stone-800/60 rounded-lg border border-brand-border dark:border-stone-700 text-xs text-brand-coffee dark:text-stone-100 font-mono max-h-48 overflow-y-auto whitespace-pre-wrap">
                 {activeSubmission.content || 'No text content provided.'}
               </div>
               {activeSubmission.fileUrl && (
@@ -290,7 +290,7 @@ export default function TeacherGradingQueuePage() {
                     href={activeSubmission.fileUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-brand-emerald font-semibold hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs text-brand-orange font-semibold hover:underline"
                   >
                     <span>View Submitted Attachment / Code</span>
                     <ExternalLink className="h-3.5 w-3.5" />
@@ -300,9 +300,9 @@ export default function TeacherGradingQueuePage() {
             </div>
 
             {/* Score & Feedback Form */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-brand-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-brand-border dark:border-stone-800">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-brand-navy">
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   Score (Out of {activeSubmission.maxScore})
                 </Label>
                 <Input
@@ -312,14 +312,14 @@ export default function TeacherGradingQueuePage() {
                   value={gradeInput}
                   onChange={(e) => setGradeInput(Number(e.target.value))}
                   error={gradeError || undefined}
-                  className="text-xs"
+                  className="text-xs border-brand-border dark:border-stone-700"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
-                <Label className="text-xs font-semibold text-brand-navy dark:text-slate-200">
+                <Label className="text-xs font-semibold text-brand-coffee dark:text-stone-200">
                   Qualitative Feedback for Learner
                 </Label>
                 <Button
@@ -333,12 +333,12 @@ export default function TeacherGradingQueuePage() {
                       proposedGrade: Number(gradeInput),
                     })
                   }
-                  className="h-7 text-[11px] gap-1.5"
+                  className="h-7 text-[11px] gap-1.5 border-brand-border dark:border-stone-700"
                 >
                   {draftFeedbackMutation.isPending ? (
                     <Loader2 className="h-3 w-3 animate-spin" />
                   ) : (
-                    <BookOpenCheck className="h-3 w-3 text-brand-emerald" />
+                    <BookOpenCheck className="h-3 w-3 text-brand-orange" />
                   )}
                   <span>Draft with AI</span>
                 </Button>
@@ -348,21 +348,21 @@ export default function TeacherGradingQueuePage() {
                 value={feedbackInput}
                 onChange={(e) => setFeedbackInput(e.target.value)}
                 placeholder="Share strengths, constructive corrections, and actionable advice..."
-                className="text-xs"
+                className="text-xs border-brand-border dark:border-stone-700"
               />
             </div>
 
-            <div className="pt-2 flex justify-end gap-2 border-t border-brand-border">
+            <div className="pt-2 flex justify-end gap-2 border-t border-brand-border dark:border-stone-800">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setActiveSubmission(null)}
-                className="text-xs"
+                className="text-xs border-brand-border dark:border-stone-700"
               >
                 Cancel
               </Button>
               <Button
-                variant="emerald"
+                variant="orange"
                 size="sm"
                 onClick={handleGradeSubmit}
                 disabled={gradeMutation.isPending}

@@ -92,11 +92,11 @@ export default function TeacherCoursesPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'PUBLISHED':
-        return <Badge variant="emerald">Published</Badge>;
+        return <Badge variant="orange">Published</Badge>;
       case 'PENDING_REVIEW':
-        return <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300">Pending Review</Badge>;
+        return <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300">Pending Review</Badge>;
       case 'DRAFT':
-        return <Badge variant="outline" className="bg-slate-50 text-slate-700">Draft</Badge>;
+        return <Badge variant="outline" className="bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-800 dark:text-stone-300">Draft</Badge>;
       case 'ARCHIVED':
         return <Badge variant="secondary">Archived</Badge>;
       default:
@@ -107,21 +107,21 @@ export default function TeacherCoursesPage() {
   return (
     <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border dark:border-stone-800 pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Curriculum Studio
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-coffee dark:text-stone-100 mt-0.5">
             Authored Courses & Curriculums
           </h1>
-          <p className="text-xs text-brand-slate mt-0.5">
-            Create, edit, organize lesson modules, and publish courseware across university networks.
+          <p className="text-xs text-brand-slate dark:text-stone-400 mt-0.5">
+            Create, edit, organize lesson modules, upload lecture materials, and configure quizzes & assignments.
           </p>
         </div>
 
         <Link href="/teacher/courses/create">
-          <Button variant="emerald" size="sm" className="gap-2 text-xs font-semibold shadow-xs">
+          <Button variant="orange" size="sm" className="gap-2 text-xs font-semibold shadow-xs">
             <PlusCircle className="h-4 w-4" />
             <span>Create New Course</span>
           </Button>
@@ -160,8 +160,8 @@ export default function TeacherCoursesPage() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 statusFilter === tab.id
-                  ? 'bg-brand-navy text-white shadow-xs'
-                  : 'bg-white border border-brand-border text-brand-slate hover:text-brand-navy'
+                  ? 'bg-brand-orange text-white shadow-xs'
+                  : 'bg-white dark:bg-stone-900 border border-brand-border dark:border-stone-800 text-brand-coffee dark:text-stone-300 hover:text-brand-orange'
               }`}
             >
               {tab.label}
@@ -179,7 +179,7 @@ export default function TeacherCoursesPage() {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
-            className="pl-9 h-9 text-xs"
+            className="pl-9 h-9 text-xs border-brand-border dark:border-stone-700"
           />
         </div>
       </div>
@@ -197,49 +197,54 @@ export default function TeacherCoursesPage() {
           {data.items.map((course) => (
             <Card
               key={course.id}
-              className="border border-brand-border bg-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+              className="border border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs hover:border-brand-orange/40 transition-all flex flex-col justify-between"
             >
               <CardContent className="p-5 space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-3">
-                    <span className="text-[11px] font-semibold text-brand-emerald">
+                    <span className="text-[11px] font-semibold text-brand-orange">
                       {course.categoryName}
                     </span>
                     {getStatusBadge(course.status)}
                   </div>
 
-                  <h3 className="font-bold text-base text-brand-navy line-clamp-1">
+                  <h3 className="font-bold text-base text-brand-coffee dark:text-stone-100 line-clamp-1">
                     {course.title}
                   </h3>
-                  <p className="text-xs text-brand-slate line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-brand-slate dark:text-stone-400 line-clamp-2 leading-relaxed">
                     {course.description}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-brand-slate pt-2 border-t border-brand-border/60">
+                <div className="flex items-center gap-4 text-xs text-brand-slate dark:text-stone-400 pt-2 border-t border-brand-border/60 dark:border-stone-800">
                   <span className="flex items-center gap-1.5">
-                    <Layers className="h-3.5 w-3.5 text-brand-slate/80" />
+                    <Layers className="h-3.5 w-3.5 text-brand-orange" />
                     {course.sectionCount} Sections
                   </span>
                   <span>•</span>
                   <span className="flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-brand-slate/80" />
+                    <Users className="h-3.5 w-3.5 text-brand-coffee dark:text-stone-300" />
                     {course.studentCount} Students
                   </span>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between pt-2 gap-2 border-t border-brand-border/60">
+                <div className="flex flex-wrap items-center justify-between pt-2 gap-2 border-t border-brand-border/60 dark:border-stone-800">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <Link href={`/teacher/courses/${course.id}/edit`}>
-                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 border-brand-border dark:border-stone-700">
                         <Edit className="h-3 w-3" />
                         <span>Edit</span>
                       </Button>
                     </Link>
                     <Link href={`/teacher/courses/${course.id}/sections`}>
-                      <Button variant="default" size="sm" className="h-7 text-xs gap-1">
-                        <Layers className="h-3 w-3" />
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 border-brand-border dark:border-stone-700 hover:border-brand-orange/40">
+                        <Layers className="h-3 w-3 text-brand-orange" />
                         <span>Curriculum</span>
+                      </Button>
+                    </Link>
+                    <Link href={`/teacher/courses/${course.id}/quizzes`}>
+                      <Button variant="outline" size="sm" className="h-7 text-xs gap-1 border-brand-border dark:border-stone-700 hover:border-brand-orange/40">
+                        <span>Quizzes</span>
                       </Button>
                     </Link>
                     <Link href={`/teacher/courses/${course.id}/students`}>

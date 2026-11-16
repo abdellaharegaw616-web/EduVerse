@@ -98,7 +98,13 @@ export function LessonAiTutor({
       }
     },
     onError: (err: any) => {
-      setErrorMsg(err?.message || 'Unable to generate study assistance right now.');
+      if (err?.message && err.message !== 'An unexpected internal server error occurred.') {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg(
+          'The study assistant is momentarily reconnecting. Please click retry or re-send your question.',
+        );
+      }
     },
   });
 

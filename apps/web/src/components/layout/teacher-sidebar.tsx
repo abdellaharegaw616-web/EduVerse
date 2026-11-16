@@ -151,7 +151,7 @@ export function TeacherSidebar({ onNavigate }: TeacherSidebarProps) {
             <Link
               href="/app/dashboard"
               onClick={handleLinkClick}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-brand-emerald dark:text-emerald-400 bg-brand-mint/50 dark:bg-emerald-950/60 hover:bg-brand-mint dark:hover:bg-emerald-950 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold text-brand-orange dark:text-orange-400 bg-brand-mint/50 dark:bg-orange-950/40 hover:bg-brand-mint dark:hover:bg-orange-950/60 transition-colors"
             >
               <GraduationCap className="h-4 w-4 shrink-0" />
               <span>Switch to Student Mode</span>

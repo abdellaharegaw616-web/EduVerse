@@ -107,10 +107,13 @@ export default function StudentAiTutorPage() {
       }
     },
     onError: (err: any) => {
-      setErrorMsg(
-        err?.message ||
-          'The study assistant encountered a temporary issue. Please rephrase or try again in a moment.',
-      );
+      if (err?.message && err.message !== 'An unexpected internal server error occurred.') {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg(
+          'The study assistant is momentarily reconnecting. Please click retry or re-send your question.',
+        );
+      }
     },
   });
 
@@ -158,7 +161,7 @@ export default function StudentAiTutorPage() {
           </p>
         </div>
 
-        <Badge variant="outline" className="text-[11px] self-start sm:self-center border-brand-border dark:border-stone-700 bg-brand-mint/60 dark:bg-stone-800 text-brand-coffee dark:text-stone-200">
+        <Badge variant="outline" className="text-[11px] self-start sm:self-center border-brand-border dark:border-stone-700 bg-brand-creamy dark:bg-stone-800 text-brand-coffee dark:text-stone-200">
           <Sparkles className="h-3 w-3 text-brand-orange mr-1" />
           {engineLabel}
         </Badge>
@@ -281,7 +284,7 @@ export default function StudentAiTutorPage() {
               <p className="text-xs text-brand-slate dark:text-stone-400">Loading study history...</p>
             ) : history.length === 0 ? (
               <div className="py-10 text-center space-y-2">
-                <div className="h-10 w-10 rounded-full bg-brand-mint text-brand-orange mx-auto flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full bg-orange-100/80 text-brand-orange dark:bg-orange-950/60 dark:text-orange-400 mx-auto flex items-center justify-center">
                   <BookOpenCheck className="h-5 w-5" />
                 </div>
                 <p className="text-sm font-bold text-brand-coffee dark:text-stone-100">
@@ -300,7 +303,7 @@ export default function StudentAiTutorPage() {
                     className={`rounded-xl p-4 text-xs leading-relaxed ${
                       isUser
                         ? 'bg-brand-coffee text-white dark:bg-stone-800 dark:text-stone-100 ml-6 sm:ml-12'
-                        : 'bg-brand-mint/40 dark:bg-stone-800/60 border border-brand-border dark:border-stone-700 text-brand-coffee dark:text-stone-100 mr-4 sm:mr-12'
+                        : 'bg-[#FDFBF7] dark:bg-stone-800/60 border border-brand-border dark:border-stone-700 text-brand-coffee dark:text-stone-100 mr-4 sm:mr-12'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1.5">
