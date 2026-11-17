@@ -45,3 +45,4 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
     </button>
   );
 }
+

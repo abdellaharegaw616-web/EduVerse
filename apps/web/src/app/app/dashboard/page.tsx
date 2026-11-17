@@ -423,23 +423,23 @@ export default function StudentDashboardPage() {
         <Card className="border-brand-border dark:border-stone-800 bg-gradient-to-r from-orange-50/70 via-orange-50/30 to-white dark:from-stone-900 dark:via-stone-900/90 dark:to-stone-950 overflow-hidden shadow-xs">
           <CardContent className="p-5 sm:p-6">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-3 max-w-2xl">
+              <div className="space-y-3 max-w-2xl min-w-0">
                 <div className="flex items-center gap-2">
-                  <Badge variant="orange" className="text-[10px] font-bold">
+                  <Badge variant="orange" className="text-[10px] font-bold shrink-0">
                     Continue Where You Left Off
                   </Badge>
                   {continueLearningCourse.course.category && (
-                    <span className="text-[11px] text-brand-slate dark:text-slate-400 font-medium">
+                    <span className="text-[11px] text-brand-slate dark:text-slate-400 font-medium truncate">
                       • {continueLearningCourse.course.category.name}
                     </span>
                   )}
                 </div>
 
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-brand-coffee dark:text-white leading-tight">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-brand-coffee dark:text-white leading-tight break-words">
                     {continueLearningCourse.course.title}
                   </h2>
-                  <p className="text-xs text-brand-slate dark:text-slate-300 mt-1 flex items-center gap-2">
+                  <p className="text-xs text-brand-slate dark:text-slate-300 mt-1 flex flex-wrap items-center gap-2">
                     <span>Instructor: {continueLearningCourse.course.author.fullName}</span>
                     {continueLearningCourse.course.institution && (
                       <span>• {continueLearningCourse.course.institution.name}</span>
@@ -503,7 +503,7 @@ export default function StudentDashboardPage() {
       )}
 
       {/* 3. Metrics Telemetry Row & Learning Goals Tracker */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Metric 1: Enrolled Courses */}
         <Card className="border-brand-border dark:border-stone-800 bg-white dark:bg-stone-900">
           <CardContent className="p-4 sm:p-5 space-y-1">

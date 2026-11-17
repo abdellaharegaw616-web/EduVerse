@@ -30,7 +30,7 @@ export function Navbar() {
   const { user: authUser, isAuthenticated, logout } = useAuth();
   const { t } = useI18n();
 
-  const navLinks = [
+  const publicNavLinks = [
     { href: '/', label: t.home },
     { href: '/courses', label: t.courses },
     { href: '/app/community', label: t.studyGroups },
@@ -39,6 +39,14 @@ export function Navbar() {
     { href: '/about', label: t.about },
     { href: '/contact', label: t.contact },
   ];
+
+  const authNavLinks = [
+    { href: '/courses', label: t.courses },
+    { href: '/app/community', label: t.studyGroups },
+  ];
+
+  const desktopNavLinks = isAuthenticated ? authNavLinks : publicNavLinks;
+  const navLinks = publicNavLinks;
 
   const { data: profileData } = useQuery({
     queryKey: ['user-profile'],
@@ -74,34 +82,34 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-brand-border bg-white/95 backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-800 transition-colors">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+      <div className="w-full max-w-7xl mx-auto flex h-16 items-center justify-between px-3 sm:px-6 gap-2">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center space-x-2.5 shrink-0">
+        <Link href="/" className="flex items-center space-x-2 shrink-0">
           <img
             src="/logo.png"
             alt="EduVerse Logo"
-            className="h-9 w-9 object-contain rounded-lg shadow-xs"
+            className="h-8 w-8 sm:h-9 sm:w-9 object-contain rounded-lg shadow-xs"
           />
           <div className="flex flex-col">
-            <span className="font-bold tracking-tight text-brand-coffee dark:text-white text-lg leading-none">
+            <span className="font-bold tracking-tight text-brand-coffee dark:text-white text-base sm:text-lg leading-none">
               Edu<span className="text-brand-orange">Verse</span>
             </span>
-            <span className="text-[10px] text-brand-slate dark:text-slate-400 tracking-wide font-medium">
+            <span className="text-[10px] text-brand-slate dark:text-slate-400 tracking-wide font-medium hidden xl:block">
               {t.tagline}
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-          {navLinks.map((link) => {
+        <nav className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
+          {desktopNavLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                  'px-2.5 py-1.5 rounded-md text-xs lg:text-sm font-medium transition-colors whitespace-nowrap',
                   isActive
                     ? 'text-brand-orange bg-orange-50 dark:bg-orange-950/60 dark:text-orange-400 font-semibold'
                     : 'text-brand-slate dark:text-slate-300 hover:text-brand-coffee dark:hover:text-white hover:bg-orange-50/60 dark:hover:bg-slate-800',
@@ -114,7 +122,7 @@ export function Navbar() {
         </nav>
 
         {/* Desktop CTAs */}
-        <div className="hidden md:flex items-center space-x-2.5">
+        <div className="hidden md:flex items-center space-x-1.5 sm:space-x-2">
           {/* Language Switcher (English / Amharic) */}
           <LanguageSwitcher />
 
@@ -122,16 +130,17 @@ export function Navbar() {
           <ThemeToggle />
 
           {isAuthenticated && user ? (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
               {(user.role === 'INSTITUTION_ADMIN' || user.role === 'SUPER_ADMIN') && (
                 <Link href="/institution">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-1.5 text-xs border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
+                    className="gap-1.5 text-xs border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50 h-8 px-2 xl:px-2.5"
+                    title={t.institutionPortal}
                   >
-                    <Building2 className="h-4 w-4 text-brand-orange" />
-                    <span>{t.institutionPortal}</span>
+                    <Building2 className="h-3.5 w-3.5 text-brand-orange shrink-0" />
+                    <span className="hidden xl:inline">{t.institutionPortal}</span>
                   </Button>
                 </Link>
               )}
@@ -141,10 +150,11 @@ export function Navbar() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-1.5 text-xs"
+                    className="gap-1.5 text-xs h-8 px-2 xl:px-2.5"
+                    title={t.admin}
                   >
-                    <ShieldCheck className="h-4 w-4 text-brand-orange" />
-                    <span>{t.admin}</span>
+                    <ShieldCheck className="h-3.5 w-3.5 text-brand-orange shrink-0" />
+                    <span className="hidden xl:inline">{t.admin}</span>
                   </Button>
                 </Link>
               )}
@@ -153,24 +163,34 @@ export function Navbar() {
                 user.role === 'INDEPENDENT_INSTRUCTOR' ||
                 user.role === 'SUPER_ADMIN') && (
                 <Link href="/teacher/dashboard">
-                  <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                    <GraduationCap className="h-4 w-4 text-brand-orange" />
-                    <span>{t.studio}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs h-8 px-2 xl:px-2.5"
+                    title={t.studio}
+                  >
+                    <GraduationCap className="h-3.5 w-3.5 text-brand-orange shrink-0" />
+                    <span className="hidden xl:inline">{t.studio}</span>
                   </Button>
                 </Link>
               )}
 
               <Link href="/app/dashboard">
-                <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                  <LayoutDashboard className="h-4 w-4 text-brand-coffee dark:text-slate-200" />
-                  <span>{t.dashboard}</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs h-8 px-2 xl:px-2.5"
+                  title={t.dashboard}
+                >
+                  <LayoutDashboard className="h-3.5 w-3.5 text-brand-coffee dark:text-slate-200 shrink-0" />
+                  <span className="hidden xl:inline">{t.dashboard}</span>
                 </Button>
               </Link>
 
-              <div className="flex items-center gap-2 pl-2 border-l border-brand-border dark:border-slate-800">
+              <div className="flex items-center gap-1.5 pl-1.5 sm:pl-2 border-l border-brand-border dark:border-slate-800">
                 <Link
                   href="/app/profile"
-                  className="h-8 w-8 rounded-full bg-orange-50 dark:bg-orange-950 text-brand-orange dark:text-orange-400 flex items-center justify-center text-xs font-bold border border-brand-orange/20 overflow-hidden hover:ring-2 hover:ring-brand-orange transition-all"
+                  className="h-8 w-8 rounded-full bg-orange-50 dark:bg-orange-950 text-brand-orange dark:text-orange-400 flex items-center justify-center text-xs font-bold border border-brand-orange/20 overflow-hidden hover:ring-2 hover:ring-brand-orange transition-all shrink-0"
                   title="View Profile"
                 >
                   {user?.profile?.avatarUrl || authUser?.profile?.avatarUrl ? (
@@ -189,11 +209,11 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={() => logout()}
-                  className="text-xs text-brand-slate hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 gap-1"
+                  className="text-xs text-brand-slate hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 gap-1 h-8 px-2"
                   title={t.signOut}
                 >
                   <LogOut className="h-3.5 w-3.5" />
-                  <span className="hidden lg:inline">{t.signOut}</span>
+                  <span className="hidden 2xl:inline">{t.signOut}</span>
                 </Button>
               </div>
             </div>
@@ -320,13 +340,13 @@ export function Navbar() {
                 {(user.role === 'TEACHER' ||
                   user.role === 'INDEPENDENT_INSTRUCTOR' ||
                   user.role === 'SUPER_ADMIN') && (
-                  <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start gap-2.5 h-10">
-                      <GraduationCap className="h-4 w-4 text-brand-orange" />
-                      <span>Instructor Studio</span>
-                    </Button>
-                  </Link>
-                )}
+                    <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full justify-start gap-2.5 h-10">
+                        <GraduationCap className="h-4 w-4 text-brand-orange" />
+                        <span>Instructor Studio</span>
+                      </Button>
+                    </Link>
+                  )}
 
                 <Link href="/app/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full justify-start gap-2.5 h-10">

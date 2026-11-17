@@ -477,8 +477,8 @@ export default function CourseLearningPlayerPage() {
     <div className="min-h-screen bg-[#120B08] text-stone-100 flex flex-col font-sans selection:bg-brand-orange/30">
       {/* 1. Top Player Navigation Header */}
       {!focusMode && (
-        <header className="h-14 border-b border-[#2D1C15] bg-[#19100C] px-4 sm:px-6 flex items-center justify-between shrink-0 z-30 transition-colors">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="h-14 border-b border-[#2D1C15] bg-[#19100C] px-3 sm:px-6 flex items-center justify-between shrink-0 z-30 transition-colors w-full max-w-full">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Link
               href="/app/courses"
               className="text-stone-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs shrink-0"
@@ -490,12 +490,12 @@ export default function CourseLearningPlayerPage() {
 
             <span className="text-[#38241B] hidden sm:inline">|</span>
 
-            <h1 className="font-semibold text-xs sm:text-sm text-stone-100 truncate max-w-xs md:max-w-md">
+            <h1 className="font-semibold text-xs sm:text-sm text-stone-100 truncate max-w-[120px] xs:max-w-xs md:max-w-md">
               {playerData.course.title}
             </h1>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Progress Tracker */}
             <div className="flex items-center gap-2.5">
               <div className="w-24 sm:w-36 bg-[#2B1B14] rounded-full h-2 overflow-hidden hidden xs:block">

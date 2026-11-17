@@ -281,7 +281,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType>({
   language: 'en',
   lang: 'en',
-  setLanguage: () => {},
+  setLanguage: () => { },
   t: DICTIONARIES.en,
   isAmharic: false,
 });
@@ -334,3 +334,4 @@ export function useI18n() {
   }
   return context;
 }
+

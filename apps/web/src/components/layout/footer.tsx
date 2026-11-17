@@ -4,8 +4,8 @@ import { ShieldCheck, Globe, Mail, Phone, MapPin } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-brand-border dark:border-slate-800 bg-white dark:bg-slate-950 text-brand-navy dark:text-slate-100 transition-colors">
-      <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16">
+    <footer className="border-t border-brand-border dark:border-slate-800 bg-white dark:bg-slate-950 text-brand-navy dark:text-slate-100 transition-colors w-full overflow-x-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">

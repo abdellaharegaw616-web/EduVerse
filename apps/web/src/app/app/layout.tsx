@@ -32,9 +32,9 @@ export default function StudentAppLayout({
 
   return (
     <ProtectedRoute>
-      <div className="flex min-h-[calc(100vh-4rem)] bg-brand-page dark:bg-slate-950 transition-colors">
+      <div className="flex w-full max-w-full overflow-x-hidden min-h-[calc(100vh-4rem)] bg-brand-page dark:bg-slate-950 transition-colors">
         {/* Desktop Sidebar */}
-        <div className="hidden md:block">
+        <div className="hidden md:block shrink-0">
           <StudentSidebar />
         </div>
 
@@ -64,7 +64,7 @@ export default function StudentAppLayout({
         )}
 
         {/* Main Workspace Area */}
-        <div className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 min-w-0 overflow-x-hidden p-3 sm:p-6 lg:p-8">
           {children}
         </div>
       </div>

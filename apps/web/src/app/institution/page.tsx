@@ -373,7 +373,7 @@ export default function InstitutionManagementPage() {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             {/* Stat Cards Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
               <Card className="bg-white dark:bg-[#19100C] border-[#EADFD4] dark:border-[#2D1C15] shadow-sm">
                 <CardContent className="p-5 space-y-2">
                   <div className="flex items-center justify-between">
