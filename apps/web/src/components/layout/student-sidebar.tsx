@@ -18,26 +18,13 @@ import {
   LogOut,
   BookOpenCheck,
   StickyNote,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
+import { useI18n } from '@/context/i18n-context';
 import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-
-const STUDENT_NAV_ITEMS = [
-  { href: '/app/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/app/courses', label: 'My Courses', icon: BookOpen },
-  { href: '/app/ai-tutor', label: 'AI Study Tutor', icon: BookOpenCheck },
-  { href: '/app/notes', label: 'Study Notebook', icon: StickyNote },
-  { href: '/app/progress', label: 'Learning Progress', icon: TrendingUp },
-  { href: '/app/recent-lessons', label: 'Recent Lessons', icon: History },
-  { href: '/app/assignments', label: 'Assignments', icon: FileCheck2 },
-  { href: '/app/quizzes', label: 'Quiz History', icon: HelpCircle },
-  { href: '/app/certificates', label: 'Certificates', icon: Award },
-  { href: '/app/notifications', label: 'Notifications', icon: Bell },
-  { href: '/app/profile', label: 'Student Profile', icon: User },
-  { href: '/app/settings', label: 'Account Settings', icon: Settings },
-];
 
 export interface StudentSidebarProps {
   onNavigate?: () => void;
@@ -46,6 +33,23 @@ export interface StudentSidebarProps {
 export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
   const pathname = usePathname();
   const { user: authUser, logout } = useAuth();
+  const { t } = useI18n();
+
+  const studentNavItems = [
+    { href: '/app/dashboard', label: t.dashboard, icon: LayoutDashboard },
+    { href: '/app/courses', label: t.myCourses, icon: BookOpen },
+    { href: '/app/ai-tutor', label: t.aiStudyTutor, icon: BookOpenCheck },
+    { href: '/app/notes', label: t.studyNotebook, icon: StickyNote },
+    { href: '/app/community', label: t.studyGroups, icon: Users },
+    { href: '/app/progress', label: t.learningProgress, icon: TrendingUp },
+    { href: '/app/recent-lessons', label: t.recentLessons, icon: History },
+    { href: '/app/assignments', label: t.assignments, icon: FileCheck2 },
+    { href: '/app/quizzes', label: t.quizHistory, icon: HelpCircle },
+    { href: '/app/certificates', label: t.certificates, icon: Award },
+    { href: '/app/notifications', label: t.notifications, icon: Bell },
+    { href: '/app/profile', label: t.studentProfile, icon: User },
+    { href: '/app/settings', label: t.accountSettings, icon: Settings },
+  ];
 
   const { data: profileData } = useQuery({
     queryKey: ['user-profile'],
@@ -97,7 +101,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
 
         {/* Links */}
         <nav className="space-y-1">
-          {STUDENT_NAV_ITEMS.map((item) => {
+          {studentNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
@@ -139,7 +143,7 @@ export function StudentSidebar({ onNavigate }: StudentSidebarProps) {
           className="w-full justify-start text-xs text-brand-slate dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2 h-9"
         >
           <LogOut className="h-4 w-4 shrink-0" />
-          <span>Sign Out</span>
+          <span>{t.signOut}</span>
         </Button>
       </div>
     </aside>

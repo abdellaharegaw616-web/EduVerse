@@ -5,11 +5,13 @@ import { Footer } from '@/components/layout/footer';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { I18nProvider } from '@/context/i18n-context';
 
 export const metadata: Metadata = {
   title: 'EduVerse — Learn Beyond Boundaries',
   description:
     'The premier educational SaaS platform for Ethiopian students, teachers, and institutions. High-quality coursework, verifiable certificates, and low-bandwidth delivery.',
+  manifest: '/manifest.json',
   keywords: [
     'EduVerse',
     'Ethiopian Education',
@@ -75,9 +77,11 @@ export default function RootLayout({
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <I18nProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </I18nProvider>
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>

@@ -30,8 +30,19 @@ import {
   Minimize2,
   FolderDown,
   BookOpen,
+  WifiOff,
+  Zap,
+  Volume2,
+  MessageSquare,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
+import { useI18n } from '@/context/i18n-context';
+import {
+  useNetworkStatus,
+  cacheLessonOffline,
+  getCachedLesson,
+  enqueueOfflineAction,
+} from '@/lib/offline-sync';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -48,6 +59,7 @@ import { LessonQuizCard } from '@/components/learn/lesson-quiz-card';
 import { LessonAssignmentCard } from '@/components/learn/lesson-assignment-card';
 import { LessonAiTutor } from '@/components/learn/lesson-ai-tutor';
 import { LessonNotesPanel } from '@/components/learn/lesson-notes-panel';
+import { LessonDiscussionBoard } from '@/components/learn/lesson-discussion-board';
 
 interface PlayerLessonSummary {
   id: string;
@@ -134,6 +146,8 @@ export default function CourseLearningPlayerPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const { lang } = useI18n();
+  const { isOnline, isLowBandwidth, toggleLowBandwidth, pendingCount } = useNetworkStatus();
 
   const slug = params?.slug as string;
   const initialLessonId = searchParams.get('lesson');
@@ -142,11 +156,12 @@ export default function CourseLearningPlayerPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [showCompletionModal, setShowCompletionModal] = useState(false);
-  const [studyTab, setStudyTab] = useState<'ai' | 'notes' | 'resources' | 'announcements'>('ai');
+  const [studyTab, setStudyTab] = useState<'ai' | 'notes' | 'resources' | 'announcements' | 'community'>('ai');
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [autoAdvance, setAutoAdvance] = useState<boolean>(true);
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg'>('base');
   const [focusMode, setFocusMode] = useState<boolean>(false);
+  const [audioOnlyMode, setAudioOnlyMode] = useState<boolean>(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -219,7 +234,7 @@ export default function CourseLearningPlayerPage() {
     }
   }, [playerData, activeLessonId]);
 
-  // 2. Fetch Active Lesson Content
+  // 2. Fetch Active Lesson Content with Offline Caching
   const {
     data: lessonData,
     isLoading: isLessonLoading,
@@ -229,7 +244,17 @@ export default function CourseLearningPlayerPage() {
     queryKey: ['lesson-detail', activeLessonId],
     queryFn: async () => {
       if (!activeLessonId) throw new Error('No lesson selected');
-      return apiClient.get<LessonDetailResponse>(`/lessons/${activeLessonId}`);
+      try {
+        const fetched = await apiClient.get<LessonDetailResponse>(`/lessons/${activeLessonId}`);
+        cacheLessonOffline(activeLessonId, fetched);
+        return fetched;
+      } catch (err) {
+        const cached = getCachedLesson(activeLessonId);
+        if (cached) {
+          return cached;
+        }
+        throw err;
+      }
     },
     enabled: !!activeLessonId,
   });
@@ -255,9 +280,22 @@ export default function CourseLearningPlayerPage() {
     },
   });
 
-  // 5. Complete / Uncomplete Mutation
+  // 5. Complete / Uncomplete Mutation with Offline Resilience
   const completionMutation = useMutation({
     mutationFn: async ({ lessonId, markComplete }: { lessonId: string; markComplete: boolean }) => {
+      if (typeof window !== 'undefined' && !navigator.onLine) {
+        enqueueOfflineAction({
+          type: markComplete ? 'LESSON_COMPLETE' : 'LESSON_UNCOMPLETE',
+          payload: { lessonId },
+        });
+        return {
+          completed: markComplete,
+          progressPercentage: playerData?.progressPercentage || 0,
+          completedLessons: playerData?.completedLessons || 0,
+          totalLessons: playerData?.totalLessons || 0,
+          courseCompleted: false,
+        };
+      }
       if (markComplete) {
         return apiClient.post<{
           completed: boolean;
@@ -483,6 +521,40 @@ export default function CourseLearningPlayerPage() {
               <span className="text-[11px]">{focusMode ? 'Exit Focus' : 'Focus'}</span>
             </Button>
 
+            {/* Low-Bandwidth / Data Saver Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => toggleLowBandwidth()}
+              className={`text-xs gap-1.5 h-8 px-2 transition-colors ${
+                isLowBandwidth
+                  ? 'text-brand-orange bg-orange-950/40 border border-orange-900/50'
+                  : 'text-stone-400 hover:text-stone-100'
+              }`}
+              title={
+                isLowBandwidth
+                  ? 'Low-Bandwidth Mode active: Media is compressed to conserve cellular data.'
+                  : 'Enable Low-Bandwidth Mode to save cellular data.'
+              }
+            >
+              <Zap className="h-3.5 w-3.5 text-brand-orange" />
+              <span className="text-[11px] hidden sm:inline">
+                {isLowBandwidth ? 'Data Saver ON' : 'Data Saver'}
+              </span>
+            </Button>
+
+            {/* Offline Connectivity Indicator */}
+            {!isOnline && (
+              <Badge
+                variant="outline"
+                className="border-amber-700 bg-amber-950/60 text-amber-300 text-[10px] gap-1 px-2 py-0.5"
+              >
+                <WifiOff className="h-3 w-3 text-amber-400" />
+                <span className="hidden sm:inline">Offline Mode</span>
+                {pendingCount > 0 && <span>({pendingCount})</span>}
+              </Badge>
+            )}
+
             {/* Toggle Syllabus Sidebar */}
             <Button
               variant="outline"
@@ -495,6 +567,25 @@ export default function CourseLearningPlayerPage() {
             </Button>
           </div>
         </header>
+      )}
+
+      {/* Offline Status Alert Banner */}
+      {!isOnline && (
+        <div className="bg-amber-950/60 border-b border-amber-900/60 px-4 sm:px-6 py-2 flex items-center justify-between text-xs text-amber-200 shrink-0">
+          <div className="flex items-center gap-2">
+            <WifiOff className="h-4 w-4 text-amber-400 shrink-0" />
+            <span>
+              {lang === 'am'
+                ? 'የኢንተርኔት ግንኙነት ተቋርጧል፡ EduVerse ከመስመር ውጭ (Offline) ሁነታ እየሰራ ነው። የተቀመጡ ትምህርቶች እና ማስታወሻዎች ሙሉ በሙሉ ክፍት ናቸው። የጨረሷቸው ትምህርቶች ግንኙነት ሲመለስ በራሳቸው ይላካሉ።'
+                : 'Connection interrupted. EduVerse is operating in offline mode. Cached lessons and notes remain readable. Completed progress will auto-sync once connection restores.'}
+            </span>
+          </div>
+          {pendingCount > 0 && (
+            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px] shrink-0">
+              {pendingCount} {lang === 'am' ? 'የሚላኩ ተይዘዋል' : 'actions pending sync'}
+            </Badge>
+          )}
+        </div>
       )}
 
       {/* Focus Mode Floating Exit Pill */}
@@ -591,15 +682,31 @@ export default function CourseLearningPlayerPage() {
                           ))}
                         </div>
 
-                        <label className="flex items-center gap-2 cursor-pointer text-[11px] text-stone-400 select-none">
-                          <input
-                            type="checkbox"
-                            checked={autoAdvance}
-                            onChange={(e) => setAutoAdvance(e.target.checked)}
-                            className="rounded border-[#38241B] text-brand-orange focus:ring-brand-orange"
-                          />
-                          <span>Auto-play next lesson</span>
-                        </label>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setAudioOnlyMode(!audioOnlyMode)}
+                            className={`px-2 py-0.5 rounded text-[11px] font-medium flex items-center gap-1 transition-colors ${
+                              audioOnlyMode || isLowBandwidth
+                                ? 'bg-orange-500/20 border border-orange-500/50 text-orange-300'
+                                : 'hover:bg-[#2B1B14] text-stone-400'
+                            }`}
+                            title="Saves ~85% mobile data by using compressed audio stream"
+                          >
+                            <Volume2 className="h-3 w-3 text-brand-orange" />
+                            <span>{audioOnlyMode || isLowBandwidth ? 'Audio-Saver ON' : 'Audio-Saver'}</span>
+                          </button>
+
+                          <label className="flex items-center gap-2 cursor-pointer text-[11px] text-stone-400 select-none">
+                            <input
+                              type="checkbox"
+                              checked={autoAdvance}
+                              onChange={(e) => setAutoAdvance(e.target.checked)}
+                              className="rounded border-[#38241B] text-brand-orange focus:ring-brand-orange"
+                            />
+                            <span>Auto-play next lesson</span>
+                          </label>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -912,7 +1019,20 @@ export default function CourseLearningPlayerPage() {
                       }`}
                     >
                       <Megaphone className="h-3.5 w-3.5" />
-                      <span>Announcements ({courseAnnouncements.length})</span>
+                      <span>{lang === 'am' ? 'ማስታወቂያዎች' : 'Announcements'} ({courseAnnouncements.length})</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setStudyTab('community')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                        studyTab === 'community'
+                          ? 'bg-brand-orange text-white'
+                          : 'bg-[#19100C] border border-[#2D1C15] text-stone-300 hover:bg-[#23150F]'
+                      }`}
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      <span>{lang === 'am' ? 'የውይይት መድረክ' : 'Community & Q&A'}</span>
                     </button>
                   </div>
 
@@ -1006,6 +1126,14 @@ export default function CourseLearningPlayerPage() {
                         </div>
                       )}
                     </div>
+                  )}
+
+                  {studyTab === 'community' && (
+                    <LessonDiscussionBoard
+                      courseId={lessonData.courseId}
+                      courseTitle={lessonData.courseTitle || playerData.course.title}
+                      lessonTitle={lessonData.title}
+                    />
                   )}
                 </div>
 

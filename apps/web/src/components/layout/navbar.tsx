@@ -14,26 +14,31 @@ import {
   ShieldCheck,
   GraduationCap,
   Settings,
+  Building2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
+import { LanguageSwitcher } from '@/components/shared/language-switcher';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
+import { useI18n } from '@/context/i18n-context';
 import { apiClient } from '@/lib/api';
-
-const NAV_LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/courses', label: 'Courses' },
-  { href: '/instructors', label: 'Instructors' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-];
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user: authUser, isAuthenticated, logout } = useAuth();
+  const { t } = useI18n();
+
+  const navLinks = [
+    { href: '/', label: t.home },
+    { href: '/courses', label: t.courses },
+    { href: '/app/community', label: t.studyGroups },
+    { href: '/instructors', label: t.instructors },
+    { href: '/pricing', label: t.pricing },
+    { href: '/about', label: t.about },
+    { href: '/contact', label: t.contact },
+  ];
 
   const { data: profileData } = useQuery({
     queryKey: ['user-profile'],
@@ -82,14 +87,14 @@ export function Navbar() {
               Edu<span className="text-brand-orange">Verse</span>
             </span>
             <span className="text-[10px] text-brand-slate dark:text-slate-400 tracking-wide font-medium">
-              Learn Beyond Boundaries
+              {t.tagline}
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
@@ -109,21 +114,37 @@ export function Navbar() {
         </nav>
 
         {/* Desktop CTAs */}
-        <div className="hidden md:flex items-center space-x-3">
+        <div className="hidden md:flex items-center space-x-2.5">
+          {/* Language Switcher (English / Amharic) */}
+          <LanguageSwitcher />
+
           {/* Theme Mode Toggle */}
           <ThemeToggle />
 
           {isAuthenticated && user ? (
             <div className="flex items-center space-x-2">
-              {user.role === 'SUPER_ADMIN' && (
-                <Link href="/admin">
+              {(user.role === 'INSTITUTION_ADMIN' || user.role === 'SUPER_ADMIN') && (
+                <Link href="/institution">
                   <Button
                     variant="outline"
                     size="sm"
                     className="gap-1.5 text-xs border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
                   >
+                    <Building2 className="h-4 w-4 text-brand-orange" />
+                    <span>{t.institutionPortal}</span>
+                  </Button>
+                </Link>
+              )}
+
+              {user.role === 'SUPER_ADMIN' && (
+                <Link href="/admin">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs"
+                  >
                     <ShieldCheck className="h-4 w-4 text-brand-orange" />
-                    <span>Admin</span>
+                    <span>{t.admin}</span>
                   </Button>
                 </Link>
               )}
@@ -134,7 +155,7 @@ export function Navbar() {
                 <Link href="/teacher/dashboard">
                   <Button variant="outline" size="sm" className="gap-1.5 text-xs">
                     <GraduationCap className="h-4 w-4 text-brand-orange" />
-                    <span>Studio</span>
+                    <span>{t.studio}</span>
                   </Button>
                 </Link>
               )}
@@ -142,7 +163,7 @@ export function Navbar() {
               <Link href="/app/dashboard">
                 <Button variant="outline" size="sm" className="gap-1.5 text-xs">
                   <LayoutDashboard className="h-4 w-4 text-brand-coffee dark:text-slate-200" />
-                  <span>Dashboard</span>
+                  <span>{t.dashboard}</span>
                 </Button>
               </Link>
 
@@ -169,10 +190,10 @@ export function Navbar() {
                   size="sm"
                   onClick={() => logout()}
                   className="text-xs text-brand-slate hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 gap-1"
-                  title="Sign Out"
+                  title={t.signOut}
                 >
                   <LogOut className="h-3.5 w-3.5" />
-                  <span className="hidden lg:inline">Sign Out</span>
+                  <span className="hidden lg:inline">{t.signOut}</span>
                 </Button>
               </div>
             </div>
@@ -180,12 +201,12 @@ export function Navbar() {
             <>
               <Link href="/login">
                 <Button variant="ghost" size="sm">
-                  Sign In
+                  {t.signIn}
                 </Button>
               </Link>
               <Link href="/register">
                 <Button variant="orange" size="sm" className="gap-1.5">
-                  <span>Get Started</span>
+                  <span>{t.getStarted}</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </Link>
@@ -195,6 +216,7 @@ export function Navbar() {
 
         {/* Mobile Header Right Items */}
         <div className="flex md:hidden items-center gap-2">
+          <LanguageSwitcher />
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -247,7 +269,7 @@ export function Navbar() {
 
           {/* Nav Links */}
           <div className="flex flex-col space-y-1">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
@@ -271,11 +293,23 @@ export function Navbar() {
           <div className="pt-3 border-t border-brand-border dark:border-slate-800 flex flex-col space-y-2">
             {isAuthenticated && user ? (
               <>
+                {(user.role === 'INSTITUTION_ADMIN' || user.role === 'SUPER_ADMIN') && (
+                  <Link href="/institution" onClick={() => setMobileMenuOpen(false)}>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2.5 h-10 border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
+                    >
+                      <Building2 className="h-4 w-4 text-brand-orange" />
+                      <span>{t.institutionPortal}</span>
+                    </Button>
+                  </Link>
+                )}
+
                 {user.role === 'SUPER_ADMIN' && (
                   <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
                     <Button
                       variant="outline"
-                      className="w-full justify-start gap-2.5 h-10 border-brand-orange/40 text-brand-orange hover:bg-orange-50 dark:border-brand-orange/50 dark:text-orange-400 dark:hover:bg-orange-950/50"
+                      className="w-full justify-start gap-2.5 h-10"
                     >
                       <ShieldCheck className="h-4 w-4 text-brand-orange" />
                       <span>Administrative Portal</span>
