@@ -4,7 +4,7 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService, CourseStatus, CourseDifficulty, LessonType } from '../database/prisma.service';
+import { PrismaService, CourseStatus, CourseDifficulty, LessonType, Role } from '../database/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -1376,6 +1376,75 @@ export class CoursesService {
       description: cat.description,
       publishedCourseCount: cat._count.courses,
     }));
+  }
+
+  // 31b. Public Instructors Directory
+  async getMarketplaceInstructors() {
+    const instructors = await this.prisma.user.findMany({
+      where: {
+        role: { in: [Role.TEACHER, Role.INDEPENDENT_INSTRUCTOR] },
+        isActive: true,
+      },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        profile: {
+          select: {
+            avatarUrl: true,
+            bio: true,
+            timezone: true,
+          },
+        },
+        authoredCourses: {
+          where: { status: CourseStatus.PUBLISHED },
+          include: {
+            category: { select: { name: true, slug: true } },
+            reviews: { select: { rating: true } },
+            _count: { select: { enrollments: true, reviews: true } },
+          },
+        },
+      },
+      take: 24,
+    });
+
+    return instructors.map((instructor) => {
+      const allRatings = instructor.authoredCourses.flatMap((c) => c.reviews.map((r) => r.rating));
+      const averageRating =
+        allRatings.length > 0
+          ? Number((allRatings.reduce((a, b) => a + b, 0) / allRatings.length).toFixed(1))
+          : 5.0;
+
+      const totalStudents = instructor.authoredCourses.reduce(
+        (acc, c) => acc + c._count.enrollments,
+        0,
+      );
+
+      const categories = Array.from(
+        new Set(
+          instructor.authoredCourses
+            .map((c) => c.category?.name)
+            .filter((name): name is string => Boolean(name)),
+        ),
+      );
+
+      return {
+        id: instructor.id,
+        fullName: instructor.fullName,
+        avatarUrl: instructor.profile?.avatarUrl || null,
+        bio: instructor.profile?.bio || null,
+        role: instructor.role,
+        stats: {
+          totalCourses: instructor.authoredCourses.length,
+          totalStudents,
+          averageRating,
+          reviewCount: allRatings.length,
+        },
+        categories,
+      };
+    });
   }
 
   // 32. Public Instructor Profile

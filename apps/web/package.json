@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "clean": "node -e \"const fs = require('fs'); fs.rmSync('.next', { recursive: true, force: true }); console.log('Cleaned .next directory');\"",
-    "build": "next build",
+    "build": "node -e \"const fs = require('fs'); if (fs.existsSync('.next')) fs.rmSync('.next', { recursive: true, force: true });\" && next build",
     "typecheck": "tsc --noEmit",
     "start": "next start",
     "lint": "next lint"

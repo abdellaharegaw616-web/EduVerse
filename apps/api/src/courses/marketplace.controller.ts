@@ -57,6 +57,15 @@ export class MarketplaceController {
     return this.coursesService.getMarketplaceCategories();
   }
 
+  @Get('instructors')
+  @ApiOperation({
+    summary: 'List verified instructors with active courses, stats, and specialties',
+  })
+  @ApiResponse({ status: 200, description: 'List of instructors returned' })
+  async getMarketplaceInstructors() {
+    return this.coursesService.getMarketplaceInstructors();
+  }
+
   @Get('instructors/:id')
   @ApiOperation({
     summary: 'Get public instructor profile, published courses, and student ratings',
